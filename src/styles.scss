@@ -5,6 +5,9 @@
 // custom components at https://material.angular.dev/guide/theming
 @use '@angular/material' as mat;
 
+@import "../public/css/fonts.scss";
+@import "../public/css/colors.scss";
+
 html {
   height: 100%;
   @include mat.theme(
@@ -36,4 +39,6 @@ body {
   margin: 0;
   height: 100%;
 }
+
 /* You can add global styles to this file, and also import other style files */
+//background-image: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(255,255,255,.5) 35px, rgba(255,255,255,.5) 70px);

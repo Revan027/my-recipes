@@ -1,0 +1,38 @@
+@font-face {
+  font-family: 'Karla';
+  src: url('../css/fonts/Karla/static/Karla-Regular.ttf') format('truetype');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+
+@font-face {
+  font-family: 'Karla';
+  src: url('../css/fonts/Karla/static/Karla-Medium.ttf') format('truetype');
+  font-weight: 500; font-style: normal; font-display: swap;
+}
+
+@font-face {
+  font-family: 'Karla';
+  src: url('../css/fonts/Karla/static/Karla-SemiBold.ttf') format('truetype');
+  font-weight: 600; font-style: normal; font-display: swap;
+}
+
+@font-face {
+  font-family: 'Karla';
+  src: url('../css/fonts/Karla/static/Karla-Bold.ttf') format('truetype');
+  font-weight: 700; 
+  font-style: normal; 
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Playfair Display';
+  src: url('../css/fonts/Playfair_Display/static/PlayfairDisplay-SemiBold.ttf') format('truetype');
+  font-weight: 600; 
+  font-style: normal; 
+  font-display: swap;
+}
+
+:root {
+  --font-family-playfair-display: 'Playfair Display', sans-serif;
+  --font-family-playfair-karla: 'Karla', sans-serif;
+}

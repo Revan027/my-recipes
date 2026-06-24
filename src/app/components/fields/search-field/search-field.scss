@@ -1,0 +1,30 @@
+.search-field{
+    position: relative;
+    color: var(--color-secondary-text);
+
+    input[type=search]{
+        border-radius: 17px;
+        padding: 20px 20px 20px 40px;
+        font-family: var(--font-family-karla), system-ui, sans-serif;
+        font-weight: 400;
+        width: 100%;
+        font-size: var(--font-size-base);
+        border: 1px solid var(--color-lines);
+        box-shadow: 0 6px 16px -12px rgba(0, 0, 0, 0.4);
+        transition: border 0.5s ease-out;
+        outline: none;
+    }
+
+    input[type=search]:focus,
+    input[type=search]:active {
+        border-radius: 17px;
+        border: 1px solid var(--color-accent);
+        outline: none;
+    }
+
+    mat-icon{
+        position: absolute;
+        top: 20px;
+        left: 10px;
+    }
+}

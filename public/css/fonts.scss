@@ -1,19 +1,25 @@
 @font-face {
   font-family: 'Karla';
   src: url('../css/fonts/Karla/static/Karla-Regular.ttf') format('truetype');
-  font-weight: 400; font-style: normal; font-display: swap;
+  font-weight: 400; 
+  font-style: normal;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Karla';
   src: url('../css/fonts/Karla/static/Karla-Medium.ttf') format('truetype');
-  font-weight: 500; font-style: normal; font-display: swap;
+  font-weight: 500; 
+  font-style: normal; 
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Karla';
   src: url('../css/fonts/Karla/static/Karla-SemiBold.ttf') format('truetype');
-  font-weight: 600; font-style: normal; font-display: swap;
+  font-weight: 600; 
+  font-style: normal; 
+  font-display: swap;
 }
 
 @font-face {
@@ -34,5 +40,21 @@
 
 :root {
   --font-family-playfair-display: 'Playfair Display', sans-serif;
-  --font-family-playfair-karla: 'Karla', sans-serif;
+  --font-family-karla: 'Karla', sans-serif;
+
+  --font-size-base: 1.125rem; 
+  --font-size-xs:   0.688rem;
+  --font-size-sm:   0.719rem;
+  --font-size-md:   0.75rem;
+  --font-size-lg:   0.969rem;
+  --font-size-xl:   2.125rem;
+  --font-size-2xl:  2.625rem;
+
+  .mb-1{
+    margin-bottom: 10px;
+  }
+
+  .mb-2{
+    margin-bottom: 20px;
+  }
 }

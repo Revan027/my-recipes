@@ -1,0 +1,11 @@
+.btn-add-float{
+  position: fixed!important;
+  bottom: 30px;
+  right: 20px;
+}
+
+.btn--accent {
+  --mat-fab-container-color: var(--color-accent);
+  --mat-fab-foreground-color: #fff;
+  --mat-fab-container-shape: 50%;
+}

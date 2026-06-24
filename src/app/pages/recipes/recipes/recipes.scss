@@ -1,0 +1,23 @@
+.recipes{
+    .recipes__kicker{
+        text-transform: uppercase;
+        color: var(--color-accent);
+        font-size: var(--font-size-xs);
+        font-weight: 700;
+        letter-spacing: 0.20em;
+    }
+
+    .recipes__title{
+        font-weight: 600;
+        font-family: 'Playfair Display', Georgia, serif;
+        font-size: var(--font-size-2xl);
+        line-height: 1.0;
+        letter-spacing: -0.01em;
+    }
+
+    .recipes__counter{
+        font-weight: 400;
+        font-size: var(--font-size-xs);
+        color: var(--color-secondary-text);
+    }
+}

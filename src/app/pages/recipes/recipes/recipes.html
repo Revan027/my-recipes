@@ -1,33 +1,35 @@
-<div class="recipes content-padding">
-    <div class="kicker-text mb-1">
-        Le Carnet
-    </div>
-
-    <div class="recipes-title mb-2">
-        <h1>Mes recettes</h1>
-    </div>
-
-    <div class="recipes-search mb-2">
-        <app-search-field></app-search-field>
-    </div>
-
-    <div class="recipes-counter mb-1">6 recettes</div>
-
-    <button matFab class="btn-add-float btn-fab--accent">
-        <mat-icon>add</mat-icon>
-    </button>
-
-    <div class="recipes-card-list">
-        <div class="recipe-card">
-            <app-card></app-card>
+@if(isAppReady() && isPageReady()){
+    <div class="recipes content-padding">
+        <div class="kicker-text mb-1">
+            Le Carnet
         </div>
 
-        <div class="recipe-card">
-            <app-card></app-card>
+        <div class="recipes-title mb-2">
+            <h1>Mes recettes</h1>
         </div>
 
-        <div class="recipe-card">
-            <app-card></app-card>
+        <div class="recipes-search mb-2">
+            <app-search-field></app-search-field>
+        </div>
+
+        <div class="recipes-counter mb-1">6 recettes</div>
+
+        <button matFab class="btn-add-float btn-fab--accent">
+            <mat-icon>add</mat-icon>
+        </button>
+
+        <div class="recipes-card-list">
+            @for(item of recipeResult().recipes; track item.id){
+                <div class="recipe-card">
+                    <app-recipe-card [recipe]="item" [pictureClass]="findPictureClass(item.id)"></app-recipe-card>
+                </div>
+            }
+            @empty {
+                <span>Aucune recette</span>
+            }
         </div>
     </div>
-</div>
+}
+@else{
+    <mat-spinner class="spinner"></mat-spinner>
+}

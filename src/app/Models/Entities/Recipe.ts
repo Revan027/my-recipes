@@ -7,7 +7,7 @@ export class Recipe {
 
   id: number = 0;
   typeID!: number;
-  picture!: string;
+  picture?: string;
   title!: string;
   type: Type = new Type();
   steps: Step[] = [];

@@ -18,3 +18,12 @@
         flex-basis: 47%;
     }
 }
+
+.spinner{
+    display: flex;
+    justify-content: center;
+    width: 100%!important;
+    height: 100%!important;
+    --mat-progress-spinner-active-indicator-color: var(--color-accent);
+}
+ 

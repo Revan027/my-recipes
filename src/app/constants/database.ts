@@ -22,6 +22,12 @@ export const version1: string[] = [
     recipeID INTEGER NOT NULL,
     FOREIGN KEY(recipeID) REFERENCES ${tableName.recipe}(id),
   );`,
+  `CREATE TABLE IF NOT EXISTS ${tableName.ingredient} (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    recipeID INTEGER NOT NULL,
+    FOREIGN KEY(recipeID) REFERENCES ${tableName.recipe}(id),
+  );`,
   `INSERT INTO ${tableName.type} (name) VALUES
     ('Plat'),
     ('Salade'),

@@ -1,3 +1,4 @@
+import { Ingredient } from '../Models/Entities/Ingredient';
 import { Recipe } from '../Models/Entities/Recipe';
 import { Step } from '../Models/Entities/Step';
 import { Type } from '../Models/Entities/Type';
@@ -8,51 +9,6 @@ export const MOCK_TYPES: Type[] = [
   { id: 3, name: 'Dessert' },
   { id: 4, name: 'Apéritif' },
   { id: 5, name: 'Boisson' },
-];
-
-export const MOCK_RECIPES: Recipe[] = [
-  {
-    id: 1,
-    typeID: 1,
-    type: MOCK_TYPES[0],
-    title: 'Velouté de potimarron',
-    picture: 'assets/images/recipes/veloute-potimarron.jpg',
-  },
-  {
-    id: 2,
-    typeID: 2,
-    type: MOCK_TYPES[1],
-    title: 'Bœuf bourguignon',
-    picture: 'assets/images/recipes/boeuf-bourguignon.jpg',
-  },
-  {
-    id: 3,
-    typeID: 2,
-    type: MOCK_TYPES[1],
-    title: 'Risotto aux champignons',
-    picture: 'assets/images/recipes/risotto-champignons.jpg',
-  },
-  {
-    id: 4,
-    typeID: 3,
-    type: MOCK_TYPES[2],
-    title: 'Fondant au chocolat',
-    picture: 'assets/images/recipes/fondant-chocolat.jpg',
-  },
-  {
-    id: 5,
-    typeID: 3,
-    type: MOCK_TYPES[2],
-    title: 'Tarte aux pommes',
-    picture: 'assets/images/recipes/tarte-pommes.jpg',
-  },
-  {
-    id: 6,
-    typeID: 4,
-    type: MOCK_TYPES[3],
-    title: 'Houmous maison',
-    picture: 'assets/images/recipes/houmous.jpg',
-  },
 ];
 
 export const MOCK_STEPS: Step[] = [
@@ -88,4 +44,107 @@ export const MOCK_STEPS: Step[] = [
   { id: 19, recipeID: 6, position: 1, title: 'Mixer les pois chiches', content: 'Mixer les pois chiches égouttés avec le tahin, le jus de citron et l’ail.' },
   { id: 20, recipeID: 6, position: 2, title: 'Assaisonner', content: 'Ajouter l’huile d’olive, le cumin, du sel et de l’eau jusqu’à obtenir une texture onctueuse.' },
   { id: 21, recipeID: 6, position: 3, title: 'Dresser', content: 'Verser dans un bol, arroser d’huile d’olive et saupoudrer de paprika avant de servir.' },
+];
+
+export const MOCK_INGREDIENTS: Ingredient[] = [
+  // Recette 1 - Velouté de potimarron
+  { id: 1, recipeID: 1, name: 'Potimarron' },
+  { id: 2, recipeID: 1, name: 'Oignon' },
+  { id: 3, recipeID: 1, name: 'Bouillon de légumes' },
+  { id: 4, recipeID: 1, name: 'Crème fraîche' },
+  { id: 5, recipeID: 1, name: 'Huile d’olive' },
+
+  // Recette 2 - Bœuf bourguignon
+  { id: 6, recipeID: 2, name: 'Bœuf à braiser' },
+  { id: 7, recipeID: 2, name: 'Vin rouge' },
+  { id: 8, recipeID: 2, name: 'Carottes' },
+  { id: 9, recipeID: 2, name: 'Oignons' },
+  { id: 10, recipeID: 2, name: 'Champignons de Paris' },
+  { id: 11, recipeID: 2, name: 'Bouquet garni' },
+
+  // Recette 3 - Risotto aux champignons
+  { id: 12, recipeID: 3, name: 'Riz arborio' },
+  { id: 13, recipeID: 3, name: 'Champignons' },
+  { id: 14, recipeID: 3, name: 'Échalote' },
+  { id: 15, recipeID: 3, name: 'Bouillon de légumes' },
+  { id: 16, recipeID: 3, name: 'Parmesan' },
+  { id: 17, recipeID: 3, name: 'Beurre' },
+
+  // Recette 4 - Fondant au chocolat
+  { id: 18, recipeID: 4, name: 'Chocolat noir' },
+  { id: 19, recipeID: 4, name: 'Beurre' },
+  { id: 20, recipeID: 4, name: 'Œufs' },
+  { id: 21, recipeID: 4, name: 'Sucre' },
+  { id: 22, recipeID: 4, name: 'Farine' },
+
+  // Recette 5 - Tarte aux pommes
+  { id: 23, recipeID: 5, name: 'Pâte brisée' },
+  { id: 24, recipeID: 5, name: 'Pommes' },
+  { id: 25, recipeID: 5, name: 'Sucre' },
+  { id: 26, recipeID: 5, name: 'Beurre' },
+
+  // Recette 6 - Houmous maison
+  { id: 27, recipeID: 6, name: 'Pois chiches' },
+  { id: 28, recipeID: 6, name: 'Tahin' },
+  { id: 29, recipeID: 6, name: 'Jus de citron' },
+  { id: 30, recipeID: 6, name: 'Ail' },
+  { id: 31, recipeID: 6, name: 'Huile d’olive' },
+  { id: 32, recipeID: 6, name: 'Cumin' },
+];
+
+export const MOCK_RECIPES: Recipe[] = [
+  {
+    id: 1,
+    typeID: 1,
+    type: MOCK_TYPES[0],
+    title: 'Velouté de potimarron',
+    picture: 'assets/images/recipes/veloute-potimarron.jpg',
+    steps: MOCK_STEPS.filter((step) => step.recipeID === 1),
+    ingredients: MOCK_INGREDIENTS.filter((ingredient) => ingredient.recipeID === 1),
+  },
+  {
+    id: 2,
+    typeID: 2,
+    type: MOCK_TYPES[1],
+    title: 'Bœuf bourguignon',
+    picture: 'assets/images/recipes/boeuf-bourguignon.jpg',
+    steps: MOCK_STEPS.filter((step) => step.recipeID === 2),
+    ingredients: MOCK_INGREDIENTS.filter((ingredient) => ingredient.recipeID === 2),
+  },
+  {
+    id: 3,
+    typeID: 2,
+    type: MOCK_TYPES[1],
+    title: 'Risotto aux champignons',
+    picture: 'assets/images/recipes/risotto-champignons.jpg',
+    steps: MOCK_STEPS.filter((step) => step.recipeID === 3),
+    ingredients: MOCK_INGREDIENTS.filter((ingredient) => ingredient.recipeID === 3),
+  },
+  {
+    id: 4,
+    typeID: 3,
+    type: MOCK_TYPES[2],
+    title: 'Fondant au chocolat',
+    picture: 'assets/images/recipes/fondant-chocolat.jpg',
+    steps: MOCK_STEPS.filter((step) => step.recipeID === 4),
+    ingredients: MOCK_INGREDIENTS.filter((ingredient) => ingredient.recipeID === 4),
+  },
+  {
+    id: 5,
+    typeID: 3,
+    type: MOCK_TYPES[2],
+    title: 'Tarte aux pommes',
+    picture: 'assets/images/recipes/tarte-pommes.jpg',
+    steps: MOCK_STEPS.filter((step) => step.recipeID === 5),
+    ingredients: MOCK_INGREDIENTS.filter((ingredient) => ingredient.recipeID === 5),
+  },
+  {
+    id: 6,
+    typeID: 4,
+    type: MOCK_TYPES[3],
+    title: 'Houmous maison',
+    picture: 'assets/images/recipes/houmous.jpg',
+    steps: MOCK_STEPS.filter((step) => step.recipeID === 6),
+    ingredients: MOCK_INGREDIENTS.filter((ingredient) => ingredient.recipeID === 6),
+  },
 ];

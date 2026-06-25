@@ -1,0 +1,20 @@
+.recipes{
+
+    .recipes-counter{
+        font-weight: 400;
+        font-size: var(--font-size-xs);
+        color: var(--color-secondary-text);
+    }
+}
+
+.recipes-card-list {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+
+   .recipe-card {
+        flex-shrink: 0;
+        flex-grow: 0;
+        flex-basis: 47%;
+    }
+}

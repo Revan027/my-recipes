@@ -1,3 +1,10 @@
+button{
+  font-family: 'Karla', sans-serif!important;
+  font-weight: 700!important;
+  letter-spacing: 0.01em!important;
+  font-size: var(--font-size-lg)!important;
+}
+
 .btn-add-float{
   position: fixed!important;
   bottom: 30px;
@@ -5,8 +12,21 @@
   z-index: 9999;
 }
 
-.btn--accent {
+.btn-back{
+  --mat-fab-container-shape: 50%;
+}
+
+.btn-fab--accent {
   --mat-fab-container-color: var(--color-accent);
   --mat-fab-foreground-color: #fff;
   --mat-fab-container-shape: 50%;
+}
+
+.btn-fab--empty {
+  --mat-fab-container-color: white;
+  --mat-fab-foreground-color: black;
+  --mat-fab-state-layer-color: var(--color-accent);
+  --mat-fab-hover-state-layer-opacity: 0.8;
+  --mat-fab-pressed-state-layer-opacity: 0.8;
+  --mat-fab-focus-state-layer-opacity: 0.8;
 }

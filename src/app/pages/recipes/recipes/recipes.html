@@ -1,34 +1,33 @@
-<div class="recipes">
-    <div class="recipes__kicker mb-1">
+<div class="recipes content-padding">
+    <div class="kicker-text mb-1">
         Le Carnet
     </div>
 
-    <div class="recipes__title mb-2">
+    <div class="recipes-title mb-2">
         <h1>Mes recettes</h1>
     </div>
 
-    <div class="recipes__search mb-2">
+    <div class="recipes-search mb-2">
         <app-search-field></app-search-field>
     </div>
 
-    <div class="recipes__counter mb-1">6 recettes</div>
+    <div class="recipes-counter mb-1">6 recettes</div>
 
-    <button matFab class="btn-add-float btn--accent" aria-label="Example icon button with a delete icon">
+    <button matFab class="btn-add-float btn-fab--accent">
         <mat-icon>add</mat-icon>
     </button>
 
-    <div class="grille">
-        <div class="col">
+    <div class="recipes-card-list">
+        <div class="recipe-card">
             <app-card></app-card>
         </div>
 
-        <div class="col">
+        <div class="recipe-card">
             <app-card></app-card>
         </div>
 
-        <div class="col">
+        <div class="recipe-card">
             <app-card></app-card>
         </div>
     </div>
-
 </div>

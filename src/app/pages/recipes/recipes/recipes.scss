@@ -1,27 +1,20 @@
 .recipes{
-    .recipes__kicker{
-        text-transform: uppercase;
-        color: var(--color-accent);
-        font-size: var(--font-size-xs);
-        font-weight: 700;
-        letter-spacing: 0.20em;
-    }
 
-    .recipes__counter{
+    .recipes-counter{
         font-weight: 400;
         font-size: var(--font-size-xs);
         color: var(--color-secondary-text);
     }
 }
 
-.grille {
-  display: flex;
-   gap: 16px;
-   flex-wrap: wrap;
-}
+.recipes-card-list {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
 
-.col {
-      flex-shrink: 0;
-    flex-grow: 0;
-    flex-basis: 47%;
+   .recipe-card {
+        flex-shrink: 0;
+        flex-grow: 0;
+        flex-basis: 47%;
+    }
 }

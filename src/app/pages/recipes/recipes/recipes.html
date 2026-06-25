@@ -4,16 +4,31 @@
     </div>
 
     <div class="recipes__title mb-2">
-        Mes recettes
+        <h1>Mes recettes</h1>
     </div>
 
     <div class="recipes__search mb-2">
         <app-search-field></app-search-field>
     </div>
 
-    <div class="recipes__counter">6 recettes</div>
+    <div class="recipes__counter mb-1">6 recettes</div>
 
     <button matFab class="btn-add-float btn--accent" aria-label="Example icon button with a delete icon">
         <mat-icon>add</mat-icon>
     </button>
+
+    <div class="grille">
+        <div class="col">
+            <app-card></app-card>
+        </div>
+
+        <div class="col">
+            <app-card></app-card>
+        </div>
+
+        <div class="col">
+            <app-card></app-card>
+        </div>
+    </div>
+
 </div>

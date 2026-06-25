@@ -47,8 +47,25 @@
   --font-size-sm:   0.719rem;
   --font-size-md:   0.75rem;
   --font-size-lg:   0.969rem;
-  --font-size-xl:   2.125rem;
+  --font-size-xl:   1.375rem;
   --font-size-2xl:  2.625rem;
+
+  h1{
+    font-weight: 600;
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: var(--font-size-2xl);
+    line-height: 1.0;
+    letter-spacing: -0.01em;
+  }
+
+  h3{
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 600;
+    font-size: var(--font-size-xl);
+    line-height: 1.04;
+    letter-spacing: -0.01em;
+    margin: 10px 0;
+  }
 
   .mb-1{
     margin-bottom: 10px;

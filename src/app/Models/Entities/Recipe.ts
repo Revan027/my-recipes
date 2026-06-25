@@ -1,3 +1,5 @@
+import { Ingredient } from "./Ingredient";
+import { Step } from "./Step";
 import { Type } from "./Type";
 
 export class Recipe {
@@ -5,7 +7,9 @@ export class Recipe {
 
   id: number = 0;
   typeID!: number;
-  type: Type = new Type();
   picture!: string;
   title!: string;
+  type: Type = new Type();
+  steps: Step[] = [];
+  ingredients: Ingredient[] = [];
 }

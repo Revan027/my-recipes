@@ -1,12 +1,3 @@
-.recipes{
-
-    .recipes-counter{
-        font-weight: 400;
-        font-size: var(--font-size-xs);
-        color: var(--color-secondary-text);
-    }
-}
-
 .recipes-card-list {
     display: flex;
     gap: 16px;
@@ -17,12 +8,4 @@
         flex-grow: 0;
         flex-basis: 47%;
     }
-}
-
-.spinner{
-    display: flex;
-    justify-content: center;
-    width: 100%!important;
-    height: 100%!important;
-    --mat-progress-spinner-active-indicator-color: var(--color-accent);
 }

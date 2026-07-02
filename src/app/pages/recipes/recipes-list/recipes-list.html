@@ -1,6 +1,6 @@
 @if(isAppReady() && isPageReady()){
     <div class="recipes content-padding">
-        <div class="kicker-text mb-1">
+        <div class="kicker mb-1">
             Le Carnet
         </div>
 
@@ -12,16 +12,16 @@
             <app-search-field></app-search-field>
         </div>
 
-        <div class="recipes-counter mb-1">6 recettes</div>
+        <div class="meta mb-1">6 recettes</div>
 
-        <button matFab class="btn-add-float btn-fab--accent">
+        <button matFab class="btn--fab btn-fab--accent">
             <mat-icon>add</mat-icon>
         </button>
 
-        <div class="recipes-card-list">
+        <div class="recipes-card-list">  
             @for(item of recipeResult().recipes; track item.id){
                 <div class="recipe-card">
-                    <app-recipe-card [recipe]="item" [pictureClass]="findPictureClass(item.id)"></app-recipe-card>
+                    <app-recipe-card [routerLink]="['recipes', item.id]" [recipe]="item" [pictureClass]="findPictureClass(item.id)"></app-recipe-card>
                 </div>
             }
             @empty {

@@ -1,6 +1,7 @@
 .recipe-book{
     overflow-x: hidden;
 
+    // retrait de la barre de scroll native
     &::-webkit-scrollbar {
         display: none;
     }
@@ -39,15 +40,11 @@
     .recipe-pages{
         display: flex;
         position: relative;
-        left: -1572;
-        transition: left 0.5s ease-out;
-
+        transition: transform 0.5s ease-out;
 
         .recipe-page{
             flex-basis: 1;
             height: 100dvh;
-            flex-grow: 1;
-            flex-shrink: 1;
             flex-shrink: 0;
             flex-grow: 0;
             flex-basis: 100%;
@@ -69,5 +66,4 @@
             }
         }
     }
-
 }

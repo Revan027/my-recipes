@@ -40,7 +40,7 @@ export class RecipeBook {
 
       this.currentPage.set(position);
 
-      this.swipeService.moveElement((page as HTMLElement).offsetLeft)
+      this.swipeService.translateElement((page as HTMLElement).offsetLeft)
     });
   }
 }

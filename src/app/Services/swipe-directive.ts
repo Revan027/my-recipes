@@ -6,67 +6,71 @@ import { RecipeService } from './recipe-service';
     standalone: true,
 })
 export class SwipeDirective {
+    private startClientX: number = 0;
     private previousClientX: number = 0;
-    private isSwiped = false;
+    private isSwipeBlocked = false;
     private totalPxMove: number = 0;
     private currentDirection: string = "";
-    private directions = ["NEXT", "PREV"];
+    private readonly directions = {Next: "NEXT", Prev: "PREV"};
+    private readonly windowWidth =  window.innerWidth;
 
     constructor(private el: ElementRef<HTMLElement>, private renderer: Renderer2, private recipeService: RecipeService) {}
 
     @HostListener('touchmove', ['$event'])
     onMove(e: TouchEvent) {
 
-        if(this.isSwiped == true) return;
-
-        this.isSwiped = true;
+        if(this.isSwipeBlocked) return;
+    
+        this.isSwipeBlocked = true;
 
         let clientX = e.changedTouches[0].clientX;
-        let pxMove = this.previousClientX - clientX; //avancement en pixel entre 2 moves
 
-        this.setDirection(clientX);
+       
+
+        const pxMove = this.previousClientX - clientX; //avancement en pixel entre 2 moves
+        const boundary = this.el.nativeElement.scrollWidth - window.innerWidth;
 
         if(this.previousClientX != 0){//si pas de point précédent
             this.totalPxMove = this.totalPxMove + pxMove;//calcul total de l'avancement
 
-            if(this.totalPxMove < 0){
-                this.totalPxMove = 0;
-                clientX = 0;
+             if(this.totalPxMove < 0){
             }
-            else if(this.totalPxMove > this.el.nativeElement.scrollWidth - window.innerWidth){
-                this.totalPxMove = this.el.nativeElement.scrollWidth - window.innerWidth;
-                clientX = 0;
+            else if(this.totalPxMove > boundary){
             }
-
-            this.moveElement(this.totalPxMove);
+            else{
+                this.translateElement(this.totalPxMove);
+            }
+            
         }
-
-        this.recipeService.currentPage.set(this.getPosition());
 
         this.setPreviousClientX(clientX);
 
-        this.isSwiped = false;
+        this.isSwipeBlocked = false;
+    }
+
+    @HostListener('touchstart', ['$event'])
+    onMoveStart(e: TouchEvent) {
+        this.startClientX = e.changedTouches[0].clientX;
     }
 
     @HostListener('touchend', ['$event'])
     onMoveEnd(e: TouchEvent) {
-        this.isSwiped = true;
+         this.setDirection(e.changedTouches[0].clientX);
+       this.fecthPage();
+    }
 
-         //on remet à zéro le previousClientX pour redémarrer une page de donnée neuve
+    private fecthPage(){
+        this.isSwipeBlocked = true;
+        //on remet à zéro le previousClientX pour redémarrer une page de donnée neuve
         this.setPreviousClientX(0);
 
-        //on avance jusqu'a la taille max de la page en cours. Ce qui ménera vers la prochaine page.
-        this.moveElement((this.getPosition() - 1) * window.innerWidth);
-
-        this.isSwiped = false;
+        this.handleAdvancement();
+        
+        this.isSwipeBlocked = false;
     }
 
-    private getPosition(){
-        return Math.round(this.totalPxMove / window.innerWidth) + 1;//on prend l'entier au dessus, cela représente la taille que prend la page actuellement dans la fenetre
-    }
-
-    private setDirection(clientX: number): void{
-       this.currentDirection = clientX < this.previousClientX ? this.directions[0] : this.directions[1];
+    private setDirection(lastClientX: number): void{
+       this.currentDirection =  lastClientX < this.startClientX ? this.directions.Next : this.directions.Prev;
     }
 
     private setPreviousClientX(clientX: number) {
@@ -77,8 +81,35 @@ export class SwipeDirective {
        return this.el.nativeElement.querySelector("#page-"+id.toString());
     }
 
-    moveElement(pxMove: number) {
-        this.totalPxMove = pxMove;//on  avance le total
-        this.renderer.setStyle(this.el.nativeElement, 'left', `${-pxMove}px`)
-    }   
+    handleAdvancement(){
+        const totalPage =  Math.round(this.el.nativeElement.scrollWidth / window.innerWidth);
+        let currentPage = this.recipeService.currentPage();
+
+        if(this.currentDirection == this.directions.Next && this.recipeService.currentPage() < totalPage){
+           this.next();
+        }
+        else if(this.currentDirection == this.directions.Prev && currentPage > 1){
+            this.previous();
+        }
+    }
+
+    next(){
+        this.translateElement(((this.recipeService.currentPage()) * window.innerWidth));// on prend la taille max d'une page
+
+        this.recipeService.currentPage.set(this.recipeService.currentPage() + 1);
+    }
+
+    previous(){
+        let currentPage = this.recipeService.currentPage();
+
+        this.translateElement(((currentPage - 1) * window.innerWidth) - window.innerWidth); // on prend la taille min d'une page
+
+        this.recipeService.currentPage.set(currentPage - 1);
+    }
+
+    translateElement(pxMove: number) {
+        this.totalPxMove = pxMove;//on avance le total
+        this.renderer.setStyle(this.el.nativeElement, 'will-change', 'transform')
+        this.renderer.setStyle(this.el.nativeElement, 'transform', `translate3d(${-pxMove}px,0,0)`);
+    }
 }

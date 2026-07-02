@@ -7,11 +7,12 @@ import { RecipeService } from '../../../Services/recipe-service';
 import { AppInitService } from '../../../Services/app-init-service';
 import { RecipeResult } from '../../../Models/RecipeResult';
 import { RecipeCard } from '../../../components/recipe-card/recipe-card';
+import { RouterLink } from '@angular/router';
 
 
 @Component({
   selector: 'app-recipes-list',
-  imports: [SearchField, MatIconModule, MatButtonModule, RecipeCard, MatProgressSpinnerModule],
+  imports: [SearchField, MatIconModule, MatButtonModule, RecipeCard, MatProgressSpinnerModule, RouterLink],
   templateUrl: './recipes-list.html',
   styleUrl: './recipes-list.scss'
 })

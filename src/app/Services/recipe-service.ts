@@ -4,24 +4,28 @@ import { StorageService } from './storage.services.common/storage-service';
 import { Recipe } from '../Models/Entities/Recipe';
 import { RecipeResult } from '../Models/RecipeResult';
 import { MOCK_RECIPES } from '../constants/mock-recipes';
+import { RecipeSearch } from '../Models/RecipeSearch';
 
 @Injectable({
     providedIn: 'root',
 })
 export class RecipeService {    
     recipeResult = signal<RecipeResult>(new RecipeResult());
-    currentPage = signal<number>(0);
+    recipeSearch = signal<RecipeSearch>(new RecipeSearch());
+    currentPage = signal<number>(1);
+
+    readonly take: number = 4;
 
     constructor(private storageService: StorageService) {}
 
-    async getAll(): Promise<Recipe[]>{
+    async fetchPage(): Promise<Recipe[]>{
         let result = await this.storageService.getDb().query(`
             SELECT recipe.id, recipe.typeID, recipe.picture, recipe.title, type.name as typeName 
-            FROM ${tableName.recipe} as recipe INNER JOIN ${tableName.type} AS type ON ${tableName.type}.id = typeID`);
+            FROM ${tableName.recipe} as recipe INNER JOIN ${tableName.type} AS type ON ${tableName.type}.id = typeID
+            LIMIT ${this.take} OFFSET ${this.recipeSearch().page - 1}`);
 
         const recipes = result.values as Recipe[]   
-        
-        
+               
         return recipes.map((item) => Recipe.fromSQL(item));
     }
 
@@ -51,7 +55,7 @@ export class RecipeService {
         let recipes: Recipe[]  = [];
 
         if(isNativePlateform){
-            recipes = await this.getAll();
+            recipes = await this.fetchPage();
         }
         else{
             recipes = MOCK_RECIPES

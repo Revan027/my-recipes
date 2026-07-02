@@ -10,12 +10,12 @@ import { RecipeCard } from '../../../components/recipe-card/recipe-card';
 
 
 @Component({
-  selector: 'app-recipes',
+  selector: 'app-recipes-list',
   imports: [SearchField, MatIconModule, MatButtonModule, RecipeCard, MatProgressSpinnerModule],
-  templateUrl: './recipes.html',
-  styleUrl: './recipes.scss'
+  templateUrl: './recipes-list.html',
+  styleUrl: './recipes-list.scss'
 })
-export class Recipes {
+export class RecipesList {
   isAppReady: WritableSignal<boolean>;
   recipeResult: WritableSignal<RecipeResult>;
 
@@ -29,8 +29,6 @@ export class Recipes {
   }
 
   async ngOnInit(){
-    await this.appInitService.init()
-
     this.pictureClass = this.recipeService.getPictureClass();
 
     this.isPageReady.set(true);

@@ -10,19 +10,23 @@ import { MOCK_RECIPES } from '../constants/mock-recipes';
 })
 export class RecipeService {    
     recipeResult = signal<RecipeResult>(new RecipeResult());
+    currentPage = signal<number>(0);
 
     constructor(private storageService: StorageService) {}
 
     async getAll(): Promise<Recipe[]>{
         let result = await this.storageService.getDb().query(`
-            SELECT id, typeID, picture, title, typeName as type.name
-            FROM ${tableName.recipe} INNER JOIN ${tableName.type} AS type ON ${tableName.type}.id = typeID`);
+            SELECT recipe.id, recipe.typeID, recipe.picture, recipe.title, type.name as typeName 
+            FROM ${tableName.recipe} as recipe INNER JOIN ${tableName.type} AS type ON ${tableName.type}.id = typeID`);
 
-        return result.values as Recipe[];
+        const recipes = result.values as Recipe[]   
+        
+        
+        return recipes.map((item) => Recipe.fromSQL(item));
     }
 
     getPictureClass(): { key: number; class: string }[]{
-        const recipesPictureEmpty = this.recipeResult().recipes.filter((item) => item.picture === undefined);
+        const recipesPictureEmpty = this.recipeResult().recipes.filter((item) => !item.picture);
         let count = 1;
         let pictureClass: { key: number; class: string }[] = [];
 

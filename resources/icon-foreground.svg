@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <!-- marque centrée et agrandie pour la zone de sécurité des icônes adaptatives -->
+  <g transform="translate(512 512) scale(1.2) translate(-512 -512)">
+    <!-- couverture du carnet (crème) -->
+    <rect x="312" y="232" width="400" height="560" rx="44" fill="#fdf8ee"/>
+    <!-- couture de la reliure -->
+    <rect x="380" y="256" width="8" height="512" rx="4" fill="#e8dfcd"/>
+
+    <!-- lignes de titre (haut) -->
+    <rect x="416" y="300" width="232" height="18" rx="9" fill="#e6d8c4"/>
+    <rect x="416" y="336" width="150" height="18" rx="9" fill="#e6d8c4"/>
+
+    <!-- lignes de texte (bas) -->
+    <rect x="416" y="704" width="232" height="16" rx="8" fill="#e6d8c4"/>
+    <rect x="416" y="738" width="180" height="16" rx="8" fill="#e6d8c4"/>
+
+    <!-- ruban marque-page -->
+    <path d="M636 232 h44 v128 l-22 -24 -22 24 Z" fill="#a8412a"/>
+
+    <!-- emblème fourchette + cuillère dans un anneau -->
+    <circle cx="512" cy="522" r="128" fill="none" stroke="#bf5333" stroke-width="14"/>
+
+    <!-- cuillère -->
+    <g transform="rotate(-26 512 522)">
+      <ellipse cx="512" cy="456" rx="27" ry="35" fill="#bf5333"/>
+      <rect x="504" y="480" width="16" height="150" rx="8" fill="#bf5333"/>
+    </g>
+
+    <!-- fourchette -->
+    <g transform="rotate(26 512 522)">
+      <rect x="504" y="484" width="16" height="146" rx="8" fill="#bf5333"/>
+      <path d="M488 452 q0 30 12 34 v0 h24 v0 q12 -4 12 -34 v-40 h-8 v34 h-6 v-34 h-8 v34 h-6 v-34 h-8 v34 h-6 v-34 h-8 Z" fill="#bf5333"/>
+    </g>
+  </g>
+</svg>

@@ -1,4 +1,4 @@
-import { Directive, ElementRef, HostListener, Renderer2, signal } from '@angular/core';
+import { Directive, ElementRef, HostListener, Renderer2, signal, ViewChild } from '@angular/core';
 import { RecipeService } from './recipe-service';
 
 @Directive({
@@ -16,6 +16,8 @@ export class SwipeDirective {
 
     constructor(private el: ElementRef<HTMLElement>, private renderer: Renderer2, private recipeService: RecipeService) {}
 
+    @ViewChild('list') list!: ElementRef;
+
     @HostListener('touchmove', ['$event'])
     onMove(e: TouchEvent) {
 
@@ -24,11 +26,8 @@ export class SwipeDirective {
         this.isSwipeBlocked = true;
 
         let clientX = e.changedTouches[0].clientX;
-
-       
-
         const pxMove = this.previousClientX - clientX; //avancement en pixel entre 2 moves
-        const boundary = this.el.nativeElement.scrollWidth - window.innerWidth;
+        const boundary = this.el.nativeElement.scrollWidth - this.windowWidth;
 
         if(this.previousClientX != 0){//si pas de point précédent
             this.totalPxMove = this.totalPxMove + pxMove;//calcul total de l'avancement
@@ -77,12 +76,16 @@ export class SwipeDirective {
        this.previousClientX = clientX;
     }
 
-    findElement(id:number): Element | null{
+    findPageElement(id:number): Element | null{
        return this.el.nativeElement.querySelector("#page-"+id.toString());
     }
 
+    findPageListElement(): Element | null{
+       return this.el.nativeElement;
+    }
+
     handleAdvancement(){
-        const totalPage =  Math.round(this.el.nativeElement.scrollWidth / window.innerWidth);
+        const totalPage =  Math.round(this.el.nativeElement.scrollWidth / this.windowWidth);
         let currentPage = this.recipeService.currentPage();
 
         if(this.currentDirection == this.directions.Next && this.recipeService.currentPage() < totalPage){
@@ -94,7 +97,7 @@ export class SwipeDirective {
     }
 
     next(){
-        this.translateElement(((this.recipeService.currentPage()) * window.innerWidth));// on prend la taille max d'une page
+        this.translateElement(((this.recipeService.currentPage()) *  this.windowWidth));// on prend la taille max d'une page
 
         this.recipeService.currentPage.set(this.recipeService.currentPage() + 1);
     }
@@ -102,7 +105,7 @@ export class SwipeDirective {
     previous(){
         let currentPage = this.recipeService.currentPage();
 
-        this.translateElement(((currentPage - 1) * window.innerWidth) - window.innerWidth); // on prend la taille min d'une page
+        this.translateElement(((currentPage - 1) *  this.windowWidth) - this.windowWidth); // on prend la taille min d'une page
 
         this.recipeService.currentPage.set(currentPage - 1);
     }
@@ -111,5 +114,13 @@ export class SwipeDirective {
         this.totalPxMove = pxMove;//on avance le total
         this.renderer.setStyle(this.el.nativeElement, 'will-change', 'transform')
         this.renderer.setStyle(this.el.nativeElement, 'transform', `translate3d(${-pxMove}px,0,0)`);
+    }
+
+    removeAnimation(){
+        this.renderer.setStyle(this.el.nativeElement, 'transition', 'none');
+    }
+
+    addAnimation(){
+        this.renderer.setStyle(this.el.nativeElement, 'transition', 'transform 0.3s ease-out');
     }
 }

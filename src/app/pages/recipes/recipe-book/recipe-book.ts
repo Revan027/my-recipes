@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, inject, ViewChild, WritableSignal } from '@angular/core';
+import { Component, DestroyRef, ElementRef, inject, signal, ViewChild, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProgressBar } from '../../../components/progress-bar/progress-bar';
@@ -36,11 +36,13 @@ export class RecipeBook {
     this.activatedRoute.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (params) => {
       const id = params.get('id');
       const position = this.recipeResult().recipes.findIndex(x => x.id == (id ?? 0) as number) + 1;
-      const page = this.swipeService.findElement((id ?? 0) as number);
+      const page = this.swipeService.findPageElement((id ?? 0) as number);
 
+      this.swipeService.removeAnimation();
       this.currentPage.set(position);
+      this.swipeService.translateElement((page as HTMLElement).offsetLeft);
 
-      this.swipeService.translateElement((page as HTMLElement).offsetLeft)
+      setTimeout(() =>  this.swipeService.addAnimation(), 400)
     });
   }
 }

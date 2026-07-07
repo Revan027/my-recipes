@@ -40,8 +40,8 @@
     .recipe-pages{
         display: flex;
         position: relative;
-        transition: transform 0.5s ease-out;
-
+        transition: transform 0.3s ease-out;
+    
         .recipe-page{
             flex-basis: 1;
             height: 100dvh;

@@ -3,7 +3,7 @@ import { tableName } from '../constants/table-names';
 import { StorageService } from './storage.services.common/storage-service';
 import { Recipe } from '../Models/Entities/Recipe';
 import { RecipeResult } from '../Models/RecipeResult';
-import { MOCK_RECIPES } from '../constants/mock-recipes';
+import { MOCK_RECIPES, MOCK_RECIPES2 } from '../constants/mock-recipes';
 import { RecipeSearch } from '../Models/RecipeSearch';
 
 @Injectable({
@@ -12,42 +12,27 @@ import { RecipeSearch } from '../Models/RecipeSearch';
 export class RecipeService {    
     recipeResult = signal<RecipeResult>(new RecipeResult());
     recipeSearch = signal<RecipeSearch>(new RecipeSearch());
-    currentPage = signal<number>(1);
 
     readonly take: number = 4;
 
-    constructor(private storageService: StorageService) {}
+    constructor(private storageService: StorageService) {}     
 
     async fetchPage(): Promise<Recipe[]>{
         let result = await this.storageService.getDb().query(`
             SELECT recipe.id, recipe.typeID, recipe.picture, recipe.title, type.name as typeName 
             FROM ${tableName.recipe} as recipe INNER JOIN ${tableName.type} AS type ON ${tableName.type}.id = typeID
-            LIMIT ${this.take} OFFSET ${this.recipeSearch().page - 1}`);
+            LIMIT ${this.take} OFFSET ${(this.recipeSearch().page - 1) * this.take}`);
 
         const recipes = result.values as Recipe[]   
                
         return recipes.map((item) => Recipe.fromSQL(item));
     }
 
-    getPictureClass(): { key: number; class: string }[]{
-        const recipesPictureEmpty = this.recipeResult().recipes.filter((item) => !item.picture);
-        let count = 1;
-        let pictureClass: { key: number; class: string }[] = [];
+    async countAllRecipe(): Promise<number>{
+        let result = await this.storageService.getDb().query(`
+            SELECT COUNT(*) FROM ${tableName.recipe}`);
 
-        recipesPictureEmpty.forEach((item, index) => {
-            if(count > 6){
-                count = 1;
-            }
-        
-            pictureClass.push({key: item.id, class: `placeholder-${count}`});
-            count++;
-        });
-
-        return pictureClass;
-    }
-
-    findPictureClass(pictureClass: { key: number; class: string }[], id: number){
-        return pictureClass.find((item) => item.key == id)?.class ?? "";
+        return result.values != undefined ? result.values[0] as number : 0;                 
     }
 
     async loadRecipeResult(isNativePlateform: boolean): Promise<RecipeResult>

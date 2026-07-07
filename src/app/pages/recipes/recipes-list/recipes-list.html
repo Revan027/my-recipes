@@ -18,7 +18,7 @@
             <mat-icon>add</mat-icon>
         </button>
 
-        <div class="recipes-card-list">  
+        <div #list class="recipes-card-list">  
             @for(item of recipeResult().recipes; track item.id){
                 <div class="recipe-card">
                     <app-recipe-card [routerLink]="['recipes', item.id]" [recipe]="item" [pictureClass]="findPictureClass(item.id)"></app-recipe-card>
@@ -28,8 +28,14 @@
                 <span>Aucune recette</span>
             }
         </div>
+
+        @if(!this.isLoaded()){
+            <div class="spinner-wrapper">
+                <mat-spinner class="spinner" diameter="30"></mat-spinner>
+            </div>
+        }
     </div>
 }
 @else{
-    <mat-spinner class="spinner"></mat-spinner>
+    <mat-spinner class="spinner spinner--app"></mat-spinner>
 }

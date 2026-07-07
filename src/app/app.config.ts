@@ -2,7 +2,7 @@ import { ApplicationConfig, ErrorHandler, inject, provideAppInitializer, provide
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
-import { AppInitService } from './Services/app-init-service';
+import { AppInitService } from './Services/app-init.service';
 import { ErrorService } from './Services/error.service';
 
 export const appConfig: ApplicationConfig = {

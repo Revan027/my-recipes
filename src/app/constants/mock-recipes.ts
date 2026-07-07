@@ -285,3 +285,31 @@ export const MOCK_RECIPES: Recipe[] = [
     ingredients: MOCK_INGREDIENTS.filter((ingredient) => ingredient.recipeID === 13),
   },
 ];
+export const MOCK_RECIPES2: Recipe[] = [
+  {
+    id: 14,
+    typeID: 1,
+    type: MOCK_TYPES[0],
+    title: 'Velouté de potimarron',
+    steps: MOCK_STEPS.filter((step) => step.recipeID === 1),
+    ingredients: MOCK_INGREDIENTS.filter((ingredient) => ingredient.recipeID === 1),
+  },
+  {
+    id: 15,
+    typeID: 2,
+    type: MOCK_TYPES[1],
+    title: 'Bœuf bourguignon',
+    picture: 'assets/images/recipes/boeuf-bourguignon.jpg',
+    steps: MOCK_STEPS.filter((step) => step.recipeID === 2),
+    ingredients: MOCK_INGREDIENTS.filter((ingredient) => ingredient.recipeID === 2),
+  },
+  {
+    id: 16,
+    typeID: 2,
+    type: MOCK_TYPES[1],
+    title: 'Risotto aux champignons',
+    steps: MOCK_STEPS.filter((step) => step.recipeID === 3),
+    ingredients: MOCK_INGREDIENTS.filter((ingredient) => ingredient.recipeID === 3),
+  },
+
+];

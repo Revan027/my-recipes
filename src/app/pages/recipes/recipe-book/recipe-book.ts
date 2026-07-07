@@ -7,6 +7,7 @@ import { RecipeResult } from '../../../Models/RecipeResult';
 import { RecipeService } from '../../../Services/recipe-service';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RecipeBookService } from '../../../Services/recipe-book.service';
 
 @Component({
   selector: 'app-recipe-book',
@@ -21,11 +22,11 @@ export class RecipeBook {
   @ViewChild(SwipeDirective) swipeService!: SwipeDirective;
 
   recipeResult: WritableSignal<RecipeResult>;
-  currentPage: WritableSignal<number>;
+  currentBookPage: WritableSignal<number>;
 
-  constructor(private recipeService: RecipeService, private activatedRoute: ActivatedRoute){
+  constructor(private recipeService: RecipeService, private recipeBookService: RecipeBookService, private activatedRoute: ActivatedRoute){
     this.recipeResult = this.recipeService.recipeResult;
-    this.currentPage = this.recipeService.currentPage;
+    this.currentBookPage = this.recipeBookService.currentBookPage;
   }
 
   async ngOnInit(){  
@@ -39,7 +40,7 @@ export class RecipeBook {
       const page = this.swipeService.findPageElement((id ?? 0) as number);
 
       this.swipeService.removeAnimation();
-      this.currentPage.set(position);
+      this.currentBookPage.set(position);
       this.swipeService.translateElement((page as HTMLElement).offsetLeft);
 
       setTimeout(() =>  this.swipeService.addAnimation(), 400)

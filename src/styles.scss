@@ -69,11 +69,23 @@ body {
   color: var(--color-secondary-text);
 }
 
-// DIVERS
-.spinner{
+.text-center{
+  text-align: center;
+}
+
+// SPINNER
+.spinner--app{
   display: flex;
   justify-content: center;
   width: 100%!important;
   height: 100%!important;
+}
+
+.spinner-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.spinner {
   --mat-progress-spinner-active-indicator-color: var(--color-accent);
 }

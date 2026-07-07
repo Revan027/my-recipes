@@ -1,5 +1,5 @@
-import { Directive, ElementRef, HostListener, Renderer2, signal, ViewChild } from '@angular/core';
-import { RecipeService } from './recipe-service';
+import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
+import { RecipeBookService } from './recipe-book.service';
 
 @Directive({
     selector: '[appSwipe]',
@@ -14,9 +14,7 @@ export class SwipeDirective {
     private readonly directions = {Next: "NEXT", Prev: "PREV"};
     private readonly windowWidth =  window.innerWidth;
 
-    constructor(private el: ElementRef<HTMLElement>, private renderer: Renderer2, private recipeService: RecipeService) {}
-
-    @ViewChild('list') list!: ElementRef;
+    constructor(private el: ElementRef<HTMLElement>, private renderer: Renderer2, private recipeBookService: RecipeBookService) {}
 
     @HostListener('touchmove', ['$event'])
     onMove(e: TouchEvent) {
@@ -86,28 +84,28 @@ export class SwipeDirective {
 
     handleAdvancement(){
         const totalPage =  Math.round(this.el.nativeElement.scrollWidth / this.windowWidth);
-        let currentPage = this.recipeService.currentPage();
+        let currentBookPage = this.recipeBookService.currentBookPage();
 
-        if(this.currentDirection == this.directions.Next && this.recipeService.currentPage() < totalPage){
+        if(this.currentDirection == this.directions.Next && this.recipeBookService.currentBookPage() < totalPage){
            this.next();
         }
-        else if(this.currentDirection == this.directions.Prev && currentPage > 1){
+        else if(this.currentDirection == this.directions.Prev && currentBookPage > 1){
             this.previous();
         }
     }
 
     next(){
-        this.translateElement(((this.recipeService.currentPage()) *  this.windowWidth));// on prend la taille max d'une page
+        this.translateElement(((this.recipeBookService.currentBookPage()) *  this.windowWidth));// on prend la taille max d'une page
 
-        this.recipeService.currentPage.set(this.recipeService.currentPage() + 1);
+        this.recipeBookService.currentBookPage.set(this.recipeBookService.currentBookPage() + 1);
     }
 
     previous(){
-        let currentPage = this.recipeService.currentPage();
+        let currentBookPage = this.recipeBookService.currentBookPage();
 
-        this.translateElement(((currentPage - 1) *  this.windowWidth) - this.windowWidth); // on prend la taille min d'une page
+        this.translateElement(((currentBookPage - 1) *  this.windowWidth) - this.windowWidth); // on prend la taille min d'une page
 
-        this.recipeService.currentPage.set(currentPage - 1);
+        this.recipeBookService.currentBookPage.set(currentBookPage - 1);
     }
 
     translateElement(pxMove: number) {

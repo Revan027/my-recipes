@@ -7,8 +7,8 @@
 
 @import "../public/css/fonts.scss";
 @import "../public/css/colors.scss";
-@import "../public/css/inputs.scss";
 @import "../public/css/buttons.scss";
+
 html {
   height: 100%;
   @include mat.theme(
@@ -41,14 +41,39 @@ body {
   height: 100%;
 }
 
+// ESPACEMENTS
 .content-padding{
   padding: 20px 20px;
 }
 
-.kicker-text{
+.mb-1{
+  margin-bottom: 10px;
+}
+
+.mb-2{
+  margin-bottom: 20px;
+}
+
+// TEXTES
+.kicker{
   text-transform: uppercase;
   color: var(--color-accent);
   font-size: var(--font-size-xs);
   font-weight: 700;
   letter-spacing: 0.20em;
+}
+
+.meta{
+  font-weight: 400;
+  font-size: var(--font-size-xs);
+  color: var(--color-secondary-text);
+}
+
+// DIVERS
+.spinner{
+  display: flex;
+  justify-content: center;
+  width: 100%!important;
+  height: 100%!important;
+  --mat-progress-spinner-active-indicator-color: var(--color-accent);
 }

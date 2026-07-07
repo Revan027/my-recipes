@@ -5,15 +5,11 @@ button{
   font-size: var(--font-size-lg)!important;
 }
 
-.btn-add-float{
+.btn--fab{
   position: fixed!important;
   bottom: 30px;
   right: 20px;
   z-index: 9999;
-}
-
-.btn-back{
-  --mat-fab-container-shape: 50%;
 }
 
 .btn-fab--accent {
@@ -29,4 +25,8 @@ button{
   --mat-fab-hover-state-layer-opacity: 0.8;
   --mat-fab-pressed-state-layer-opacity: 0.8;
   --mat-fab-focus-state-layer-opacity: 0.8;
+}
+
+.btn-back{
+  --mat-fab-container-shape: 50%;
 }

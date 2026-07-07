@@ -1,0 +1,54 @@
+<div class="recipe-book">
+    <div class="action-bar">
+        <div class="action-bar-list">
+            <div class="action-bar-item">
+                <button matFab class="btn-back btn-fab--empty">
+                    <mat-icon>navigate_before</mat-icon>
+                </button>
+            </div>
+
+            <div class="action-bar-item progress-bar-item">
+                <app-progress-bar [current]="currentPage()" [max]="recipeResult().recipes.length"></app-progress-bar>
+            </div>
+
+            <div class="action-bar-item">
+                <button matFab extended class="btn-fab--empty">
+                    Modifier
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div #list appSwipe class="recipe-pages">
+         @for(item of recipeResult().recipes; track item.id){
+            <div [id]="`page-${item.id}`" class="recipe-page">
+                <div class="recipe-picture-wrapper">
+                    <div class="recipe-picture"></div>
+                </div>
+
+                <div class="recipe-content">
+                    <div class="content-padding">
+                        <div class="kicker mb-1">
+                            {{item.type.name}}
+                        </div>
+
+                        <div class="mb-1">
+                            <h2>{{item.title}}</h2>
+                        </div>
+
+                        <div class="recipe-ingredients">
+                        
+                        </div>
+
+                        <div class="recipe-steps">
+                        
+                        </div>
+                    </div>   
+                </div>
+            </div>
+        }
+        @empty {
+            <span>Aucune recette</span>
+        }
+    </div>
+</div>

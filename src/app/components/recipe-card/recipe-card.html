@@ -1,0 +1,24 @@
+<div class="card">
+  <div class="card-header {{pictureClass()}}">
+      @if(recipe().picture){
+        <img class="card-image" loading="lazy" src="data:image/png;base64,"/>
+      }
+      @else{
+        <div class="card-placeholder-picture"></div>
+      } 
+  </div>
+
+  <div class="card-content">
+    <div class="card-title">
+      <h3>{{recipe().title}}</h3>
+    </div>
+  </div>
+
+  <div class="card_footer">
+    <div class="card-meta">
+      <div class="meta">
+        {{recipe().type.name}}
+      </div>
+    </div>
+  </div>
+</div>

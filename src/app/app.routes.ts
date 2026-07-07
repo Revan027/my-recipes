@@ -1,11 +1,10 @@
 import { Routes } from '@angular/router';
-
-import { Search } from './pages/search/search';
-import { Recipes } from './pages/recipes/recipes/recipes';
+import { RecipesList } from './pages/recipes/recipes-list/recipes-list';
+import { Loading } from './pages/loading/loading';
 
 export const routes: Routes = [
-  { path: '', component: Recipes }, // route par default
-  { path: 'search', component: Search },
+  { path: '', component: RecipesList }, // route par default
+  { path: 'loading', component: Loading },
   {
     path: 'recipes',
     loadChildren: () => import('./pages/recipes/recipes.routes').then((m) => m.routes)

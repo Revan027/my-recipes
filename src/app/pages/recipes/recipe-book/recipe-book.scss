@@ -1,0 +1,69 @@
+.recipe-book{
+    overflow-x: hidden;
+
+    // retrait de la barre de scroll native
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    &{
+        -ms-overflow-style: none;
+        scrollbar-width: none
+    }
+
+    .action-bar{
+        position: fixed;
+        top: 20px;
+        width: 100%;
+        z-index: 9999;
+        
+        .action-bar-list{
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            padding: 0 10px;
+
+            .progress-bar-item{
+                box-shadow: 0 4px 12px -4px rgba(0,0,0,0.3);
+                background: rgba(255,255,255,0.86);
+                padding: 20px;
+                border-radius: 20px;
+
+                &.action-bar-item {
+                    flex-grow: 1;
+                    align-content: center;
+                }
+            }
+        }
+    }
+
+    .recipe-pages{
+        display: flex;
+        position: relative;
+        transition: transform 0.3s ease-out;
+    
+        .recipe-page{
+            flex-basis: 1;
+            height: 100dvh;
+            flex-shrink: 0;
+            flex-grow: 0;
+            flex-basis: 100%;
+
+            .recipe-picture-wrapper{
+                background-color: var(--color-placeholder-1);
+
+                .recipe-picture{
+                    background: repeating-linear-gradient(135deg, var(--color-lines) 0px 2px,transparent 2px 10px);
+                    height: 50dvh;
+                }
+            }
+
+            .recipe-content{
+                border-radius: 20px;
+                background-color: var(--color-surface);
+                border: 1px solid var(--color-surface);
+                transform: translateY(-20px);
+            }
+        }
+    }
+}

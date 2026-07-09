@@ -8,6 +8,7 @@ import { RecipeBookService } from './recipe-book.service';
 export class SwipeDirective {
     private startClientX: number = 0;
     private previousClientX: number = 0;
+    private previousClientY: number = 0;
     private isSwipeBlocked = false;
     private totalPxMove: number = 0;
     private currentDirection: string = "";
@@ -18,14 +19,15 @@ export class SwipeDirective {
 
     @HostListener('touchmove', ['$event'])
     onMove(e: TouchEvent) {
-
-        if(this.isSwipeBlocked) return;
+       /* if(this.isSwipeBlocked) return;
     
         this.isSwipeBlocked = true;
 
         let clientX = e.changedTouches[0].clientX;
         const pxMove = this.previousClientX - clientX; //avancement en pixel entre 2 moves
         const boundary = this.el.nativeElement.scrollWidth - this.windowWidth;
+
+        // on garde 4 points 
 
         if(this.previousClientX != 0){//si pas de point précédent
             this.totalPxMove = this.totalPxMove + pxMove;//calcul total de l'avancement
@@ -37,12 +39,11 @@ export class SwipeDirective {
             else{
                 this.translateElement(this.totalPxMove);
             }
-            
         }
 
         this.setPreviousClientX(clientX);
 
-        this.isSwipeBlocked = false;
+        this.isSwipeBlocked = false;*/
     }
 
     @HostListener('touchstart', ['$event'])
@@ -52,8 +53,12 @@ export class SwipeDirective {
 
     @HostListener('touchend', ['$event'])
     onMoveEnd(e: TouchEvent) {
-         this.setDirection(e.changedTouches[0].clientX);
-       this.fecthPage();
+        this.setDirection(e.changedTouches[0].clientX);
+        
+        // Si le swipe est un swipe horizontal
+        if( (this.startClientX >  e.changedTouches[0].clientX && this.startClientX - e.changedTouches[0].clientX > 50) ||
+            (this.startClientX <  e.changedTouches[0].clientX  && this.startClientX - e.changedTouches[0].clientX < 50))
+            this.fecthPage();
     }
 
     private fecthPage(){

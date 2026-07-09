@@ -58,9 +58,13 @@ body {
 .kicker{
   text-transform: uppercase;
   color: var(--color-accent);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-md);
   font-weight: 700;
   letter-spacing: 0.20em;
+}
+
+.kicker--main-text{
+  color: var(--color-main-text);
 }
 
 .meta{
@@ -88,4 +92,20 @@ body {
 
 .spinner {
   --mat-progress-spinner-active-indicator-color: var(--color-accent);
+}
+
+//CHIPS
+.chips{
+  border-radius: 30px;
+  padding: 5px 10px;
+  border: 1px solid var(--color-lines);
+  font-size: var(--font-size-lg);
+  background-color: white;
+}
+
+// HR
+hr{
+  margin: 20px 0 20px 0;
+  width: 40px;
+  border: 1px solid var( --color-accent);
 }

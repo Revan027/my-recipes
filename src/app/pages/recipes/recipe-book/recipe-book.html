@@ -20,8 +20,8 @@
     </div>
 
     <div #list appSwipe class="recipe-pages">
-         @for(item of recipeResult().recipes; track item.id){
-            <div [id]="`page-${item.id}`" class="recipe-page">
+         @for(recipe of recipeResult().recipes; track recipe.id){
+            <div [id]="`page-${recipe.id}`" class="recipe-page">
                 <div class="recipe-picture-wrapper">
                     <div class="recipe-picture"></div>
                 </div>
@@ -29,19 +29,38 @@
                 <div class="recipe-content">
                     <div class="content-padding">
                         <div class="kicker mb-1">
-                            {{item.type.name}}
+                            {{recipe.type.name}}
                         </div>
 
                         <div class="mb-1">
-                            <h2>{{item.title}}</h2>
+                            <h2>{{recipe.title}}</h2>
                         </div>
 
-                        <div class="recipe-ingredients">
-                        
+                        <hr/>
+
+                        <div class="recipe-ingredients mb-2">                        
+                            @for(ingredient of recipe.ingredients; track ingredient.id){
+                                <div class="chips">
+                                    {{ingredient.name}}
+                                </div>
+                            }
                         </div>
 
                         <div class="recipe-steps">
-                        
+                            <div>                    
+                                @for(step of recipe.steps; track step.id){
+                                    <div class="recipe-step mb-2">
+                                        <div class="kicker">
+                                            {{step.position | number:'2.0-0'}}
+                                        </div>
+
+                                        <div>
+                                            <div class="kicker kicker--main-text mb-1">  {{step.title}}</div>
+                                            <div class="step-content">  {{step.content}}</div>
+                                        </div>   
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>   
                 </div>

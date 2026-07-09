@@ -3,7 +3,6 @@ import { tableName } from '../constants/table-names';
 import { StorageService } from './storage.services.common/storage-service';
 import { Recipe } from '../Models/Entities/Recipe';
 import { RecipeResult } from '../Models/RecipeResult';
-import { MOCK_RECIPES } from '../constants/mock-recipes';
 import { RecipeSearch } from '../Models/RecipeSearch';
 
 @Injectable({
@@ -18,42 +17,52 @@ export class RecipeService {
     constructor(private storageService: StorageService) {}     
 
     async fetchPage(): Promise<Recipe[]>{
-        const searchText = this.recipeSearch().searchText ?? "";
-
-        let result = await this.storageService.getDb().query(`
-            SELECT recipe.id, recipe.typeID, recipe.picture, recipe.title, type.name as typeName 
-            FROM ${tableName.recipe} as recipe INNER JOIN ${tableName.type} AS type ON ${tableName.type}.id = typeID
-            WHERE ${searchText.length > 0 ? 'FALSE' : 'TRUE'} OR lower(recipe.title) LIKE '%${searchText.toLowerCase()}%'
+        let recipesResult = await this.storageService.getDb().query(`
+            SELECT 
+                recipe.id, recipe.typeID, recipe.picture, recipe.title,
+                type.name as typeName
+            FROM ${tableName.recipe} as recipe 
+            INNER JOIN ${tableName.type} AS type ON ${tableName.type}.id = typeID
+            ${this.getQuerySearch()}
             LIMIT ${this.take} OFFSET ${(this.recipeSearch().page - 1) * this.take}`);
 
-        const recipes = result.values as Recipe[]   
+        //todo en promise all
+        let recipes = recipesResult.values?.map((item) => Recipe.createRecipe(item));
 
-        return recipes.map((item) => Recipe.fromSQL(item));
+        const recipeIDs = recipes?.map((item) => item.id);
+
+        // on récupère les étapes de chaque recette
+        let stepsResult = await this.storageService.getDb().query(`
+            SELECT
+                step.id as stepID, step.content as stepContent, step.position as stepPosition, step.title as stepTitle, step.recipeID
+            FROM ${tableName.step} as step
+            WHERE step.recipeID IN (${recipeIDs})`);
+
+        let ingredientsResult = await this.storageService.getDb().query(`
+            SELECT
+                ingredient.id as ingredientID, ingredient.name as ingredientName, ingredient.recipeID
+            FROM ${tableName.ingredient} as ingredient
+            WHERE ingredient.recipeID IN (${recipeIDs})`);
+        
+        Recipe.setSteps(stepsResult.values ?? [], recipes ?? []);
+        Recipe.setIngredients(ingredientsResult.values ?? [], recipes ?? []);
+
+        ///alert(JSON.stringify(recipes, null, 2));
+        return recipes ?? [];
     }
 
-    async countAllRecipe(): Promise<number>{
+    private getQuerySearch(){
+        const searchText = this.recipeSearch().searchText ?? "";
+
+        return `WHERE ${searchText.length > 0 ? 'FALSE' : 'TRUE'} OR lower(recipe.title) LIKE '%${searchText.toLowerCase()}%'`
+    }
+
+    async countQueryResult(): Promise<number>{
         let result = await this.storageService.getDb().query(`
-            SELECT COUNT(*) FROM ${tableName.recipe}`);
+            SELECT COUNT(*) as countTotal
+            FROM ${tableName.recipe}
+            ${this.getQuerySearch()}`);
 
-        return result.values != undefined ? result.values[0] as number : 0;                 
-    }
-
-    async loadRecipeResult(isNativePlateform: boolean): Promise<RecipeResult>
-    {
-        let recipes: Recipe[]  = [];
-
-        if(isNativePlateform){
-            recipes = await this.fetchPage();
-        }
-        else{
-            recipes = MOCK_RECIPES
-        }
-
-        const recipeResult = new RecipeResult();
-        recipeResult.recipes = recipes;
-
-        this.recipeResult.set(recipeResult);
-
-        return recipeResult;
+        return result.values != undefined ? result.values[0].countTotal as number : 0;                 
     }
 }

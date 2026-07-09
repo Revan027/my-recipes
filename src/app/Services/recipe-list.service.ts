@@ -48,6 +48,9 @@ export class RecipeListService {
         }
         else{
             recipeResult.recipes = recipes;
+
+            // premiere page on va chercher le total de resultat de la requete
+            recipeResult.countTotal = await this.recipeService.countQueryResult();
         }
 
         this.recipeService.recipeResult.set(recipeResult);

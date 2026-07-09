@@ -8,11 +8,11 @@ import { RecipeService } from '../../../Services/recipe-service';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RecipeBookService } from '../../../Services/recipe-book.service';
-import { Location } from '@angular/common';
+import { Location, DecimalPipe  } from '@angular/common';
 
 @Component({
   selector: 'app-recipe-book',
-  imports: [MatIconModule, MatButtonModule, ProgressBar, SwipeDirective],
+  imports: [MatIconModule, MatButtonModule, ProgressBar, SwipeDirective, DecimalPipe, DecimalPipe],
   templateUrl: './recipe-book.html',
   styleUrl: './recipe-book.scss'
 })

@@ -14,7 +14,7 @@
             </form>        
         </div>
 
-        <div class="meta mb-1">6 recettes</div>
+        <div class="meta mb-1">{{recipeResult().countTotal}} recette{{recipeResult().countTotal > 1 ? "s" : "" }}</div>
 
         <button matFab class="btn--fab btn-fab--accent">
             <mat-icon>add</mat-icon>

@@ -12,8 +12,8 @@ export class Recipe {
   type: Type = new Type();
   steps: Step[] = [];
   ingredients: Ingredient[] = [];
-
-  static fromSQL(data: any): Recipe {
+  
+  static createRecipe(data: any): Recipe {
     const recipe = new Recipe();
     recipe.id = data.id;
     recipe.typeID = data.typeID;
@@ -24,5 +24,29 @@ export class Recipe {
     recipe.ingredients = [];
 
     return recipe;
+  }
+
+  static setSteps(datas: any[], recipes: Recipe[]): void {
+    datas.map((data) => {
+      let recipe = recipes.find((recipe) => recipe.id == data.recipeID);
+      let step = new Step();
+      step.id = data.stepID;
+      step.content = data.stepContent;
+      step.position = data.stepPosition;
+      step.title = data.stepTitle;
+
+      recipe?.steps.push(step);
+    });
+  }
+
+  static setIngredients(datas: any[], recipes: Recipe[]): void {
+    datas.map((data) => {
+      let recipe = recipes.find((recipe) => recipe.id == data.recipeID);
+      let ingredient = new Ingredient();
+      ingredient.id = data.ingredientID;
+      ingredient.name = data.ingredientName;
+
+      recipe?.ingredients.push(ingredient);
+    }); 
   }
 }

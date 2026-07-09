@@ -3,5 +3,4 @@ export class RecipeSearch {
 
   searchText?: string;
   page: number = 1;
-  
 }

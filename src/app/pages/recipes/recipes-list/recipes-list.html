@@ -9,7 +9,9 @@
         </div>
 
         <div class="recipes-search mb-2">
-            <app-search-field></app-search-field>
+            <form [formGroup]="formGroup" novalidate>
+                <app-search-field [searchControl]="searchControl()" (searchText)="onSubmit($event)"></app-search-field>
+            </form>        
         </div>
 
         <div class="meta mb-1">6 recettes</div>
@@ -29,7 +31,7 @@
             }
         </div>
 
-        @if(!this.isLoaded()){
+        @if(this.isLoading()){
             <div class="spinner-wrapper">
                 <mat-spinner class="spinner" diameter="30"></mat-spinner>
             </div>

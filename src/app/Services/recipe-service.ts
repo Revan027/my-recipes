@@ -3,7 +3,7 @@ import { tableName } from '../constants/table-names';
 import { StorageService } from './storage.services.common/storage-service';
 import { Recipe } from '../Models/Entities/Recipe';
 import { RecipeResult } from '../Models/RecipeResult';
-import { MOCK_RECIPES, MOCK_RECIPES2 } from '../constants/mock-recipes';
+import { MOCK_RECIPES } from '../constants/mock-recipes';
 import { RecipeSearch } from '../Models/RecipeSearch';
 
 @Injectable({
@@ -18,13 +18,16 @@ export class RecipeService {
     constructor(private storageService: StorageService) {}     
 
     async fetchPage(): Promise<Recipe[]>{
+        const searchText = this.recipeSearch().searchText ?? "";
+
         let result = await this.storageService.getDb().query(`
             SELECT recipe.id, recipe.typeID, recipe.picture, recipe.title, type.name as typeName 
             FROM ${tableName.recipe} as recipe INNER JOIN ${tableName.type} AS type ON ${tableName.type}.id = typeID
+            WHERE ${searchText.length > 0 ? 'FALSE' : 'TRUE'} OR lower(recipe.title) LIKE '%${searchText.toLowerCase()}%'
             LIMIT ${this.take} OFFSET ${(this.recipeSearch().page - 1) * this.take}`);
 
         const recipes = result.values as Recipe[]   
-               
+
         return recipes.map((item) => Recipe.fromSQL(item));
     }
 

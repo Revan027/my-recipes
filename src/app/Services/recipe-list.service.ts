@@ -6,17 +6,30 @@ import { RecipeService } from './recipe-service';
 })
 export class RecipeListService {    
     currentBookPage = signal<number>(1);
-    isLoaded = signal<boolean>(true);
-    isFinished = signal<boolean>(false);
+    isLoading = signal<boolean>(false);
+    hasMore = signal<boolean>(true);
 
     constructor(private recipeService: RecipeService) {}   
-    
+
+    loadSearch(searchText: string){
+        if(searchText != "" && searchText.length < 3)
+            return;
+
+        this.hasMore.set(true); 
+
+        let recipeSearch = this.recipeService.recipeSearch();
+        recipeSearch.searchText = searchText;
+        recipeSearch.page = 0;
+
+        this.recipeService.recipeSearch.set(recipeSearch);
+    }
+
     async loadNextPage(): Promise<void>{
-        if(this.isFinished()){
+        if(!this.hasMore()){
             return;
         }
 
-        this.isLoaded.set(false);
+        this.isLoading.set(true);
         
         let recipeSearch = this.recipeService.recipeSearch();
         recipeSearch.page++; 
@@ -24,18 +37,21 @@ export class RecipeListService {
         this.recipeService.recipeSearch.set(recipeSearch);
     
         const recipes = await this.recipeService.fetchPage();
+        const recipeResult = this.recipeService.recipeResult();
 
         if(recipes.length == 0){
-            this.isLoaded.set(true); 
-            this.isFinished.set(true); 
-            return;
+            this.hasMore.set(false); 
         }
 
-        const recipeResult = this.recipeService.recipeResult();
-        recipeResult.recipes = recipeResult.recipes.concat(recipes);
+        if(recipeSearch.page > 1){
+            recipeResult.recipes = recipeResult.recipes.concat(recipes);
+        }
+        else{
+            recipeResult.recipes = recipes;
+        }
 
         this.recipeService.recipeResult.set(recipeResult);
-        this.isLoaded.set(true); 
+        this.isLoading.set(false); 
     }
 
     getPictureClass(): { key: number; class: string }[]{

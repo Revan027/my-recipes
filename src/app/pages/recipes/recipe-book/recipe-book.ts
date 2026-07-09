@@ -1,4 +1,4 @@
-import { Component, DestroyRef, ElementRef, inject, signal, ViewChild, WritableSignal } from '@angular/core';
+import { Component, DestroyRef, inject, ViewChild, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProgressBar } from '../../../components/progress-bar/progress-bar';
@@ -8,6 +8,7 @@ import { RecipeService } from '../../../Services/recipe-service';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RecipeBookService } from '../../../Services/recipe-book.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-recipe-book',
@@ -18,13 +19,17 @@ import { RecipeBookService } from '../../../Services/recipe-book.service';
 export class RecipeBook {
   private destroyRef = inject(DestroyRef);
 
-  @ViewChild('list') list!: ElementRef<HTMLDivElement>;
   @ViewChild(SwipeDirective) swipeService!: SwipeDirective;
 
   recipeResult: WritableSignal<RecipeResult>;
   currentBookPage: WritableSignal<number>;
 
-  constructor(private recipeService: RecipeService, private recipeBookService: RecipeBookService, private activatedRoute: ActivatedRoute){
+  constructor(
+    private recipeService: RecipeService, 
+    private recipeBookService: RecipeBookService, 
+    private activatedRoute: ActivatedRoute,
+    private location: Location)
+  {
     this.recipeResult = this.recipeService.recipeResult;
     this.currentBookPage = this.recipeBookService.currentBookPage;
   }
@@ -33,7 +38,6 @@ export class RecipeBook {
   }
 
   ngAfterViewInit(){
-  
     this.activatedRoute.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (params) => {
       const id = params.get('id');
       const position = this.recipeResult().recipes.findIndex(x => x.id == (id ?? 0) as number) + 1;
@@ -43,7 +47,11 @@ export class RecipeBook {
       this.currentBookPage.set(position);
       this.swipeService.translateElement((page as HTMLElement).offsetLeft);
 
-      setTimeout(() =>  this.swipeService.addAnimation(), 400)
+      setTimeout(() =>  this.swipeService.addAnimation(), 400); //on laisse le temps au css de faire le transform avant de remettre l'animation
     });
+  }
+
+  onReturnBack(){
+    this.location.back()
   }
 }

@@ -12,7 +12,7 @@
             </div>
 
             <div class="action-bar-item">
-                <button matFab extended class="btn-fab--empty">
+                <button matFab extended class="btn-fab--empty" [routerLink]="['edit']">
                     Modifier
                 </button>
             </div>
@@ -27,43 +27,8 @@
                 </div>
 
                 <div class="recipe-content">
-                    <div class="content-padding">
-                        <div class="kicker mb-1">
-                            {{recipe.type.name}}
-                        </div>
-
-                        <div class="mb-1">
-                            <h2>{{recipe.title}}</h2>
-                        </div>
-
-                        <hr/>
-
-                        <div class="recipe-ingredients mb-2">                        
-                            @for(ingredient of recipe.ingredients; track ingredient.id){
-                                <div class="chips">
-                                    {{ingredient.name}}
-                                </div>
-                            }
-                        </div>
-
-                        <div class="recipe-steps">
-                            <div>                    
-                                @for(step of recipe.steps; track step.id){
-                                    <div class="recipe-step mb-2">
-                                        <div class="kicker">
-                                            {{step.position | number:'2.0-0'}}
-                                        </div>
-
-                                        <div>
-                                            <div class="kicker kicker--main-text mb-1">  {{step.title}}</div>
-                                            <div class="step-content">  {{step.content}}</div>
-                                        </div>   
-                                    </div>
-                                }
-                            </div>
-                        </div>
-                    </div>   
-                </div>
+                    <app-recipe-page [recipe]="recipe"></app-recipe-page>
+                </div>   
             </div>
         }
         @empty {

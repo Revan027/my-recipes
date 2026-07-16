@@ -7,8 +7,11 @@ import { RecipeBookService } from './recipe-book.service';
 })
 export class SwipeDirective {
     private startClientX: number = 0;
+
+    private moveLineCoord: {X: number, Y: number}[] = [];
+    private horizontalLineCoord: {X: number, Y: number}[] = [];
+
     private previousClientX: number = 0;
-    private previousClientY: number = 0;
     private isSwipeBlocked = false;
     private totalPxMove: number = 0;
     private currentDirection: string = "";
@@ -49,19 +52,45 @@ export class SwipeDirective {
     @HostListener('touchstart', ['$event'])
     onMoveStart(e: TouchEvent) {
         this.startClientX = e.changedTouches[0].clientX;
+
+        this.moveLineCoord[0] = {X: Math.round(this.startClientX), Y: Math.round(e.changedTouches[0].clientY)};
     }
 
     @HostListener('touchend', ['$event'])
     onMoveEnd(e: TouchEvent) {
         this.setDirection(e.changedTouches[0].clientX);
+
+        this.moveLineCoord[1] = {X: Math.round(e.changedTouches[0].clientX), Y: Math.round(e.changedTouches[0].clientY)};
+
+        this.horizontalLineCoord[0] = {X: Math.round(e.changedTouches[0].clientX + 30), Y: Math.round(e.changedTouches[0].clientY )};
+        this.horizontalLineCoord[1] = {X: Math.round(e.changedTouches[0].clientX), Y: Math.round(e.changedTouches[0].clientY)};
         
-        // Si le swipe est un swipe horizontal
-        if( (this.startClientX >  e.changedTouches[0].clientX && this.startClientX - e.changedTouches[0].clientX > 50) ||
-            (this.startClientX <  e.changedTouches[0].clientX  && this.startClientX - e.changedTouches[0].clientX < 50))
-            this.fecthPage();
+        if(!this.isVerticalSwipe())
+            this.fetchPage();
     }
 
-    private fecthPage(){
+    private isVerticalSwipe(){
+        // Calcul des coefficient directeur des droites X et Y
+        const cMoveLine = this.getSlope(this.moveLineCoord[0], this.moveLineCoord[1]);  
+        const cHorizontalLine = this.getSlope(this.horizontalLineCoord[1], this.horizontalLineCoord[0]);
+
+        // Calclul de l'angle
+        let corner =  this.getCorner(cMoveLine, cHorizontalLine);
+
+        corner = corner < 0 ? corner * - 1 : corner;
+
+        return corner > 50;
+    }
+
+    private getSlope(coordB: any, coordA: any){ 
+        return (coordA.Y - coordB.Y) / (coordA.X - coordB.X);
+    }
+
+    private getCorner(m2: number, m1: number){
+        return (Math.atan(( m2 - m1) / ( 1 + (m2 * m1))) * 180) / Math.PI;
+    }
+
+    private fetchPage(){
         this.isSwipeBlocked = true;
         //on remet à zéro le previousClientX pour redémarrer une page de donnée neuve
         this.setPreviousClientX(0);

@@ -4,6 +4,7 @@ import { StorageService } from './storage.services.common/storage-service';
 import { Recipe } from '../Models/Entities/Recipe';
 import { RecipeResult } from '../Models/RecipeResult';
 import { RecipeSearch } from '../Models/RecipeSearch';
+import { Type } from '../Models/Entities/Type';
 
 @Injectable({
     providedIn: 'root',
@@ -11,6 +12,7 @@ import { RecipeSearch } from '../Models/RecipeSearch';
 export class RecipeService {    
     recipeResult = signal<RecipeResult>(new RecipeResult());
     recipeSearch = signal<RecipeSearch>(new RecipeSearch());
+    recipeTypes = signal<Type[]>([]);
 
     readonly take: number = 4;
 

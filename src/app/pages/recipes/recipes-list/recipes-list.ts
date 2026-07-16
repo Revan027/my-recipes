@@ -2,17 +2,16 @@ import { Component, ElementRef, HostListener, signal, viewChild, ViewChild, Writ
 import { SearchField } from '../../../components/fields/search-field/search-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';;
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';;
 import { RecipeService } from '../../../Services/recipe-service';
 import { AppInitService } from '../../../Services/app-init.service';
 import { RecipeResult } from '../../../Models/RecipeResult';
 import { RecipeCard } from '../../../components/recipe-card/recipe-card';
 import { RouterLink } from '@angular/router';
 import { RecipeListService } from '../../../Services/recipe-list.service';
-import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RecipeSearch } from '../../../Models/RecipeSearch';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { debounceTime, distinctUntilChanged, Observable, switchMap } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-recipes-list',

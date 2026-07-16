@@ -1,1 +1,16 @@
-<p>edit-recipe works!</p>
+ <div class="action-bar mb-3">   
+    <button matButton class="btn-link--secondary-text">Annuler</button>
+    <button matButton class="btn-link--black">Modifier</button>
+    <button matButton class="btn-link--accent">Enregistrer</button>
+</div>
+
+<div>
+    <div class="picture-placeholder">
+        <div class="picture-placeholder-text">
+            <mat-icon class="mb-1">photo</mat-icon>
+           <div>Ajouter une photo</div>
+        </div>
+    </div>
+
+    <app-recipe-page [recipe]="recipe()" [isEditable]="true"></app-recipe-page>
+</div>

@@ -23,8 +23,8 @@ export class RecipeService {
             SELECT 
                 type.id as id, type.name as name
             FROM ${tableName.type} as type`);
-
-        return result.values != undefined ? (result.values[0] as Type[]) : [];
+            
+        return result.values != undefined ? (result.values as Type[]) : [];
     }
 
     async fetchPage(): Promise<Recipe[]> {

@@ -19,7 +19,7 @@
             {{ recipeResult().countTotal }} recette{{ recipeResult().countTotal > 1 ? 's' : '' }}
         </div>
 
-        <button matFab class="btn--fab btn-fab--accent">
+        <button matFab class="btn--fab btn-fab--accent"  [routerLink]="['create']">
             <mat-icon>add</mat-icon>
         </button>
 
@@ -27,7 +27,7 @@
             @for (item of recipeResult().recipes; track item.id) {
                 <div class="recipe-card">
                     <app-recipe-card
-                        [routerLink]="['recipes', item.id]"
+                        [routerLink]="[item.id]"
                         [recipe]="item"
                         [pictureClass]="findPictureClass(item.id)"
                     ></app-recipe-card>

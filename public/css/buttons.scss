@@ -12,6 +12,19 @@ button{
   z-index: 9999;
 }
 
+.btn-link--accent {
+  --mat-button-text-label-text-color: var(--color-accent);
+}
+
+.btn-link--black {
+  --mat-button-text-label-text-color: black;
+}
+
+.btn-link--secondary-text {
+  --mat-button-text-label-text-color: var(--color-secondary-text);
+  font-weight: 100!important;
+}
+
 .btn-fab--accent {
   --mat-fab-container-color: var(--color-accent);
   --mat-fab-foreground-color: #fff;
@@ -29,4 +42,14 @@ button{
 
 .btn-back{
   --mat-fab-container-shape: 50%;
+}
+
+.btn-tonal--empty{
+  --mat-button-tonal-container-color: transparent;
+  --mat-button-tonal-label-text-color: var(--color-accent);
+  width: 100%;
+  --mat-button-tonal-container-height: 60px;
+  .mat-mdc-button-persistent-ripple{
+    border: 1px dashed var(--color-lines);
+  }
 }

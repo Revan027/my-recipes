@@ -8,6 +8,7 @@
 @import "../public/css/fonts.scss";
 @import "../public/css/colors.scss";
 @import "../public/css/buttons.scss";
+@import "../public/css/form.scss";
 
 html {
   height: 100%;
@@ -54,13 +55,33 @@ body {
   margin-bottom: 20px;
 }
 
+.mb-3{
+  margin-bottom: 30px;
+}
+
+.mt-1{
+  margin-top: 10px;
+}
+
+.mt-2{
+  margin-top: 20px;
+}
+
+.mt-3{
+  margin-top: 30px;
+}
+
 // TEXTES
 .kicker{
   text-transform: uppercase;
   color: var(--color-accent);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-md);
   font-weight: 700;
   letter-spacing: 0.20em;
+}
+
+.kicker--main-text{
+  color: var(--color-main-text);
 }
 
 .meta{
@@ -88,4 +109,34 @@ body {
 
 .spinner {
   --mat-progress-spinner-active-indicator-color: var(--color-accent);
+}
+
+//CHIPS
+.chips{
+  border-radius: 30px;
+  padding: 5px 10px;
+  border: 1px solid var(--color-lines);
+  font-size: var(--font-size-lg);
+  background-color: white;
+  display: flex;
+  align-items: center;
+  width: max-content;
+
+  mat-icon{
+    font-size: var(--font-size-base);
+    margin-left: 10px;
+    width: max-content;
+  }
+}
+
+// HR
+hr{
+  margin: 20px 0 20px 0;
+  width: 40px;
+  border: 1px solid var( --color-accent);
+}  
+
+// DISPLAY
+.d-inline-block{
+  display: inline-block;
 }

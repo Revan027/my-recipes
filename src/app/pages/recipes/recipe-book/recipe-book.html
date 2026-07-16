@@ -2,7 +2,7 @@
     <div class="action-bar">
         <div class="action-bar-list">
             <div class="action-bar-item">
-                <button matFab class="btn-back btn-fab--empty">
+                <button matFab class="btn-back btn-fab--empty" (click)="onReturnBack()">
                     <mat-icon>navigate_before</mat-icon>
                 </button>
             </div>
@@ -12,7 +12,7 @@
             </div>
 
             <div class="action-bar-item">
-                <button matFab extended class="btn-fab--empty">
+                <button matFab extended class="btn-fab--empty" [routerLink]="['edit']">
                     Modifier
                 </button>
             </div>
@@ -20,31 +20,15 @@
     </div>
 
     <div #list appSwipe class="recipe-pages">
-         @for(item of recipeResult().recipes; track item.id){
-            <div [id]="`page-${item.id}`" class="recipe-page">
+         @for(recipe of recipeResult().recipes; track recipe.id){
+            <div [id]="`page-${recipe.id}`" class="recipe-page">
                 <div class="recipe-picture-wrapper">
                     <div class="recipe-picture"></div>
                 </div>
 
                 <div class="recipe-content">
-                    <div class="content-padding">
-                        <div class="kicker mb-1">
-                            {{item.type.name}}
-                        </div>
-
-                        <div class="mb-1">
-                            <h2>{{item.title}}</h2>
-                        </div>
-
-                        <div class="recipe-ingredients">
-                        
-                        </div>
-
-                        <div class="recipe-steps">
-                        
-                        </div>
-                    </div>   
-                </div>
+                    <app-recipe-page [recipe]="recipe"></app-recipe-page>
+                </div>   
             </div>
         }
         @empty {

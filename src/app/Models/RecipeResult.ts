@@ -4,4 +4,5 @@ export class RecipeResult {
   constructor() {}
 
   recipes: Recipe[] = [];
+  countTotal: number = 0;
 }

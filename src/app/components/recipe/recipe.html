@@ -1,0 +1,99 @@
+<div class="content-padding">
+  <div class="kicker mb-1">
+    {{recipe().type.name}}
+  </div>
+    @if(isEditable()){
+      <div>
+        <mat-form-field>
+        <mat-label>Type de recette</mat-label>
+
+        <mat-select class="a" >
+          <mat-option value="option1">Option 1</mat-option>
+          <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
+          <mat-option value="option3">Option 3</mat-option>
+        </mat-select>
+      </mat-form-field>
+      </div>
+       
+    }
+  
+
+  <div class="mb-1">
+     <h2>{{recipe().title}}</h2>
+    @if(isEditable()){
+      <mat-form-field class="example-full-width">
+        <mat-label>Titre</mat-label>
+        <input matInput placeholder="Ex. Pizza" value="Sushi">
+      </mat-form-field>
+    }
+  </div>
+
+  <hr/>
+
+  <div class="mb-2">
+     <div class="recipe-ingredients">                        
+      @for(ingredient of recipe().ingredients; track ingredient.id){
+        <div class="chips">
+          @if(isEditable()){
+            <input type="text" class="empty" value="{{ingredient.name}}"/>
+            <mat-icon>close</mat-icon>
+          }
+          @else{
+            {{ingredient.name}}
+          }
+        </div>
+      }      
+    </div>
+
+    @if(isEditable()){
+      <div class="chips d-inline-block mt-1">
+        <input class="empty" type="text"/>
+      </div> 
+
+      <button matButton class="btn-link--accent">   
+        <mat-icon>add</mat-icon> Ajouter
+      </button>
+    }
+  </div>
+ 
+
+
+  <div class="recipe-steps">
+    <div>                    
+      @for(step of recipe().steps; track step.id){
+        <div class="recipe-step mb-2">
+          <div class="kicker">
+            {{step.position | number:'2.0-0'}}
+          </div>
+
+          <div class="step-content-wrapper">
+            <div class="kicker kicker--main-text mb-1">             
+              @if(isEditable()){
+                <mat-icon class="delete-icon">close</mat-icon>
+
+                <input class="empty empty--accent" type="text" value="{{step.title}}"/>     
+              }
+              @else{
+                {{step.title}}
+              }
+              
+            </div>
+
+            <div class="step-content">   
+              @if(isEditable()){
+                <textarea class="empty empty--accent" rows="3">{{step.content}}</textarea>
+              }
+              @else{
+                {{step.content}}
+              }     
+            </div>
+          </div>   
+        </div>
+      }
+      <button matButton="tonal"  class="btn-tonal--empty">
+        <mat-icon>add</mat-icon>        
+        Ajouter une étape
+      </button>
+    </div>
+  </div>
+</div>   

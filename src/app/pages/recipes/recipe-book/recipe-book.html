@@ -8,7 +8,10 @@
             </div>
 
             <div class="action-bar-item progress-bar-item">
-                <app-progress-bar [current]="currentBookPage()" [max]="recipeResult().recipes.length"></app-progress-bar>
+                <app-progress-bar
+                    [current]="currentBookPage()"
+                    [max]="recipeResult().recipes.length"
+                ></app-progress-bar>
             </div>
 
             <div class="action-bar-item">
@@ -20,7 +23,7 @@
     </div>
 
     <div #list appSwipe class="recipe-pages">
-         @for(recipe of recipeResult().recipes; track recipe.id){
+        @for (recipe of recipeResult().recipes; track recipe.id) {
             <div [id]="`page-${recipe.id}`" class="recipe-page">
                 <div class="recipe-picture-wrapper">
                     <div class="recipe-picture"></div>
@@ -28,10 +31,9 @@
 
                 <div class="recipe-content">
                     <app-recipe-page [recipe]="recipe"></app-recipe-page>
-                </div>   
+                </div>
             </div>
-        }
-        @empty {
+        } @empty {
             <span>Aucune recette</span>
         }
     </div>

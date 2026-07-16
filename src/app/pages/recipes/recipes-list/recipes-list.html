@@ -1,8 +1,6 @@
-@if(isAppReady() && isPageReady()){
+@if (isAppReady() && isPageReady()) {
     <div class="recipes content-padding">
-        <div class="kicker mb-1">
-            Le Carnet
-        </div>
+        <div class="kicker mb-1">Le Carnet</div>
 
         <div class="recipes-title mb-2">
             <h1>Mes recettes</h1>
@@ -10,34 +8,41 @@
 
         <div class="recipes-search mb-2">
             <form [formGroup]="formGroup" novalidate>
-                <app-search-field [searchControl]="searchControl()" (searchText)="onSubmit($event)"></app-search-field>
-            </form>        
+                <app-search-field
+                    [searchControl]="searchControl()"
+                    (searchText)="onSubmit($event)"
+                ></app-search-field>
+            </form>
         </div>
 
-        <div class="meta mb-1">{{recipeResult().countTotal}} recette{{recipeResult().countTotal > 1 ? "s" : "" }}</div>
+        <div class="meta mb-1">
+            {{ recipeResult().countTotal }} recette{{ recipeResult().countTotal > 1 ? 's' : '' }}
+        </div>
 
         <button matFab class="btn--fab btn-fab--accent">
             <mat-icon>add</mat-icon>
         </button>
 
-        <div #list class="recipes-card-list">  
-            @for(item of recipeResult().recipes; track item.id){
+        <div #list class="recipes-card-list">
+            @for (item of recipeResult().recipes; track item.id) {
                 <div class="recipe-card">
-                    <app-recipe-card [routerLink]="['recipes', item.id]" [recipe]="item" [pictureClass]="findPictureClass(item.id)"></app-recipe-card>
+                    <app-recipe-card
+                        [routerLink]="['recipes', item.id]"
+                        [recipe]="item"
+                        [pictureClass]="findPictureClass(item.id)"
+                    ></app-recipe-card>
                 </div>
-            }
-            @empty {
+            } @empty {
                 <span>Aucune recette</span>
             }
         </div>
 
-        @if(this.isLoading()){
+        @if (this.isLoading()) {
             <div class="spinner-wrapper">
                 <mat-spinner class="spinner" diameter="30"></mat-spinner>
             </div>
         }
     </div>
-}
-@else{
+} @else {
     <mat-spinner class="spinner spinner--app"></mat-spinner>
 }

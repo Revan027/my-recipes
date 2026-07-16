@@ -5,7 +5,14 @@
     {
       "files": "*.html",
       "options": {
-        "parser": "angular"
+        "parser": "angular",
+        "tabWidth": 4
+      }
+    },
+    {
+      "files": "*.ts",
+      "options": {
+        "tabWidth": 4
       }
     }
   ]

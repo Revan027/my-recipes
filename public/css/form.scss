@@ -1,26 +1,29 @@
-
-
-
- .mat-mdc-text-field-wrapper {
-    background: transparent!important;
-  }
-  .mat-mdc-select-panel{
-     background: var(--color-surface)!important;
-  }
-  .mdc-floating-label{
-    color: var(--color-accent)!important;
-  }
-  
-  .mdc-line-ripple::after,.mdc-line-ripple::before  {
-     border-bottom-color: var(--color-accent)!important;
+// INPUT MATERIAL
+.mat-mdc-text-field-wrapper {
+  background: transparent!important;
 }
-    .a{
-        --mat-select-focused-arrow-color: var(--color-accent);
-    }
+.mat-mdc-select-panel{
+  background: var(--color-surface)!important;
+}
+
+.mdc-floating-label{
+  color: var(--color-accent)!important;
+}
+  
+.mdc-line-ripple::after,.mdc-line-ripple::before  {
+  border-bottom-color: var(--color-accent)!important;
+}
+
+// MAT SELECT
+mat-select{
+  --mat-select-focused-arrow-color: var(--color-accent);
+}
+
 mat-option{
   --mat-option-label-text-color: var(--color-accent);
 }
 
+// INPUT BASIQUE
 input[type=text].empty{
   border: none;
   font-family: var(--font-family-karla), system-ui, sans-serif;
@@ -29,14 +32,15 @@ input[type=text].empty{
   width: 100%;
 }
 
-input[type=text].empty--accent{
- background-color: var(--color-surface);
+input[type=text].empty--dashed{
+  border: 1px dashed var(--color-lines);
 }
 
 input[type=text].empty:focus{
   outline: none;
 }
 
+// TEXTAREA BASIQUE
 textarea.empty{
   border: none;
   font-family: var(--font-family-karla), system-ui, sans-serif;
@@ -45,8 +49,8 @@ textarea.empty{
   width: 100%;
 }
 
-textarea.empty--accent{
- background-color: var(--color-surface);
+textarea.empty--dashed{
+  border: 1px dashed var(--color-lines);
 }
 
 textarea.empty:focus{

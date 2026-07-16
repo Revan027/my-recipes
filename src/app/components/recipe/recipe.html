@@ -1,99 +1,134 @@
-<div class="content-padding">
-  <div class="kicker mb-1">
-    {{recipe().type.name}}
-  </div>
-    @if(isEditable()){
-      <div>
-        <mat-form-field>
-        <mat-label>Type de recette</mat-label>
+<form #form [formGroup]="formGroup" novalidate>
+    <input type="hidden" formControlName="picture" />
 
-        <mat-select class="a" >
-          <mat-option value="option1">Option 1</mat-option>
-          <mat-option value="option2" disabled>Option 2 (disabled)</mat-option>
-          <mat-option value="option3">Option 3</mat-option>
-        </mat-select>
-      </mat-form-field>
-      </div>
-       
-    }
-  
-
-  <div class="mb-1">
-     <h2>{{recipe().title}}</h2>
-    @if(isEditable()){
-      <mat-form-field class="example-full-width">
-        <mat-label>Titre</mat-label>
-        <input matInput placeholder="Ex. Pizza" value="Sushi">
-      </mat-form-field>
-    }
-  </div>
-
-  <hr/>
-
-  <div class="mb-2">
-     <div class="recipe-ingredients">                        
-      @for(ingredient of recipe().ingredients; track ingredient.id){
-        <div class="chips">
-          @if(isEditable()){
-            <input type="text" class="empty" value="{{ingredient.name}}"/>
-            <mat-icon>close</mat-icon>
-          }
-          @else{
-            {{ingredient.name}}
-          }
+    <div class="content-padding">
+        <div class="kicker mb-1">
+            {{ recipe().type.name }}
         </div>
-      }      
-    </div>
 
-    @if(isEditable()){
-      <div class="chips d-inline-block mt-1">
-        <input class="empty" type="text"/>
-      </div> 
+        @if (isEditable()) {
+            <div>
+                <mat-form-field>
+                    <mat-label>Type de la recette</mat-label>
 
-      <button matButton class="btn-link--accent">   
-        <mat-icon>add</mat-icon> Ajouter
-      </button>
-    }
-  </div>
- 
+                    <mat-select class="a" formControlName="type">
+                        @for (item of recipeTypes(); track item.id) {
+                            <mat-option value="option1">{{ item.name }}</mat-option>
+                        }
+                    </mat-select>
+                </mat-form-field>
 
+                @if (formGroup.controls['type'].invalid && (formGroup.controls['type'].dirty || formGroup.controls['type'].touched)) {
+                    <div class="alert-danger">Le type est requis !</div>
+                }
+            </div>
+        }
 
-  <div class="recipe-steps">
-    <div>                    
-      @for(step of recipe().steps; track step.id){
-        <div class="recipe-step mb-2">
-          <div class="kicker">
-            {{step.position | number:'2.0-0'}}
-          </div>
+        <div class="mb-1">
+            <h2>{{ recipeRequest().title }}</h2>
 
-          <div class="step-content-wrapper">
-            <div class="kicker kicker--main-text mb-1">             
-              @if(isEditable()){
-                <mat-icon class="delete-icon">close</mat-icon>
+            @if (isEditable()) {
+                <mat-form-field class="example-full-width">
+                    <mat-label>Titre de la recette</mat-label>
 
-                <input class="empty empty--accent" type="text" value="{{step.title}}"/>     
-              }
-              @else{
-                {{step.title}}
-              }
-              
+                    <input matInput formControlName="title" placeholder="Pâtes au pesto" />
+                </mat-form-field>
+
+                @if (formGroup.controls['title'].invalid && (formGroup.controls['title'].dirty || formGroup.controls['title'].touched)) 
+                {
+                    <div class="alert-danger">Le titre est requis !</div>
+                }
+            }
+        </div>
+
+        <hr />
+
+        <div class="mb-2">
+            <div class="recipe-ingredients">
+                @for (ingredient of recipeRequest().ingredients; track ingredient.id; let idx = $index;) {
+                    <div class="chips">
+                        @if (isEditable()) {
+                            <input type="text" class="empty" [formControlName]="getFormIngredientName(idx)" />
+
+                            <mat-icon (click)="removeIngredient(idx)">close</mat-icon>
+                        } @else {
+                            {{ ingredient.name }}
+                        }
+                    </div>
+
+                    @if (formGroup.controls[getFormIngredientName(idx)].invalid && (formGroup.controls[getFormIngredientName(idx)].dirty || formGroup.controls[getFormIngredientName(idx)].touched)) {
+                        <div class="alert-danger">Une valeur est requise !</div>
+                    }
+                }
             </div>
 
-            <div class="step-content">   
-              @if(isEditable()){
-                <textarea class="empty empty--accent" rows="3">{{step.content}}</textarea>
-              }
-              @else{
-                {{step.content}}
-              }     
-            </div>
-          </div>   
+            @if (isEditable()) {
+                <div class="mt-1 mb-2">
+                    <div class="chips d-inline-block ">
+                        <input class="empty" type="text" formControlName="ingredient" placeholder="Oeuf" />
+                    </div>
+
+                    @if (formGroup.controls['ingredient'].invalid && (formGroup.controls['ingredient'].dirty || formGroup.controls['ingredient'].touched)) {
+                        <div class="alert-danger">Un ingredient est requis !</div>
+                    }
+
+                    <button matButton="tonal" class="btn-tonal--empty mt-2" (click)="addIngredient()">
+                        <mat-icon>add</mat-icon>
+                        Ajouter un ingrédient
+                    </button>
+                </div>         
+            }
         </div>
-      }
-      <button matButton="tonal"  class="btn-tonal--empty">
-        <mat-icon>add</mat-icon>        
-        Ajouter une étape
-      </button>
+
+        <div class="recipe-steps">
+            <div>
+                @for (step of recipeRequest().steps; track step.id; let idx = $index;) {
+                    <div class="recipe-step mb-2">
+
+                        <div class="kicker">
+                            {{ step.position | number: '2.0-0' }}
+                        </div>
+
+                        <div class="step-content-wrapper">
+                            <div class="kicker kicker--main-text mb-1">
+                                @if (isEditable()) {                              
+                                    <input
+                                        [formControlName]="getFormStepName(idx)"
+                                        class="empty empty--dashed"
+                                        type="text"
+                                    />
+                                } @else {
+                                    {{ step.title }}
+                                }
+                            </div>
+
+                            @if (formGroup.controls[getFormStepName(idx)].invalid && (formGroup.controls[getFormStepName(idx)].dirty || formGroup.controls[getFormStepName(idx)].touched)) {
+                                <div class="alert-danger">Une valeur est requise !</div>
+                            }
+
+                            <div class="step-content">
+                                @if (isEditable()) {
+                                    <textarea class="empty empty--dashed" rows="3">{{
+                                        step.content
+                                    }}</textarea>
+                                } @else {
+                                    {{ step.content }}
+                                }
+                            </div>
+                        </div>
+
+                        <div>
+                            @if (isEditable()) {  
+                                <mat-icon class="delete-icon">close</mat-icon>
+                            }
+                        </div>
+                    </div>
+                }
+                <button matButton="tonal" class="btn-tonal--empty" (click)="addStep()">
+                    <mat-icon>add</mat-icon>
+                    Ajouter une étape
+                </button>
+            </div>
+        </div>
     </div>
-  </div>
-</div>   
+</form>

@@ -1,6 +1,6 @@
 export class RecipeSearch {
-  constructor() {}
+    constructor() {}
 
-  searchText?: string;
-  page: number = 0;
+    searchText?: string;
+    page: number = 0;
 }

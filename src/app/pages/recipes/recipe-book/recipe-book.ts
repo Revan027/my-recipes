@@ -8,52 +8,54 @@ import { RecipeService } from '../../../Services/recipe-service';
 import { ActivatedRoute } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RecipeBookService } from '../../../Services/recipe-book.service';
-import { Location  } from '@angular/common';
+import { Location } from '@angular/common';
 import { RecipePage } from '../../../components/recipe/recipe';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-recipe-book',
-  imports: [MatIconModule, MatButtonModule, ProgressBar, SwipeDirective, RecipePage, RouterLink],
-  templateUrl: './recipe-book.html',
-  styleUrl: './recipe-book.scss'
+    selector: 'app-recipe-book',
+    imports: [MatIconModule, MatButtonModule, ProgressBar, SwipeDirective, RecipePage, RouterLink],
+    templateUrl: './recipe-book.html',
+    styleUrl: './recipe-book.scss',
 })
 export class RecipeBook {
-  private destroyRef = inject(DestroyRef);
+    private destroyRef = inject(DestroyRef);
 
-  @ViewChild(SwipeDirective) swipeService!: SwipeDirective;
+    @ViewChild(SwipeDirective) swipeService!: SwipeDirective;
 
-  recipeResult: WritableSignal<RecipeResult>;
-  currentBookPage: WritableSignal<number>;
+    recipeResult: WritableSignal<RecipeResult>;
+    currentBookPage: WritableSignal<number>;
 
-  constructor(
-    private recipeService: RecipeService, 
-    private recipeBookService: RecipeBookService, 
-    private activatedRoute: ActivatedRoute,
-    private location: Location)
-  {
-    this.recipeResult = this.recipeService.recipeResult;
-    this.currentBookPage = this.recipeBookService.currentBookPage;
-  }
+    constructor(
+        private recipeService: RecipeService,
+        private recipeBookService: RecipeBookService,
+        private activatedRoute: ActivatedRoute,
+        private location: Location,
+    ) {
+        this.recipeResult = this.recipeService.recipeResult;
+        this.currentBookPage = this.recipeBookService.currentBookPage;
+    }
 
-  async ngOnInit(){  
-  }
+    async ngOnInit() {}
 
-  ngAfterViewInit(){
-    this.activatedRoute.paramMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(async (params) => {
-      const id = params.get('id');
-      const position = this.recipeResult().recipes.findIndex(x => x.id == (id ?? 0) as number) + 1;
-      const page = this.swipeService.findPageElement((id ?? 0) as number);
+    ngAfterViewInit() {
+        this.activatedRoute.paramMap
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(async (params) => {
+                const id = params.get('id');
+                const position =
+                    this.recipeResult().recipes.findIndex((x) => x.id == ((id ?? 0) as number)) + 1;
+                const page = this.swipeService.findPageElement((id ?? 0) as number);
 
-      this.swipeService.removeAnimation();
-      this.currentBookPage.set(position);
-      this.swipeService.translateElement((page as HTMLElement).offsetLeft);
+                this.swipeService.removeAnimation();
+                this.currentBookPage.set(position);
+                this.swipeService.translateElement((page as HTMLElement).offsetLeft);
 
-      setTimeout(() =>  this.swipeService.addAnimation(), 400); //on laisse le temps au css de faire le transform avant de remettre l'animation
-    });
-  }
+                setTimeout(() => this.swipeService.addAnimation(), 400); //on laisse le temps au css de faire le transform avant de remettre l'animation
+            });
+    }
 
-  onReturnBack(){
-    this.location.back()
-  }
+    onReturnBack() {
+        this.location.back();
+    }
 }

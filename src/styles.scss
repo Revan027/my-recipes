@@ -90,6 +90,12 @@ body {
   color: var(--color-secondary-text);
 }
 
+.alert-danger{
+  font-size: var(--font-size-sm);
+  color: red;
+  margin: 10px 0;
+}
+
 .text-center{
   text-align: center;
 }

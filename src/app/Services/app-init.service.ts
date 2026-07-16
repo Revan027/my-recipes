@@ -10,39 +10,35 @@ import { RecipeListService } from './recipe-list.service';
 @Injectable({
     providedIn: 'root',
 })
-export class AppInitService {    
-
+export class AppInitService {
     isAppReady = signal<boolean>(false);
     isNativePlateform = signal<boolean>(false);
 
     constructor(
-        private storageService: StorageService, 
-        private recipeService: RecipeService, 
-        private recipeListService: RecipeListService) 
-    {       
-    }
+        private storageService: StorageService,
+        private recipeService: RecipeService,
+        private recipeListService: RecipeListService,
+    ) {}
 
-    async init(): Promise<void>
-    {
-       this.isNativePlateform.set(Capacitor.isNativePlatform());
+    async init(): Promise<void> {
+        this.isNativePlateform.set(Capacitor.isNativePlatform());
 
-        if(Capacitor.isNativePlatform()){
+        if (Capacitor.isNativePlatform()) {
             await this.storageService.initPlugin();
         }
 
-        await this.loadRecipeResult(Capacitor.isNativePlatform());
+        await this.loadDatas(Capacitor.isNativePlatform());
 
         this.isAppReady.set(true);
     }
 
-    private async loadRecipeResult(isNativePlateform: boolean): Promise<void>
-    {
-        let recipes: Recipe[]  = [];
+    private async loadDatas(isNativePlateform: boolean): Promise<void> {
+        let recipes: Recipe[] = [];
 
-        if(isNativePlateform){
+        if (isNativePlateform) {
             await this.recipeListService.loadNextPage();
-        }
-        else{
+            this.recipeService.recipeTypes.set(await this.recipeService.getTypes());
+        } else {
             recipes = MOCK_RECIPES;
 
             const recipeResult = new RecipeResult();

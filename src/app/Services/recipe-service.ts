@@ -9,16 +9,25 @@ import { Type } from '../Models/Entities/Type';
 @Injectable({
     providedIn: 'root',
 })
-export class RecipeService {    
+export class RecipeService {
     recipeResult = signal<RecipeResult>(new RecipeResult());
     recipeSearch = signal<RecipeSearch>(new RecipeSearch());
     recipeTypes = signal<Type[]>([]);
 
     readonly take: number = 4;
 
-    constructor(private storageService: StorageService) {}     
+    constructor(private storageService: StorageService) {}
 
-    async fetchPage(): Promise<Recipe[]>{
+    async getTypes(): Promise<Type[]> {
+        const result = await this.storageService.getDb().query(`
+            SELECT 
+                type.id as id, type.name as name
+            FROM ${tableName.type} as type`);
+
+        return result.values != undefined ? (result.values[0] as Type[]) : [];
+    }
+
+    async fetchPage(): Promise<Recipe[]> {
         let recipesResult = await this.storageService.getDb().query(`
             SELECT 
                 recipe.id, recipe.typeID, recipe.picture, recipe.title,
@@ -45,7 +54,7 @@ export class RecipeService {
                 ingredient.id as ingredientID, ingredient.name as ingredientName, ingredient.recipeID
             FROM ${tableName.ingredient} as ingredient
             WHERE ingredient.recipeID IN (${recipeIDs})`);
-        
+
         Recipe.setSteps(stepsResult.values ?? [], recipes ?? []);
         Recipe.setIngredients(ingredientsResult.values ?? [], recipes ?? []);
 
@@ -53,18 +62,18 @@ export class RecipeService {
         return recipes ?? [];
     }
 
-    private getQuerySearch(){
-        const searchText = this.recipeSearch().searchText ?? "";
+    private getQuerySearch() {
+        const searchText = this.recipeSearch().searchText ?? '';
 
-        return `WHERE ${searchText.length > 0 ? 'FALSE' : 'TRUE'} OR lower(recipe.title) LIKE '%${searchText.toLowerCase()}%'`
+        return `WHERE ${searchText.length > 0 ? 'FALSE' : 'TRUE'} OR lower(recipe.title) LIKE '%${searchText.toLowerCase()}%'`;
     }
 
-    async countQueryResult(): Promise<number>{
+    async countQueryResult(): Promise<number> {
         let result = await this.storageService.getDb().query(`
             SELECT COUNT(*) as countTotal
             FROM ${tableName.recipe}
             ${this.getQuerySearch()}`);
 
-        return result.values != undefined ? result.values[0].countTotal as number : 0;                 
+        return result.values != undefined ? (result.values[0].countTotal as number) : 0;
     }
 }

@@ -1,8 +1,8 @@
-import { Recipe } from "./Entities/Recipe";
+import { Recipe } from './Entities/Recipe';
 
 export class RecipeResult {
-  constructor() {}
+    constructor() {}
 
-  recipes: Recipe[] = [];
-  countTotal: number = 0;
+    recipes: Recipe[] = [];
+    countTotal: number = 0;
 }

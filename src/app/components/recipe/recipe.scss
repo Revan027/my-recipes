@@ -8,11 +8,9 @@
 .recipe-step{
     display: flex;
     gap: 20px;
-    align-items: baseline;
+    position: relative;
 
     .delete-icon{
-        position: absolute;
-        right: 20px; 
         font-size: var(--font-size-base);
         width: max-content;
     }

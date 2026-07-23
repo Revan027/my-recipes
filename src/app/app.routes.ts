@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { RecipesList } from './pages/recipes/recipes-list/recipes-list';
 import { Loading } from './pages/loading/loading';
 
 export const routes: Routes = [

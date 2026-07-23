@@ -4,7 +4,7 @@ import { Capacitor } from '@capacitor/core';
 import { RecipeService } from './recipe-service';
 import { Recipe } from '../Models/Entities/Recipe';
 import { RecipeResult } from '../Models/RecipeResult';
-import { MOCK_RECIPES } from '../constants/mock-recipes';
+import { MOCK_RECIPES, MOCK_TYPES } from '../constants/mock-recipes';
 import { RecipeListService } from './recipe-list.service';
 
 @Injectable({
@@ -44,6 +44,7 @@ export class AppInitService {
             const recipeResult = new RecipeResult();
             recipeResult.recipes = recipes;
 
+             this.recipeService.recipeTypes.set(MOCK_TYPES);
             this.recipeService.recipeResult.set(recipeResult);
         }
     }

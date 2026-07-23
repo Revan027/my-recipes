@@ -76,12 +76,14 @@ export class SwipeDirective {
             X: Math.round(e.changedTouches[0].clientX + 30),
             Y: Math.round(e.changedTouches[0].clientY),
         };
+
         this.horizontalLineCoord[1] = {
             X: Math.round(e.changedTouches[0].clientX),
             Y: Math.round(e.changedTouches[0].clientY),
         };
 
-        if (!this.isVerticalSwipe()) this.fetchPage();
+        if (!this.isVerticalSwipe()) 
+            this.fetchPage();
     }
 
     private isVerticalSwipe() {
@@ -110,6 +112,7 @@ export class SwipeDirective {
 
     private fetchPage() {
         this.isSwipeBlocked = true;
+        
         //on remet à zéro le previousClientX pour redémarrer une page de donnée neuve
         this.setPreviousClientX(0);
 
@@ -119,8 +122,7 @@ export class SwipeDirective {
     }
 
     private setDirection(lastClientX: number): void {
-        this.currentDirection =
-            lastClientX < this.startClientX ? this.directions.Next : this.directions.Prev;
+        this.currentDirection = lastClientX < this.startClientX ? this.directions.Next : this.directions.Prev;
     }
 
     private setPreviousClientX(clientX: number) {
@@ -137,7 +139,7 @@ export class SwipeDirective {
 
     handleAdvancement() {
         const totalPage = Math.round(this.el.nativeElement.scrollWidth / this.windowWidth);
-        let currentBookPage = this.recipeBookService.currentBookPage();
+        const currentBookPage = this.recipeBookService.currentBookPage();
 
         if (
             this.currentDirection == this.directions.Next &&
@@ -147,10 +149,16 @@ export class SwipeDirective {
         } else if (this.currentDirection == this.directions.Prev && currentBookPage > 1) {
             this.previous();
         }
+
+        // on recupère l'id de la recette sur la page courante
+        const pageElement = Array.from(this.el.nativeElement.querySelectorAll(".recipe-page"))
+            .find((e, index: number) => index + 1 ==  this.recipeBookService.currentBookPage())
+
+        this.recipeBookService.currentIDPage.set((pageElement?.getAttribute("data-id") ?? 0) as number)
     }
 
     next() {
-        this.translateElement(this.recipeBookService.currentBookPage() * this.windowWidth); // on prend la taille max d'une page
+        this.translateElement(this.recipeBookService.currentBookPage() * this.windowWidth); // on prend la taille max d'une page et on * par la position de la page pour avoirt le décalage réel
 
         this.recipeBookService.currentBookPage.set(this.recipeBookService.currentBookPage() + 1);
     }

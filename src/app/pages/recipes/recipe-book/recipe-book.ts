@@ -5,16 +5,16 @@ import { ProgressBar } from '../../../components/progress-bar/progress-bar';
 import { SwipeDirective } from '../../../Services/swipe-directive';
 import { RecipeResult } from '../../../Models/RecipeResult';
 import { RecipeService } from '../../../Services/recipe-service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RecipeBookService } from '../../../Services/recipe-book.service';
 import { Location } from '@angular/common';
-import { RecipePage } from '../../../components/recipe/recipe';
+import { RecipeComponent } from '../../../components/recipe/recipe';
 import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-recipe-book',
-    imports: [MatIconModule, MatButtonModule, ProgressBar, SwipeDirective, RecipePage, RouterLink],
+    imports: [MatIconModule, MatButtonModule, ProgressBar, SwipeDirective, RecipeComponent, RouterLink],
     templateUrl: './recipe-book.html',
     styleUrl: './recipe-book.scss',
 })
@@ -31,6 +31,7 @@ export class RecipeBook {
         private recipeBookService: RecipeBookService,
         private activatedRoute: ActivatedRoute,
         private location: Location,
+        private router: Router,
     ) {
         this.recipeResult = this.recipeService.recipeResult;
         this.currentBookPage = this.recipeBookService.currentBookPage;
@@ -42,20 +43,25 @@ export class RecipeBook {
         this.activatedRoute.paramMap
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(async (params) => {
-                const id = params.get('id');
-                const position =
-                    this.recipeResult().recipes.findIndex((x) => x.id == ((id ?? 0) as number)) + 1;
+                const id = (params.get('id') || 0) as number;
+                const position = this.recipeResult().recipes.findIndex((x) => x.id == ((id ?? 0) as number)) + 1;
                 const page = this.swipeService.findPageElement((id ?? 0) as number);
 
                 this.swipeService.removeAnimation();
                 this.currentBookPage.set(position);
                 this.swipeService.translateElement((page as HTMLElement).offsetLeft);
 
+                this.recipeBookService.currentIDPage.set(id)
+
                 setTimeout(() => this.swipeService.addAnimation(), 400); //on laisse le temps au css de faire le transform avant de remettre l'animation
             });
     }
 
     onReturnBack() {
-        this.location.back();
+        this.router.navigate(["recipes"]);
+    }
+
+    onEditRecipe(){
+        this.router.navigate(["recipes",  + this.recipeBookService.currentIDPage(), 'edit']);
     }
 }

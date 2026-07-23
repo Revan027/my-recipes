@@ -9,23 +9,3 @@
     background-color: var(--color-background);
     top: 0;
 }
-
-.picture-placeholder{
-    position: relative;
-    width: 80%;
-    height: 250px;
-    background-color: var(--color-placeholder-1);
-    background: repeating-linear-gradient(135deg, var(--color-background) 0px 2px, white  2px 10px);
-    border: 1px dashed var(--color-lines);
-    border-radius: 20px;
-    margin: 0 auto;
-
-    .picture-placeholder-text{
-        color: var( --color-secondary-text);
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        text-align: center;
-    }
-}

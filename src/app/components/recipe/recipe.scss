@@ -1,5 +1,34 @@
+.recipe-picture img{
+   width: 80%;
+    height: 300px;
+    border: 1px solid var(--color-lines);
+    border-radius: 20px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    object-position: center;
+}
 
- .recipe-ingredients{
+.recipe-picture-placeholder{
+    position: relative;
+    width: 80%;
+    height: 250px;
+    background-color: var(--color-placeholder-1);
+    background: repeating-linear-gradient(135deg, var(--color-background) 0px 2px, white  2px 10px);
+    border: 1px dashed var(--color-lines);
+    border-radius: 20px;
+    margin: 0 auto;
+
+    .recipe-picture-placeholder-text{
+        color: var( --color-secondary-text);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+}
+
+.recipe-ingredients{
     display: flex;
     flex-wrap: wrap;
     gap: 10px; 

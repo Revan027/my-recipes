@@ -1,9 +1,22 @@
-<form #form [formGroup]="formGroup" novalidate>
-    <input type="hidden" formControlName="picture" />
+@if(isEditable()){
+    @if(recipeRequest().picture){
+        <div class="recipe-picture text-center" (click)="onClickPicture()">
+            <img [src]="getSrcPicture()"/>
+        </div>   
+    }@else{
+        <div class="recipe-picture-placeholder" (click)="onClickPicture()"> 
+            <div class="recipe-picture-placeholder-text">
+                <mat-icon class="mb-1">photo</mat-icon>
+                <div>Ajouter une photo</div>
+            </div>
+        </div>
+    }
+}
 
+<form #form [formGroup]="formGroup" novalidate>  
     <div class="content-padding">
         <div class="kicker mb-1">
-            {{ recipe().type.name }}
+            {{ recipeRequest().type.name }}
         </div>
 
         @if (isEditable()) {
@@ -11,14 +24,14 @@
                 <mat-form-field>
                     <mat-label>Type de la recette</mat-label>
 
-                    <mat-select class="a" formControlName="type">
+                    <mat-select class="a" formControlName="typeID">
                         @for (item of recipeTypes(); track item.id) {
                             <mat-option value="{{ item.id }}">{{ item.name }}</mat-option>
                         }
                     </mat-select>
                 </mat-form-field>
 
-                @if (formGroup.controls['type'].invalid && (formGroup.controls['type'].dirty || formGroup.controls['type'].touched)) {
+                @if (formGroup.controls['typeID'].invalid && (formGroup.controls['typeID'].dirty || formGroup.controls['typeID'].touched)) {
                     <div class="alert-danger">Le type est requis !</div>
                 }
             </div>
@@ -44,31 +57,27 @@
         <hr />
 
         <div class="mb-2">
-            <div class="recipe-ingredients">
-                @for (ingredient of recipeRequest().ingredients; track ingredient.id; let idx = $index;) {
-                    <div class="chips">
+            <div class="recipe-ingredients" formArrayName="ingredients">
+                @for (ingredient of ingredients.controls; track ingredient; let i = $index) {
+                    <div class="chips" [formGroupName]="i">
                         @if (isEditable()) {
-                            <input type="text" class="empty" [formControlName]="getFormIngredientName(idx)" />
+                            <input type="text" class="empty" formControlName="ingredient" />
 
-                            <mat-icon (click)="removeIngredient(idx)">close</mat-icon>
+                            <mat-icon (click)="removeIngredient(i)">close</mat-icon>
                         } @else {
-                            {{ ingredient.name }}
-                        }
+                            {{ ingredient.value.ingredient }}
+                        }  
                     </div>
-
-                    @if (formGroup.controls[getFormIngredientName(idx)].invalid && (formGroup.controls[getFormIngredientName(idx)].dirty || formGroup.controls[getFormIngredientName(idx)].touched)) {
-                        <div class="alert-danger">Une valeur est requise !</div>
-                    }
                 }
             </div>
 
             @if (isEditable()) {
                 <div class="mt-1 mb-2">
                     <div class="chips d-inline-block ">
-                        <input class="empty" type="text" formControlName="ingredient" placeholder="Oeuf" />
+                        <input class="empty" type="text" formControlName="newIngredient" placeholder="Oeuf" />
                     </div>
 
-                    @if (formGroup.controls['ingredient'].invalid && (formGroup.controls['ingredient'].dirty || formGroup.controls['ingredient'].touched)) {
+                    @if (formGroup.controls['newIngredient'].invalid && (formGroup.controls['newIngredient'].dirty || formGroup.controls['newIngredient'].touched)) {
                         <div class="alert-danger">Un ingredient est requis !</div>
                     }
 
@@ -80,55 +89,54 @@
             }
         </div>
 
-        <div class="recipe-steps">
+        <div class="recipe-steps" formArrayName="steps">
             <div>
-                @for (step of recipeRequest().steps; track step.id; let idx = $index;) {
-                    <div class="recipe-step mb-2">
+                @for (step of steps.controls; track step; let i = $index;) {
+                    <div class="recipe-step mb-2" [formGroupName]="i">
 
                         <div class="kicker">
-                            {{ step.position | number: '2.0-0' }}
+                            {{ i + 1 | number: '2.0-0' }}
                         </div>
 
                         <div class="step-content-wrapper">
                             <div class="kicker kicker--main-text mb-1">
                                 @if (isEditable()) {                              
                                     <input
-                                        [formControlName]="getFormStepName(idx)"
+                                        formControlName="stepTitle"
                                         class="empty empty--dashed"
                                         type="text"
+                                        placeholder="Préparer les oeufs"
                                     />
                                 } @else {
-                                    {{ step.title }}
+                                    {{ step.value.stepTitle}}
                                 }
                             </div>
 
-                            @if (formGroup.controls[getFormStepName(idx)].invalid && (formGroup.controls[getFormStepName(idx)].dirty || formGroup.controls[getFormStepName(idx)].touched)) {
-                                <div class="alert-danger">Une valeur est requise !</div>
-                            }
-
                             <div class="step-content">
                                 @if (isEditable()) {
-                                    <textarea class="empty empty--dashed" rows="3">{{
-                                        step.content
-                                    }}</textarea>
+                                    <textarea class="empty empty--dashed" rows="3" placeholder="Casser et cuire les oeufs" formControlName="stepContent"></textarea>
                                 } @else {
-                                    {{ step.content }}
+                                    {{ step.value.stepContent }}
                                 }
                             </div>
                         </div>
 
                         <div>
                             @if (isEditable()) {  
-                                <mat-icon class="delete-icon">close</mat-icon>
+                                <mat-icon class="delete-icon" (click)="removeStep(i)">close</mat-icon>
                             }
                         </div>
                     </div>
                 }
-                <button matButton="tonal" class="btn-tonal--empty" (click)="addStep()">
-                    <mat-icon>add</mat-icon>
-                    Ajouter une étape
-                </button>
+
+                @if (isEditable()) {  
+                    <button matButton="tonal" class="btn-tonal--empty" (click)="addStep()">
+                        <mat-icon>add</mat-icon>
+                        Ajouter une étape
+                    </button>
+                }          
             </div>
         </div>
     </div>
 </form>
+

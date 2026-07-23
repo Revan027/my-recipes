@@ -15,7 +15,7 @@
             </div>
 
             <div class="action-bar-item">
-                <button matFab extended class="btn-fab--empty" [routerLink]="['edit']">
+                <button matFab extended class="btn-fab--empty" (click)="onEditRecipe()">
                     Modifier
                 </button>
             </div>
@@ -24,13 +24,13 @@
 
     <div #list appSwipe class="recipe-pages">
         @for (recipe of recipeResult().recipes; track recipe.id) {
-            <div [id]="`page-${recipe.id}`" class="recipe-page">
+            <div [attr.data-id]="recipe.id" [id]="`page-${recipe.id}`" class="recipe-page">
                 <div class="recipe-picture-wrapper">
                     <div class="recipe-picture"></div>
                 </div>
 
                 <div class="recipe-content">
-                    <app-recipe-page [recipe]="recipe"></app-recipe-page>
+                    <app-recipe-component [recipe]="recipe" ></app-recipe-component>
                 </div>
             </div>
         } @empty {

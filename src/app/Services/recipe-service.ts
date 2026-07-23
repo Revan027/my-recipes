@@ -5,6 +5,8 @@ import { Recipe } from '../Models/Entities/Recipe';
 import { RecipeResult } from '../Models/RecipeResult';
 import { RecipeSearch } from '../Models/RecipeSearch';
 import { Type } from '../Models/Entities/Type';
+import { Ingredient } from '../Models/Entities/Ingredient';
+import { Step } from '../Models/Entities/Step';
 
 @Injectable({
     providedIn: 'root',
@@ -17,6 +19,34 @@ export class RecipeService {
     readonly take: number = 4;
 
     constructor(private storageService: StorageService) {}
+
+    async create(recipe: Recipe) {
+        // on créée la recette
+        let sql = `
+            INSERT INTO ${tableName.recipe} (title, picture, typeID) 
+            VALUES (?, ?, ?)`;
+
+        let  result = await this.storageService.getDb().run(sql, [recipe.title, recipe.picture, recipe.typeID]);
+
+        // on créee les ingrédients
+        recipe.ingredients.forEach(async (ingredient: Ingredient) => {
+            sql = `
+                INSERT INTO ${tableName.ingredient} (name, recipeID) 
+                VALUES (?, ?)`;
+
+            result = await this.storageService.getDb().run(sql, [ingredient.name, result.changes?.lastId]);
+        });
+
+        // on créée les étapes
+        recipe.steps.forEach(async (step: Step) => {
+            sql = `
+                INSERT INTO ${tableName.step} (title, content, position, recipeID) 
+                VALUES (?, ?, ?, ?)`;
+
+            result = await this.storageService.getDb().run(sql, [step.title, step.content, step.position, result.changes?.lastId]);
+        });
+        return result;
+    }
 
     async getTypes(): Promise<Type[]> {
         const result = await this.storageService.getDb().query(`

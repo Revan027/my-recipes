@@ -11,7 +11,7 @@ export const version1: string[] = [
     `CREATE TABLE IF NOT EXISTS ${tableName.recipe} (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
-    picture TEXT NOT NULL,
+    picture TEXT NULL,
     typeID INTEGER NOT NULL,
     FOREIGN KEY(typeID) REFERENCES ${tableName.type}(id)
   );`,

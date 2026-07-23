@@ -20,32 +20,48 @@ export class RecipeService {
 
     constructor(private storageService: StorageService) {}
 
-    async create(recipe: Recipe) {
-        // on créée la recette
-        let sql = `
-            INSERT INTO ${tableName.recipe} (title, picture, typeID) 
-            VALUES (?, ?, ?)`;
+    async create(recipe: Recipe): Promise<boolean> {
+        let isSuccess = true;
 
-        let  result = await this.storageService.getDb().run(sql, [recipe.title, recipe.picture, recipe.typeID]);
+        try {
+            await this.storageService.getDb().beginTransaction();
 
-        // on créee les ingrédients
-        recipe.ingredients.forEach(async (ingredient: Ingredient) => {
-            sql = `
-                INSERT INTO ${tableName.ingredient} (name, recipeID) 
-                VALUES (?, ?)`;
+            let sql = `
+                INSERT INTO ${tableName.recipe} (title, picture, typeID) 
+                VALUES (?, ?, ?)`;
 
-            result = await this.storageService.getDb().run(sql, [ingredient.name, result.changes?.lastId]);
-        });
+            let result = await this.storageService.getDb().run(sql, [recipe.title, recipe.picture, recipe.typeID], false);
+          alert(result.changes?.lastId);
+             // on créee les ingrédients
+            for (const ingredient of recipe.ingredients) {
+                sql = `
+                    INSERT INTO ${tableName.ingredient} (name, recipeID) 
+                    VALUES (?, ?)`;
 
-        // on créée les étapes
-        recipe.steps.forEach(async (step: Step) => {
-            sql = `
-                INSERT INTO ${tableName.step} (title, content, position, recipeID) 
-                VALUES (?, ?, ?, ?)`;
+                await this.storageService.getDb().run(sql, [ingredient.name, result.changes?.lastId], false);
+            }
+  alert(result.changes?.lastId);
+            // on créée les étapes
+            for (const step of recipe.steps) {
+                sql = `
+                    INSERT INTO ${tableName.step} (title, content, position, recipeID) 
+                    VALUES (?, ?, ?, ?)`;
 
-            result = await this.storageService.getDb().run(sql, [step.title, step.content, step.position, result.changes?.lastId]);
-        });
-        return result;
+                result = await this.storageService.getDb().run(sql, [step.title, step.content, step.position, result.changes?.lastId], false);
+            }
+  alert(result.changes?.lastId);
+            await this.storageService.getDb().commitTransaction();   // tout est validé d'un coup
+        } catch (err) {
+            isSuccess = false;
+  alert(err);
+            if ((await this.storageService.getDb()?.isTransactionActive()).result) {
+                await this.storageService.getDb()?.rollbackTransaction();   // tout est annulé si une erreur survient
+            }
+            
+            throw err;
+        }
+
+        return isSuccess;
     }
 
     async getTypes(): Promise<Type[]> {

@@ -9,11 +9,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Type } from '../../Models/Entities/Type';
 import { RecipeService } from '../../Services/recipe-service';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Ingredient } from '../../Models/Entities/Ingredient';
 import { ValidatorFn } from '@angular/forms';
 import { Step } from '../../Models/Entities/Step';
 import { MediaService } from '../../Services/media.services.common/media.service';
+import { ToastrService } from 'ngx-toastr';
 
 export function ingredientValidator(ingredientCount: number): ValidatorFn {
   return (control: AbstractControl<string>): {[key: string]: any} | null => {
@@ -59,7 +60,8 @@ export class RecipeComponent {
     constructor(
         private recipeService: RecipeService,
         private formBuilder: FormBuilder,
-        private mediaService: MediaService
+        private mediaService: MediaService,
+        private toastrService: ToastrService
     ) {
         this.recipeTypes = this.recipeService.recipeTypes;
     }
@@ -90,7 +92,6 @@ export class RecipeComponent {
                 this.steps.push(this.createStepFormGroup(step));
             })     
         }
-        console.log(this.steps.controls)
     }
 
     private createIngredientFormGroup(ingredient : Ingredient){
@@ -101,22 +102,46 @@ export class RecipeComponent {
         return this.formBuilder.group({ stepTitle: [step.title], stepContent: [step.content], });
     }
 
-    submit() {
+    async submit() {
         this.formGroup.markAllAsTouched();
 
         if(!this.formGroup.invalid){
-            this.recipeRequest().title = this.formGroup.get("title")?.value;
-            this.recipeRequest().typeID = this.formGroup.get("typeID")?.value;
+            const value = this.formGroup.value;
 
+            // on reconstruit l'objet recette
             this.recipeRequest.update((recipe: Recipe) => { 
                 recipe.title = this.formGroup.get("title")?.value;
                 recipe.typeID = this.formGroup.get("typeID")?.value;
+                
+                recipe.ingredients = value.ingredients.map( (element: any) => {
+                    return {name : element.ingredient} as Ingredient
+                });
+
+                recipe.steps = value.steps.map( (element: any, i: number) => {
+                    return {title : element.stepTitle, content: element.stepContent, position: i} as Step
+                });
 
                 return recipe;
             })
 
-            alert(JSON.stringify(this.recipeRequest(), null, 2));
-            //this.recipeService.create(this.recipeRequest());
+            if( this.recipeRequest().id > 0){
+                //update
+                const isSuccess = await this.recipeService.create(this.recipeRequest());
+
+                if(isSuccess){
+                    this.toastrService.success(`Modification effectuée`);
+                }else{
+                    this.toastrService.error(`Une erreur est survenue`);
+                }
+            }else{
+                const isSuccess = await this.recipeService.create(this.recipeRequest());
+
+                if(isSuccess){
+                    this.toastrService.success(`Création effectuée`);
+                }else{
+                    this.toastrService.error(`Une erreur est survenue`);
+                }
+            }  
         }
     }
 

@@ -93,9 +93,9 @@ export class RecipesList {
     }
 
     async ngOnInit() {
-        /*const info = await App.getInfo();
+        const info = await App.getInfo();
 
-        this.numVersion = info.version;*/
+        this.numVersion = info.version;
 
         this.setPictureClass();
 

@@ -1,6 +1,6 @@
 export class Type {
-  constructor() {}
+    constructor() {}
 
-  id!: number;
-  name!: string;
+    id!: number;
+    name!: string;
 }

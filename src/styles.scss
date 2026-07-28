@@ -9,6 +9,7 @@
 @import "../public/css/colors.scss";
 @import "../public/css/buttons.scss";
 @import "../public/css/form.scss";
+@import "ngx-toastr/toastr";
 
 html {
   height: 100%;
@@ -88,6 +89,12 @@ body {
   font-weight: 400;
   font-size: var(--font-size-xs);
   color: var(--color-secondary-text);
+}
+
+.alert-danger{
+  font-size: var(--font-size-sm);
+  color: red;
+  margin: 10px 0;
 }
 
 .text-center{

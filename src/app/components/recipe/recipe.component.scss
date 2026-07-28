@@ -1,0 +1,85 @@
+form.no-editable{
+    border-radius: 20px;
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-surface);
+    transform: translateY(-20px);  
+}
+
+.recipe-picture-no-editable{
+    background-color: var(--color-placeholder-1);
+    position: sticky;
+    top: 0;
+
+    .recipe-picture-placeholder{
+        background: repeating-linear-gradient(135deg, var(--color-lines) 0px 2px,transparent 2px 10px);
+        height: 50dvh;
+    }
+
+    .recipe-picture img{
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        object-position: center;
+    } 
+}
+
+.recipe-picture-editable{
+    .recipe-picture img{
+        width: 80%;
+        height: 300px;
+        border: 1px solid var(--color-lines);
+        border-radius: 20px;
+        aspect-ratio: 1 / 1;
+        object-fit: cover;
+        object-position: center;
+    }
+
+    .recipe-picture-placeholder {
+        position: relative;
+        width: 80%;
+        height: 250px;
+        background-color: var(--color-placeholder-1);
+        background: repeating-linear-gradient(135deg, var(--color-background) 0px 2px, white  2px 10px);
+        border: 1px dashed var(--color-lines);
+        border-radius: 20px;
+        margin: 0 auto;
+
+        .recipe-picture-placeholder-text{
+            color: var( --color-secondary-text);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+    }
+}
+
+.recipe-ingredients{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; 
+}
+
+.recipe-step{
+    display: flex;
+    gap: 20px;
+    position: relative;
+
+    .delete-icon{
+        font-size: var(--font-size-base);
+        width: max-content;
+    }
+
+    .step-content-wrapper{
+         flex: 1 1 auto;
+
+        .step-content{
+            font-family: 'Karla', sans-serif;
+            font-weight: 400;
+            font-size: var(--font-size-lg);
+            line-height: 1.62;
+            opacity: 0.82;
+        }
+    }
+}

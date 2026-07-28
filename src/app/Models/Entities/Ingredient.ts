@@ -1,7 +1,7 @@
 export class Ingredient {
-  constructor() {}
+    constructor() {}
 
-  id!: number;
-  name!: string;
-  recipeID!: number;
+    id!: number;
+    name!: string;
+    recipeID!: number;
 }

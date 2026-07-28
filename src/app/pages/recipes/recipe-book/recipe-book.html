@@ -8,11 +8,14 @@
             </div>
 
             <div class="action-bar-item progress-bar-item">
-                <app-progress-bar [current]="currentBookPage()" [max]="recipeResult().recipes.length"></app-progress-bar>
+                <app-progress-bar
+                    [current]="currentBookPage()"
+                    [max]="recipeResult().recipes.length"
+                ></app-progress-bar>
             </div>
 
             <div class="action-bar-item">
-                <button matFab extended class="btn-fab--empty" [routerLink]="['edit']">
+                <button matFab extended class="btn-fab--empty" (click)="onEditRecipe()">
                     Modifier
                 </button>
             </div>
@@ -20,18 +23,11 @@
     </div>
 
     <div #list appSwipe class="recipe-pages">
-         @for(recipe of recipeResult().recipes; track recipe.id){
-            <div [id]="`page-${recipe.id}`" class="recipe-page">
-                <div class="recipe-picture-wrapper">
-                    <div class="recipe-picture"></div>
-                </div>
-
-                <div class="recipe-content">
-                    <app-recipe-page [recipe]="recipe"></app-recipe-page>
-                </div>   
+        @for (recipe of recipeResult().recipes; track recipe.id) {
+            <div [attr.data-id]="recipe.id" [id]="`page-${recipe.id}`" class="recipe-page">
+                <app-recipe-component [recipe]="recipe" ></app-recipe-component>
             </div>
-        }
-        @empty {
+        } @empty {
             <span>Aucune recette</span>
         }
     </div>

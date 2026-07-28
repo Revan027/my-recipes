@@ -3,7 +3,6 @@ import { HttpErrorResponse } from '@angular/common/http';
 
 import { Capacitor } from '@capacitor/core';
 
-
 @Injectable({
     providedIn: 'root',
 })
@@ -12,24 +11,20 @@ export class ErrorService implements ErrorHandler {
 
     async handleError(error: any) {
         let message = '';
-    
+
         if (error instanceof HttpErrorResponse) {
             //erreur http
-        } 
-        else {
+        } else {
             // On ne prend une erreur venant de la fermeture de la caméra
-            if(error?.message?.includes('cancel') && error?.message?.includes('photos app')) return;
+            if (error?.message?.includes('cancel') && error?.message?.includes('photos app'))
+                return;
 
-            message = error.message!
-                ? error.message
-                : error;
+            message = error.message! ? error.message : error;
         }
 
         if (Capacitor.isNativePlatform()) {
-            alert(message)
-
-        }
-        else{
+            alert(message);
+        } else {
             console.error(message);
         }
     }

@@ -80,7 +80,7 @@ export class RecipeComponent {
         
         this.formGroup = this.formBuilder.group({
             title: [this.recipeRequest().title, Validators.required],
-            typeID: [this.recipeRequest().typeID.toString(), Validators.required],
+            typeID: [this.recipeRequest().typeID?.toString(), Validators.required],
             newIngredient: ["", null],
             ingredients: this.formBuilder.array([]), // le form array sert pour les formulaire dynamique, pour des listes
             steps: this.formBuilder.array([]),

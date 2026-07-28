@@ -16,7 +16,21 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    // Keystore fixe et versionné : garantit que TOUTES les builds (CI + Android
+    // Studio) sont signées avec la même clé, donc mutuellement installables en
+    // mise à jour (au lieu d'une clé aléatoire régénérée à chaque build CI).
+    signingConfigs {
+        debugFixed {
+            storeFile file('../keystore/debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+        }
+    }
     buildTypes {
+        debug {
+            signingConfig signingConfigs.debugFixed
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

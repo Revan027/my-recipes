@@ -12,9 +12,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Récupération du code
+      # 1. Récupération du code (+ sous-modules : services communs *.services.common)
       - name: Checkout du dépôt
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       # 2. Installation de Node.js (Angular 21 requiert Node 20+)
       - name: Setup Node.js
@@ -34,9 +36,12 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      # 5. Installation des dépendances npm (reproductible)
+      # 5. Installation des dépendances npm
+      #    npm install (et non npm ci) : complète le lock pour la plateforme
+      #    Linux du runner (binaires sharp/emnapi) au lieu d'exiger un lock
+      #    parfaitement synchronisé cross-plateforme.
       - name: Installation des dépendances
-        run: npm ci
+        run: npm install --no-audit --no-fund
 
       # 6. Build de l'app Angular
       - name: Build Angular

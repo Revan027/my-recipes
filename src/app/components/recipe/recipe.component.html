@@ -1,19 +1,25 @@
 @if(isEditable()){
-    @if(recipeRequest().picture){
-        <div class="recipe-picture text-center" (click)="onClickPicture()">
-            <img [src]="getSrcPicture()"/>
-        </div>   
-    }@else{
-        <div class="recipe-picture-placeholder" (click)="onClickPicture()"> 
-            <div class="recipe-picture-placeholder-text">
-                <mat-icon class="mb-1">photo</mat-icon>
-                <div>Ajouter une photo</div>
+    <div class="recipe-picture-editable">
+        @if(recipeRequest().picture){
+            <div class="recipe-picture text-center" (click)="onClickPicture()">
+                <img [src]="getSrcPicture()"/>
+            </div>   
+        }@else{
+            <div class="recipe-picture-placeholder" (click)="onClickPicture()"> 
+                <div class="recipe-picture-placeholder-text">
+                    <mat-icon class="mb-1">photo</mat-icon>
+                    <div>Ajouter une photo</div>
+                </div>
             </div>
-        </div>
-    }
+        }
+    </div>
+}@else {
+    <div class="recipe-picture-no-editable">
+        <div class="recipe-picture"> <img [src]="getSrcPicture()"/></div>
+    </div>
 }
 
-<form #form [formGroup]="formGroup" novalidate>  
+<form #form [class.no-editable]="!isEditable()" [formGroup]="formGroup" novalidate>  
     <div class="content-padding">
         <div class="kicker mb-1">
             {{ recipeRequest().type.name }}
@@ -24,7 +30,7 @@
                 <mat-form-field>
                     <mat-label>Type de la recette</mat-label>
 
-                    <mat-select class="a" formControlName="typeID">
+                    <mat-select formControlName="typeID">
                         @for (item of recipeTypes(); track item.id) {
                             <mat-option value="{{ item.id }}">{{ item.name }}</mat-option>
                         }

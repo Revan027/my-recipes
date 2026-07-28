@@ -31,7 +31,9 @@ export const version1: string[] = [
   );`,
     `INSERT INTO ${tableName.type} (name) VALUES
     ('Plat'),
-    ('Salade');`,
+    ('Entrée'),
+    ('Salade'),
+    ('Apéritif');`,
     `INSERT INTO ${tableName.recipe} (title, picture, typeID) VALUES
     ('Poulet rôti', '', 1),
     ('Salade César', '', 2),

@@ -9,12 +9,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RecipeBookService } from '../../../Services/recipe-book.service';
 import { Location } from '@angular/common';
-import { RecipeComponent } from '../../../components/recipe/recipe';
-import { RouterLink } from '@angular/router';
+import { RecipeComponent } from '../../../components/recipe/recipe.component';
 
 @Component({
     selector: 'app-recipe-book',
-    imports: [MatIconModule, MatButtonModule, ProgressBar, SwipeDirective, RecipeComponent, RouterLink],
+    imports: [MatIconModule, MatButtonModule, ProgressBar, SwipeDirective, RecipeComponent],
     templateUrl: './recipe-book.html',
     styleUrl: './recipe-book.scss',
 })

@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { RecipeService } from './recipe-service';
+import { RecipeResult } from '../Models/RecipeResult';
 
 @Injectable({
     providedIn: 'root',
@@ -14,13 +15,19 @@ export class RecipeListService {
     loadSearch(searchText: string) {
         if (searchText != '' && searchText.length < 3) return;
 
+       this.reloadPage(searchText);
+    }
+
+    async reloadPage(searchText: string = ""){
         this.hasMore.set(true);
 
         let recipeSearch = this.recipeService.recipeSearch();
         recipeSearch.searchText = searchText;
-        recipeSearch.page = 0;
+        recipeSearch.page = 0; 
 
         this.recipeService.recipeSearch.set(recipeSearch);
+
+        this.recipeService.recipeResult.set(new RecipeResult());
     }
 
     async loadNextPage(): Promise<void> {

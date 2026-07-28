@@ -5,8 +5,7 @@ import { Recipe } from '../Models/Entities/Recipe';
 import { RecipeResult } from '../Models/RecipeResult';
 import { RecipeSearch } from '../Models/RecipeSearch';
 import { Type } from '../Models/Entities/Type';
-import { Ingredient } from '../Models/Entities/Ingredient';
-import { Step } from '../Models/Entities/Step';
+
 
 @Injectable({
     providedIn: 'root',
@@ -31,38 +30,100 @@ export class RecipeService {
                 VALUES (?, ?, ?)`;
 
             let result = await this.storageService.getDb().run(sql, [recipe.title, recipe.picture, recipe.typeID], false);
-          alert(result.changes?.lastId);
-             // on créee les ingrédients
-            for (const ingredient of recipe.ingredients) {
-                sql = `
-                    INSERT INTO ${tableName.ingredient} (name, recipeID) 
-                    VALUES (?, ?)`;
 
-                await this.storageService.getDb().run(sql, [ingredient.name, result.changes?.lastId], false);
-            }
-  alert(result.changes?.lastId);
+            // on créee les ingrédients
+           await this.createIngredients(result.changes?.lastId ?? 0, recipe);
+
             // on créée les étapes
-            for (const step of recipe.steps) {
-                sql = `
-                    INSERT INTO ${tableName.step} (title, content, position, recipeID) 
-                    VALUES (?, ?, ?, ?)`;
+            await this.createSteps(result.changes?.lastId ?? 0, recipe);
 
-                result = await this.storageService.getDb().run(sql, [step.title, step.content, step.position, result.changes?.lastId], false);
-            }
-  alert(result.changes?.lastId);
-            await this.storageService.getDb().commitTransaction();   // tout est validé d'un coup
+            // tout est validé d'un coup
+            await this.storageService.getDb().commitTransaction(); 
         } catch (err) {
             isSuccess = false;
-  alert(err);
+
             if ((await this.storageService.getDb()?.isTransactionActive()).result) {
                 await this.storageService.getDb()?.rollbackTransaction();   // tout est annulé si une erreur survient
             }
-            
-            throw err;
+
+            return isSuccess;
         }
 
         return isSuccess;
     }
+
+    private async createIngredients(lastId: number, recipe: Recipe): Promise<void>{
+        for (const ingredient of recipe.ingredients) {
+            const sql = `
+                INSERT INTO ${tableName.ingredient} (name, recipeID) 
+                VALUES (?, ?)`;
+
+            await this.storageService.getDb().run(sql, [ingredient.name, lastId], false);
+        }
+    }
+
+    private async createSteps(lastId: number, recipe: Recipe): Promise<void>{
+        for (const step of recipe.steps) {
+            const sql = `
+                INSERT INTO ${tableName.step} (title, content, position, recipeID) 
+                VALUES (?, ?, ?, ?)`;
+
+            await this.storageService.getDb().run(sql, [step.title, step.content, step.position, lastId], false);
+        }
+    }
+
+    async update(recipe: Recipe): Promise<boolean> {
+         let isSuccess = true;
+
+        try {
+            await this.storageService.getDb().beginTransaction();
+
+            let sql = `
+                UPDATE ${tableName.recipe}
+                SET title = ?, picture = ?, typeID = ?
+                WHERE id = ?`;
+
+            await this.storageService.getDb().run(sql, [recipe.title, recipe.picture, recipe.typeID, recipe.id], false);
+
+            await this.deleteIngredients(recipe);
+
+            await this.deleteSteps(recipe)
+
+            await this.createIngredients(recipe.id, recipe);
+
+            await this.createSteps(recipe.id, recipe);
+
+            // tout est validé d'un coup
+            await this.storageService.getDb().commitTransaction(); 
+        } catch (err) {
+            isSuccess = false;
+
+            if ((await this.storageService.getDb()?.isTransactionActive()).result) {
+                await this.storageService.getDb()?.rollbackTransaction();   // tout est annulé si une erreur survient
+            }
+
+            return isSuccess;
+        }
+
+        return isSuccess;
+    }
+
+    private async deleteIngredients(recipe: Recipe): Promise<void>{
+       const sql = `
+                DELETE FROM ${tableName.ingredient}
+                WHERE recipeID = ?`;
+
+            await this.storageService.getDb().run(sql, [recipe.id], false);
+    }
+
+    private async deleteSteps(recipe: Recipe): Promise<void>{
+        const sql = `
+                DELETE FROM ${tableName.step}
+                WHERE recipeID = ?`;
+
+            await this.storageService.getDb().run(sql, [recipe.id], false);
+    }
+
 
     async getTypes(): Promise<Type[]> {
         const result = await this.storageService.getDb().query(`
@@ -121,5 +182,21 @@ export class RecipeService {
             ${this.getQuerySearch()}`);
 
         return result.values != undefined ? (result.values[0].countTotal as number) : 0;
+    }
+
+    getSrcPicture(recipe: Recipe){
+        const picture = recipe.picture;
+
+        if (!picture) {
+            return '';
+        }
+
+        // chemin d'asset ou URL (mocks) → on retourne tel quel
+        if (picture.startsWith('assets/') || picture.startsWith('http') || picture.startsWith('data:')) {
+            return picture;
+        }
+
+        // sinon c'est du base64 (photo prise par l'utilisateur)
+        return `data:image/jpeg;base64,${picture}`;
     }
 }

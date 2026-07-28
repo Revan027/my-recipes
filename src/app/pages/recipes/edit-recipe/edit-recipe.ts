@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeResult } from '../../../Models/RecipeResult';
 import { RecipeService } from '../../../Services/recipe-service';
 import { Recipe } from '../../../Models/Entities/Recipe';
-import { RecipeComponent } from '../../../components/recipe/recipe';
+import { RecipeComponent } from '../../../components/recipe/recipe.component';
 import { Location } from '@angular/common';
 
 @Component({
@@ -51,6 +51,10 @@ export class EditRecipe {
     }
 
     onReturnBack() {
-        this.router.navigate(["recipes",  + (this.id ?? 0)]);
+        if(this.id  && this.id > 0){
+            this.router.navigate(["recipes",  + (this.id ?? 0)]);
+        }else{
+            this.router.navigate(["recipes"]);
+        }  
     }
 }

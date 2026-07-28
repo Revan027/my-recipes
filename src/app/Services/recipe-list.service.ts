@@ -30,6 +30,23 @@ export class RecipeListService {
         this.recipeService.recipeResult.set(new RecipeResult());
     }
 
+    async refreshResult(){ 
+        this.isLoading.set(true);
+
+        let recipeResult = this.recipeService.recipeResult();
+        let recipeSearch = this.recipeService.recipeSearch();
+        recipeSearch.page = 1; 
+
+        this.recipeService.recipeSearch.set(recipeSearch);
+
+        const recipes = await this.recipeService.fetchPage(this.recipeService.recipeResult().countTotal);
+        recipeResult.recipes = recipes;
+
+        this.recipeService.recipeResult.set(recipeResult);
+
+        this.isLoading.set(false);
+    }
+
     async loadNextPage(): Promise<void> {
         if (!this.hasMore()) {
             return;

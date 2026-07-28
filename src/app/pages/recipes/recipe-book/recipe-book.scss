@@ -48,13 +48,6 @@
             flex-shrink: 0;
             flex-grow: 0;
             flex-basis: 100%;
-
-            .recipe-content{
-                border-radius: 20px;
-                background-color: var(--color-surface);
-                border: 1px solid var(--color-surface);
-                transform: translateY(-20px);
-            }
         }
     }
 }

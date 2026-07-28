@@ -124,7 +124,6 @@ export class RecipeService {
             await this.storageService.getDb().run(sql, [recipe.id], false);
     }
 
-
     async getTypes(): Promise<Type[]> {
         const result = await this.storageService.getDb().query(`
             SELECT 
@@ -134,7 +133,7 @@ export class RecipeService {
         return result.values != undefined ? (result.values as Type[]) : [];
     }
 
-    async fetchPage(): Promise<Recipe[]> {
+    async fetchPage(take: number | undefined = undefined): Promise<Recipe[]> {
         let recipesResult = await this.storageService.getDb().query(`
             SELECT 
                 recipe.id, recipe.typeID, recipe.picture, recipe.title,
@@ -142,7 +141,7 @@ export class RecipeService {
             FROM ${tableName.recipe} as recipe 
             INNER JOIN ${tableName.type} AS type ON ${tableName.type}.id = typeID
             ${this.getQuerySearch()}
-            LIMIT ${this.take} OFFSET ${(this.recipeSearch().page - 1) * this.take}`);
+            LIMIT ${take ?? this.take} OFFSET ${(this.recipeSearch().page - 1) * (take ?? this.take)}`);
 
         //todo en promise all
         let recipes = recipesResult.values?.map((item) => Recipe.createRecipe(item));

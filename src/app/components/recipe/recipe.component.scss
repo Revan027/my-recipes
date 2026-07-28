@@ -15,18 +15,20 @@ form.no-editable{
         height: 50dvh;
     }
 
-    .recipe-picture{
+    .recipe-picture img{
         width: 100%;
-        border-radius: 20px;
         aspect-ratio: 1 / 1;
         object-fit: cover;
         object-position: center;
     } 
 }
 
-.recipe-picture-no-editable{
+.recipe-picture-editable{
     .recipe-picture img{
-        width: 100%;
+        width: 80%;
+        height: 300px;
+        border: 1px solid var(--color-lines);
+        border-radius: 20px;
         aspect-ratio: 1 / 1;
         object-fit: cover;
         object-position: center;

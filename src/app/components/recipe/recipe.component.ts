@@ -138,8 +138,7 @@ export class RecipeComponent {
                 if(isSuccess){
                     this.toastrService.success(`Modification effectuée`);
 
-                    await this.recipeListService.reloadPage(); 
-                    await this.recipeListService.loadNextPage();
+                    await this.recipeListService.refreshResult(); 
                 }else{
                     this.toastrService.error(`Une erreur est survenue`);
                 }

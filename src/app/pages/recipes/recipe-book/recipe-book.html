@@ -25,9 +25,7 @@
     <div #list appSwipe class="recipe-pages">
         @for (recipe of recipeResult().recipes; track recipe.id) {
             <div [attr.data-id]="recipe.id" [id]="`page-${recipe.id}`" class="recipe-page">
-                <div class="recipe-content">
-                    <app-recipe-component [recipe]="recipe" ></app-recipe-component>
-                </div>
+                <app-recipe-component [recipe]="recipe" ></app-recipe-component>
             </div>
         } @empty {
             <span>Aucune recette</span>

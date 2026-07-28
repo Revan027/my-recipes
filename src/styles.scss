@@ -43,6 +43,14 @@ body {
   height: 100%;
 }
 
+.app-version{
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  font-size: var(--font-size-xs); 
+  color: var(--color-accent);
+}
+
 // ESPACEMENTS
 .content-padding{
   padding: 20px 20px;

@@ -8,7 +8,6 @@ import { RecipeService } from '../../../Services/recipe-service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RecipeBookService } from '../../../Services/recipe-book.service';
-import { Location } from '@angular/common';
 import { RecipeComponent } from '../../../components/recipe/recipe.component';
 
 @Component({
@@ -29,7 +28,6 @@ export class RecipeBook {
         private recipeService: RecipeService,
         private recipeBookService: RecipeBookService,
         private activatedRoute: ActivatedRoute,
-        private location: Location,
         private router: Router,
     ) {
         this.recipeResult = this.recipeService.recipeResult;

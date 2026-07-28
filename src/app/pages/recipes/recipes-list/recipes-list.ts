@@ -20,6 +20,8 @@ import { RecipeListService } from '../../../Services/recipe-list.service';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RecipeSearch } from '../../../Models/RecipeSearch';
 import { Observable } from 'rxjs';
+import { App } from '@capacitor/app';
+import { Location } from '@angular/common';
 
 @Component({
     selector: 'app-recipes-list',
@@ -52,17 +54,27 @@ export class RecipesList {
     pictureClass: { key: number; class: string }[] = [];
     formGroup!: FormGroup;
     timeout?: number = 0;
+    numVersion!: string;
 
     constructor(
         private appInitService: AppInitService,
         private recipeService: RecipeService,
         private recipeListService: RecipeListService,
-        private formBuilder: FormBuilder,
+        private formBuilder: FormBuilder, 
+        private location: Location
     ) {
         this.isAppReady = this.appInitService.isAppReady;
         this.recipeResult = this.recipeService.recipeResult;
         this.recipeSearch = this.recipeService.recipeSearch;
         this.isLoading = this.recipeListService.isLoading;
+
+        App.addListener('backButton', (event: any) => {
+            if (event.canGoBack) {
+                this.location.back();
+            } else {
+                App.exitApp();
+            }
+        });
     }
 
     @HostListener('window:scroll')
@@ -81,6 +93,10 @@ export class RecipesList {
     }
 
     async ngOnInit() {
+        const info = await App.getInfo();
+
+        this.numVersion = info.version;
+
         this.setPictureClass();
 
         this.isPageReady.set(true);

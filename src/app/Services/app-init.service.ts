@@ -29,11 +29,11 @@ export class AppInitService {
 
         if (Capacitor.isNativePlatform()) {
             await this.storageService.initPlugin();
+
+            await this.loadAppVersion();
         }
 
-        this.intBackListener();
-
-        await this.loadAppVersion();
+        this.intBackListener();   
 
         await this.loadDatas(Capacitor.isNativePlatform());
 

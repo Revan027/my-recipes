@@ -6,6 +6,8 @@ import { Recipe } from '../Models/Entities/Recipe';
 import { RecipeResult } from '../Models/RecipeResult';
 import { MOCK_RECIPES, MOCK_TYPES } from '../constants/mock-recipes';
 import { RecipeListService } from './recipe-list.service';
+import { App } from '@capacitor/app';
+import { Location } from '@angular/common';
 
 @Injectable({
     providedIn: 'root',
@@ -13,11 +15,13 @@ import { RecipeListService } from './recipe-list.service';
 export class AppInitService {
     isAppReady = signal<boolean>(false);
     isNativePlateform = signal<boolean>(false);
+    appVersion = signal<string>("");
 
     constructor(
         private storageService: StorageService,
         private recipeService: RecipeService,
         private recipeListService: RecipeListService,
+        private location: Location
     ) {}
 
     async init(): Promise<void> {
@@ -27,10 +31,31 @@ export class AppInitService {
             await this.storageService.initPlugin();
         }
 
+        this.intBackListener();
+
+        await this.loadAppVersion();
+
         await this.loadDatas(Capacitor.isNativePlatform());
 
         this.isAppReady.set(true);
     }
+
+    intBackListener(){
+        App.addListener('backButton', (event: any) => {
+            if (event.canGoBack) {
+                this.location.back();
+            } else {
+                App.exitApp();
+            }
+        });
+    }
+
+    async loadAppVersion(){
+        const info = await App.getInfo();
+        this.appVersion.set(info.version);
+    }
+
+
 
     private async loadDatas(isNativePlateform: boolean): Promise<void> {
         let recipes: Recipe[] = [];

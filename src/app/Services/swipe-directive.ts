@@ -16,7 +16,7 @@ export class SwipeDirective {
     private totalPxMove: number = 0;
     private currentDirection: string = '';
     private readonly directions = { Next: 'NEXT', Prev: 'PREV' };
-    private readonly windowWidth = window.innerWidth;
+    private readonly windowWidth = window.screen.width;
 
     constructor(
         private el: ElementRef<HTMLElement>,

@@ -15,8 +15,8 @@ export class SwipeDirective {
     private isSwipeBlocked = false;
     private totalPxMove: number = 0;
     private currentDirection: string = '';
+    private pageWidth = 0;
     private readonly directions = { Next: 'NEXT', Prev: 'PREV' };
-    private readonly windowWidth = window.screen.width;
 
     constructor(
         private el: ElementRef<HTMLElement>,
@@ -112,6 +112,8 @@ export class SwipeDirective {
 
     private fetchPage() {
         this.isSwipeBlocked = true;
+
+        this.pageWidth = this.el.nativeElement.children[0].getBoundingClientRect().width;  
         
         //on remet à zéro le previousClientX pour redémarrer une page de donnée neuve
         this.setPreviousClientX(0);
@@ -138,7 +140,7 @@ export class SwipeDirective {
     }
 
     handleAdvancement() {
-        const totalPage = Math.round(this.el.nativeElement.scrollWidth / this.windowWidth);
+        const totalPage = Math.round(this.el.nativeElement.scrollWidth / this.pageWidth);
         const currentBookPage = this.recipeBookService.currentBookPage();
 
         if (
@@ -158,7 +160,7 @@ export class SwipeDirective {
     }
 
     next() {
-        this.translateElement(this.recipeBookService.currentBookPage() * this.windowWidth); // on prend la taille max d'une page et on * par la position de la page pour avoirt le décalage réel
+        this.translateElement(this.recipeBookService.currentBookPage() * this.pageWidth); // on prend la taille max d'une page et on * par la position de la page pour avoirt le décalage réel
 
         this.recipeBookService.currentBookPage.set(this.recipeBookService.currentBookPage() + 1);
     }
@@ -166,7 +168,7 @@ export class SwipeDirective {
     previous() {
         let currentBookPage = this.recipeBookService.currentBookPage();
 
-        this.translateElement((currentBookPage - 1) * this.windowWidth - this.windowWidth); // on prend la taille min d'une page
+        this.translateElement((currentBookPage - 1) * this.pageWidth - this.pageWidth); // on prend la taille min d'une page
 
         this.recipeBookService.currentBookPage.set(currentBookPage - 1);
     }
@@ -174,7 +176,7 @@ export class SwipeDirective {
     translateElement(pxMove: number) {
         this.totalPxMove = pxMove; //on avance le total
         this.renderer.setStyle(this.el.nativeElement, 'will-change', 'transform');
-        this.renderer.setStyle(this.el.nativeElement, 'transform', `translate3d(${-pxMove}px,0,0)`);
+        this.renderer.setStyle(this.el.nativeElement, 'transform', `translateX(${-pxMove}px)`);
     }
 
     removeAnimation() {

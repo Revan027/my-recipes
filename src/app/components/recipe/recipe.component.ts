@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Type } from '../../Models/Entities/Type';
-import { RecipeService } from '../../Services/recipe-service';
+import { RecipeService } from '../../Services/recipe.service';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Ingredient } from '../../Models/Entities/Ingredient';
 import { ValidatorFn } from '@angular/forms';

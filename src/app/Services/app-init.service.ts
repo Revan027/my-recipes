@@ -1,7 +1,7 @@
 import { Injectable, signal } from '@angular/core';
 import { StorageService } from './storage.services.common/storage-service';
 import { Capacitor } from '@capacitor/core';
-import { RecipeService } from './recipe-service';
+import { RecipeService } from './recipe.service';
 import { Recipe } from '../Models/Entities/Recipe';
 import { RecipeResult } from '../Models/RecipeResult';
 import { MOCK_RECIPES, MOCK_TYPES } from '../constants/mock-recipes';

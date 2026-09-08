@@ -11,7 +11,7 @@ import { SearchField } from '../../../components/fields/search-field/search-fiel
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { RecipeService } from '../../../Services/recipe-service';
+import { RecipeService } from '../../../Services/recipe.service';
 import { AppInitService } from '../../../Services/app-init.service';
 import { RecipeResult } from '../../../Models/RecipeResult';
 import { RecipeCard } from '../../../components/recipe-card/recipe-card';

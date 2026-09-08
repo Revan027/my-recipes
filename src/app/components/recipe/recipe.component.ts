@@ -65,7 +65,7 @@ export class RecipeComponent {
         private formBuilder: FormBuilder,
         private mediaService: MediaService,
         private recipeListService: RecipeListService,
-        private toastrService: ToastrService,
+        private toastService: ToastrService,
         private router: Router,
     ) {
         this.recipeTypes = this.recipeService.recipeTypes;
@@ -105,7 +105,26 @@ export class RecipeComponent {
     }
 
     private createStepFormGroup(step : Step){
-        return this.formBuilder.group({ stepTitle: [step.title], stepContent: [step.content], });
+        return this.formBuilder.group({ stepContent: [step.content], });
+    }
+
+    async delete(){
+        this.isSubmit = true;
+
+        const isSuccess = await this.recipeService.delete(this.recipeRequest());
+
+        if(isSuccess){
+            this.toastService.success(`Suppression effectuée`);
+        }else{
+            this.toastService.error(`Une erreur est survenue`);
+        }
+        
+        await this.recipeListService.reloadPage(); 
+        await this.recipeListService.loadNextPage();
+
+        this.isSubmit = false;
+
+        this.router.navigate(["recipes"]);
     }
 
     async submit() {
@@ -126,7 +145,7 @@ export class RecipeComponent {
                 });
 
                 recipe.steps = value.steps.map( (element: any, i: number) => {
-                    return {title : element.stepTitle, content: element.stepContent, position: i + 1} as Step
+                    return {content: element.stepContent, position: i + 1} as Step
                 });
 
                 return recipe;
@@ -136,11 +155,11 @@ export class RecipeComponent {
                 const isSuccess = await this.recipeService.update(this.recipeRequest());
 
                 if(isSuccess){
-                    this.toastrService.success(`Modification effectuée`);
+                    this.toastService.success(`Modification effectuée`);
 
                     await this.recipeListService.refreshResult(); 
                 }else{
-                    this.toastrService.error(`Une erreur est survenue`);
+                    this.toastService.error(`Une erreur est survenue`);
                 }
 
                 this.isSubmit = false;
@@ -148,9 +167,9 @@ export class RecipeComponent {
                 const isSuccess = await this.recipeService.create(this.recipeRequest());
 
                 if(isSuccess){
-                    this.toastrService.success(`Création effectuée`);
+                    this.toastService.success(`Création effectuée`);
                 }else{
-                    this.toastrService.error(`Une erreur est survenue`);
+                    this.toastService.error(`Une erreur est survenue`);
                 }
                 
                 await this.recipeListService.reloadPage(); 

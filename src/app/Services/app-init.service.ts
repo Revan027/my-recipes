@@ -8,6 +8,7 @@ import { MOCK_RECIPES, MOCK_TYPES } from '../constants/mock-recipes';
 import { RecipeListService } from './recipe-list.service';
 import { App } from '@capacitor/app';
 import { Location } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root',
@@ -21,7 +22,8 @@ export class AppInitService {
         private storageService: StorageService,
         private recipeService: RecipeService,
         private recipeListService: RecipeListService,
-        private location: Location
+        private location: Location,
+        private router: Router
     ) {}
 
     async init(): Promise<void> {
@@ -42,8 +44,14 @@ export class AppInitService {
 
     intBackListener(){
         App.addListener('backButton', (event: any) => {
+            const regex = /recipes\/(\d)*\/edit/;
+
             if (event.canGoBack) {
-                this.location.back();
+                if(regex.test(this.location.path())){
+                    this.router.navigate([this.location.path().replace("/edit", "")]);
+                }else{
+                    this.location.back();
+                }
             } else {
                 App.exitApp();
             }
@@ -54,8 +62,6 @@ export class AppInitService {
         const info = await App.getInfo();
         this.appVersion.set(info.version);
     }
-
-
 
     private async loadDatas(isNativePlateform: boolean): Promise<void> {
         let recipes: Recipe[] = [];

@@ -68,15 +68,13 @@ export class RecipesList {
     }
 
     @HostListener('window:scroll')
-    onScroll() {
-        const offsetScroll = 30;
+    async onScroll() {
+        const offsetScroll = 50;
 
-        if (
-            window.scrollY + window.innerHeight >
-                this.list.nativeElement.scrollHeight - offsetScroll &&
-            !this.isLoading()
-        ) {
-            this.recipeListService.loadNextPage();
+        if (window.scrollY + window.innerHeight > this.list.nativeElement.scrollHeight - offsetScroll && !this.isLoading()) 
+        {
+    
+            await this.recipeListService.loadNextPage();
 
             this.pictureClass = this.recipeListService.getPictureClass();
         }

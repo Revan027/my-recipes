@@ -7,11 +7,12 @@ import { RecipeResult } from '../../../Models/RecipeResult';
 import { RecipeService } from '../../../Services/recipe-service';
 import { Recipe } from '../../../Models/Entities/Recipe';
 import { RecipeComponent } from '../../../components/recipe/recipe.component';
-import { Location } from '@angular/common';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { DialogComponent } from '../../../components/dialog/dialog';
 
 @Component({
     selector: 'app-edit-recipe',
-    imports: [MatButtonModule, MatIconModule, RecipeComponent],
+    imports: [MatButtonModule, MatIconModule, RecipeComponent, MatDialogModule],
     templateUrl: './edit-recipe.html',
     styleUrl: './edit-recipe.scss',
 })
@@ -28,7 +29,7 @@ export class EditRecipe {
     constructor(
         private recipeService: RecipeService,
         private activatedRoute: ActivatedRoute,
-        private location: Location,
+        private matDialog: MatDialog,
         private router: Router
     ) {
         this.recipeResult = this.recipeService.recipeResult;
@@ -48,6 +49,21 @@ export class EditRecipe {
     onSubmit() {
         // appelle la méthode du composant enfant
         this.recipeComponent().submit();
+    }
+
+    onDelete() {
+        const dialogRef = this.matDialog.open(DialogComponent, {
+            data: {
+                title: 'Supprimer',
+                text: "Confirmer la suppression ?"
+            },
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+            if(result){
+                this.recipeComponent().delete();
+            }
+        });
     }
 
     onReturnBack() {

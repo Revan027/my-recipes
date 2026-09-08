@@ -16,6 +16,10 @@ button{
   --mat-button-text-label-text-color: var(--color-accent);
 }
 
+.btn-link--danger {
+  --mat-button-text-label-text-color: var(--color-danger);
+}
+
 .btn-link--black {
   --mat-button-text-label-text-color: black;
 }

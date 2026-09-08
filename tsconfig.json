@@ -13,7 +13,12 @@
     "experimentalDecorators": true,
     "importHelpers": true,
     "target": "ES2022",
-    "module": "preserve"
+    "module": "preserve",
+    "paths": {
+      "@common/file/*": ["./src/app/Services/file.services.common/*"],
+      "@common/media/*": ["./src/app/Services/media.services.common/*"],
+      "@common/storage/*": ["./src/app/Services/storage.services.common/*"]
+    }
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,

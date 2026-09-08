@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { StorageService } from './storage.services.common/storage-service';
+import { StorageService } from '@common/storage/storage-service';
 import { Capacitor } from '@capacitor/core';
 import { RecipeService } from './recipe.service';
 import { Recipe } from '../Models/Entities/Recipe';

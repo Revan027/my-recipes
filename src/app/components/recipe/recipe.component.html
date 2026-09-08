@@ -113,19 +113,6 @@
                         </div>
 
                         <div class="step-content-wrapper">
-                            <div class="kicker kicker--main-text mb-1">
-                                @if (isEditable()) {                              
-                                    <input
-                                        formControlName="stepTitle"
-                                        class="empty empty--dashed"
-                                        type="text"
-                                        placeholder="Préparer les oeufs"
-                                    />
-                                } @else {
-                                    {{ step.value.stepTitle}}
-                                }
-                            </div>
-
                             <div class="step-content">
                                 @if (isEditable()) {
                                     <textarea class="empty empty--dashed" rows="3" placeholder="Casser et cuire les oeufs" formControlName="stepContent"></textarea>

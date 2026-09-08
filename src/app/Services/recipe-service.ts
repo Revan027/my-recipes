@@ -15,7 +15,7 @@ export class RecipeService {
     recipeSearch = signal<RecipeSearch>(new RecipeSearch());
     recipeTypes = signal<Type[]>([]);
 
-    readonly take: number = 4;
+    readonly take: number = 6;
 
     constructor(private storageService: StorageService) {}
 
@@ -65,10 +65,10 @@ export class RecipeService {
     private async createSteps(lastId: number, recipe: Recipe): Promise<void>{
         for (const step of recipe.steps) {
             const sql = `
-                INSERT INTO ${tableName.step} (title, content, position, recipeID) 
-                VALUES (?, ?, ?, ?)`;
+                INSERT INTO ${tableName.step} (content, position, recipeID) 
+                VALUES (?, ?, ?)`;
 
-            await this.storageService.getDb().run(sql, [step.title, step.content, step.position, lastId], false);
+            await this.storageService.getDb().run(sql, [step.content, step.position, lastId], false);
         }
     }
 
@@ -108,20 +108,51 @@ export class RecipeService {
         return isSuccess;
     }
 
-    private async deleteIngredients(recipe: Recipe): Promise<void>{
-       const sql = `
-                DELETE FROM ${tableName.ingredient}
-                WHERE recipeID = ?`;
+    async delete(recipe: Recipe): Promise<boolean> {
+        let isSuccess = true;
+
+        try {
+            await this.storageService.getDb().beginTransaction();
+
+            // les enfants d'abord : les FK step/ingredient -> recipe empêchent
+            // de supprimer la recette tant qu'elle est référencée
+            await this.deleteIngredients(recipe);
+
+            await this.deleteSteps(recipe);
+
+            const sql = `DELETE FROM ${tableName.recipe} WHERE id = ?`;
 
             await this.storageService.getDb().run(sql, [recipe.id], false);
+
+            // tout est validé d'un coup
+            await this.storageService.getDb().commitTransaction(); 
+        } catch (err) {
+            isSuccess = false;
+
+            if ((await this.storageService.getDb()?.isTransactionActive()).result) {
+                await this.storageService.getDb()?.rollbackTransaction();   // tout est annulé si une erreur survient
+            }
+
+            return isSuccess;
+        }
+
+        return isSuccess;
+    }
+
+    private async deleteIngredients(recipe: Recipe): Promise<void>{
+       const sql = `
+            DELETE FROM ${tableName.ingredient}
+            WHERE recipeID = ?`;
+
+        await this.storageService.getDb().run(sql, [recipe.id], false);
     }
 
     private async deleteSteps(recipe: Recipe): Promise<void>{
         const sql = `
-                DELETE FROM ${tableName.step}
-                WHERE recipeID = ?`;
+            DELETE FROM ${tableName.step}
+            WHERE recipeID = ?`;
 
-            await this.storageService.getDb().run(sql, [recipe.id], false);
+        await this.storageService.getDb().run(sql, [recipe.id], false);
     }
 
     async getTypes(): Promise<Type[]> {
@@ -151,7 +182,7 @@ export class RecipeService {
         // on récupère les étapes de chaque recette
         let stepsResult = await this.storageService.getDb().query(`
             SELECT
-                step.id as stepID, step.content as stepContent, step.position as stepPosition, step.title as stepTitle, step.recipeID
+                step.id as stepID, step.content as stepContent, step.position as stepPosition, step.recipeID
             FROM ${tableName.step} as step
             WHERE step.recipeID IN (${recipeIDs})`);
 

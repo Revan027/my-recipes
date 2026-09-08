@@ -1,7 +1,10 @@
 <div class="action-bar mb-3">
     <button matButton class="btn-link--secondary-text" (click)="onReturnBack()">Annuler</button>
-    <button matButton class="btn-link--black">Modifier</button>
-    <button matButton class="btn-link--accent" (click)="onSubmit()">Enregistrer</button>
+    
+    <div class="sub-action-bar">
+        <button matButton class="btn-link--accent" (click)="onSubmit()">Enregistrer</button>
+        <button matButton class="btn-link--danger" (click)="onDelete()">Supprimer</button>
+    </div>  
 </div>
 
 <div>

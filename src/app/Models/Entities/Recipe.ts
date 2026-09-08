@@ -33,7 +33,6 @@ export class Recipe {
             step.id = data.stepID;
             step.content = data.stepContent;
             step.position = data.stepPosition;
-            step.title = data.stepTitle;
 
             recipe?.steps.push(step);
         });

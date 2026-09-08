@@ -1,7 +1,11 @@
 import { tableName } from './table-names';
 
 export const DB_NAME = 'my_receipes_db';
-export const DB_VERSION = 1;
+export const DB_VERSION = 2;
+
+export const version2: string[] = [
+`ALTER TABLE ${tableName.step} DROP COLUMN title;`
+];
 
 export const version1: string[] = [
     `CREATE TABLE IF NOT EXISTS ${tableName.type} (
@@ -36,4 +40,7 @@ export const version1: string[] = [
     ('Apéritif');`,
 ];
 
-export const DB_UPGRADES = [{ toVersion: DB_VERSION, statements: version1 }];
+export const DB_UPGRADES = [
+  { toVersion: 1, statements: version1 },
+  { toVersion: 2, statements: version2 },
+];

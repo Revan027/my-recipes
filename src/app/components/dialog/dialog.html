@@ -1,0 +1,13 @@
+<mat-dialog-content>
+    {{data.text}}
+</mat-dialog-content>
+
+<mat-dialog-actions>
+    <button matFab extended class="btn-fab--empty" mat-dialog-close>
+        Annuler
+    </button>
+
+     <button matFab extended class="btn-fab--accent" (click)="onClose()" cdkFocusInitial>  
+        Confirmer
+    </button>
+</mat-dialog-actions>

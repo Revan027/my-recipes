@@ -1,4 +1,4 @@
 export const folder = {
-    My_Receipes: 'MY_RECEIPES',
-    Backup: 'BACKUP_MY_RECEIPES',
+    My_Recipes: 'MY_RECIPES',
+    Backup: 'BACKUP_MY_RECIPES',
 };

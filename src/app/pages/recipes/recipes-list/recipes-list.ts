@@ -100,7 +100,7 @@ export class RecipesList {
 
     private launchTimetout() {
         if (this.timeout == 0) {
-            this.timeout = setTimeout(async () => {
+            this.timeout = window.setTimeout(async () => {
                 this.recipeListService.loadSearch(this.formGroup.get('searchText')?.value); // on lance la recherche si pendat 1 seconde pas de texte tapé
 
                 await this.recipeListService.loadNextPage();

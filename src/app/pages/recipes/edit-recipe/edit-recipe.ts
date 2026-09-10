@@ -54,7 +54,7 @@ export class EditRecipe {
     async onSubmit() {
         // appelle la méthode du composant enfant
         //this.recipeComponent().submit();
-        const uri = await this.PDFService.savePDF();
+        const uri = await this.PDFService.savePDF(this.recipe());
         this.shareService.share([uri]);
     }
 

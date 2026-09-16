@@ -29,9 +29,20 @@
 
 <form #form [class.no-editable]="!isEditable()" [formGroup]="formGroup" novalidate>  
     <div class="content-padding">
-        <div class="kicker mb-1">
-            {{ recipeRequest().type.name }}
+        <div class="mb-1">
+            <div class="recipe-header">
+                <div class="kicker">
+                    {{ recipeRequest().type.name }}
+                </div>
+
+                <div>
+                    <button matMiniFab class="btn-mini-fab--empty" (click)="onDownload()">
+                        <mat-icon>download</mat-icon>
+                    </button>
+                </div>
+            </div>         
         </div>
+        
 
         @if (isEditable()) {
             <div>

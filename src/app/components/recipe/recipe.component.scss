@@ -1,7 +1,7 @@
 form.no-editable{
     border-radius: 20px;
-    background-color: var(--color-surface);
-    border: 1px solid var(--color-surface);
+    background-color: var(--color-background);
+    border: 1px solid var(--color-background);
     transform: translateY(-20px);  
 }
 
@@ -55,6 +55,12 @@ form.no-editable{
     }
 }
 
+.recipe-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .recipe-ingredients{
     display: flex;
     flex-wrap: wrap;
@@ -80,7 +86,6 @@ form.no-editable{
             font-weight: 400;
             font-size: var(--font-size-lg);
             line-height: 1.62;
-            opacity: 0.82;
         }
     }
 }

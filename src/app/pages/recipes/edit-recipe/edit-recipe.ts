@@ -9,8 +9,7 @@ import { Recipe } from '../../../Models/Entities/Recipe';
 import { RecipeComponent } from '../../../components/recipe/recipe.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogComponent } from '../../../components/dialog/dialog';
-import { PDFService } from '../../../Services/pdf.service';
-import { ShareService } from '../../../Services/share.service';
+
 
 @Component({
     selector: 'app-edit-recipe',
@@ -32,10 +31,7 @@ export class EditRecipe {
         private recipeService: RecipeService,
         private activatedRoute: ActivatedRoute,
         private matDialog: MatDialog,
-        private router: Router, 
-        private PDFService: PDFService,
-        private shareService: ShareService,
-
+        private router: Router,
     ) {
         this.recipeResult = this.recipeService.recipeResult;
     }
@@ -53,9 +49,7 @@ export class EditRecipe {
 
     async onSubmit() {
         // appelle la méthode du composant enfant
-        //this.recipeComponent().submit();
-        const uri = await this.PDFService.savePDF(this.recipe());
-        this.shareService.share([uri]);
+        this.recipeComponent().submit();
     }
 
     onDelete() {

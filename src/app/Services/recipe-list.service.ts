@@ -93,7 +93,7 @@ export class RecipeListService {
     getPictureClass(): { key: number; class: string }[] {
         const recipesPictureEmpty = this.recipeService
             .recipeResult()
-            .recipes.filter((item) => !item.picture);
+            .recipes.filter((item) => !item.srcPicture);
         let count = 1;
         let pictureClass: { key: number; class: string }[] = [];
 

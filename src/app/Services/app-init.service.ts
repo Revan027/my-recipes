@@ -6,6 +6,7 @@ import { RecipeListService } from './recipe-list.service';
 import { App } from '@capacitor/app';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
+import { FileService } from './file.services.common/file.service';
 
 @Injectable({
     providedIn: 'root',
@@ -22,7 +23,8 @@ export class AppInitService {
         private recipeService: RecipeService,
         private recipeListService: RecipeListService,
         private location: Location,
-        private router: Router
+        private router: Router,
+        private fileService: FileService
     ) {}
 
     async init(): Promise<void>{
@@ -36,10 +38,12 @@ export class AppInitService {
 
         const p1 = this.recipeListService.loadNextPage();
         const p2 = this.recipeService.getTypes();
+        const p3 = this.fileService.getDocumentsUri("");
 
         // on attend la résolution des promises
-        Promise.all([p1, p2]).then((values) => {
-            this.recipeService.loadTypes(values[1]);
+        Promise.all([p1, p2, p3]).then((values) => {
+            this.recipeService.loadTypes(values[1]);         
+            this.recipeService.loadDocumentURI(values[2]);
 
             this._isAppInit.set(true);
 

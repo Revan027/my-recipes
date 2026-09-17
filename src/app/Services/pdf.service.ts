@@ -52,11 +52,8 @@ export class PDFService {
         });
     }
 
-    private generatePDF(){
-
-    }
-
     async savePDF(recipe: Recipe): Promise<string>{
+        const dataImage = await this.fileService.readFile(recipe.srcPicture as string);
 
         let docDefinition: TDocumentDefinitions = {
             // pdfmake n'a pas de primitive "fond de page" : il faut peindre un rectangle.
@@ -85,7 +82,7 @@ export class PDFService {
                 {  
                     alignment: 'center',
                     margin: [0, 0, 0, 30],
-                    image: "data:image/jpeg;base64," + recipe.srcPicture,                 
+                    image: "data:image/jpeg;base64," + dataImage.data,                 
                     cover: { width:300, height: 300, valign: "center", align: "center" },
                 }, 
             ],

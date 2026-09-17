@@ -85,7 +85,7 @@ export class PDFService {
                 {  
                     alignment: 'center',
                     margin: [0, 0, 0, 30],
-                    image: "data:image/jpeg;base64," + recipe.picture,                 
+                    image: "data:image/jpeg;base64," + recipe.srcPicture,                 
                     cover: { width:300, height: 300, valign: "center", align: "center" },
                 }, 
             ],

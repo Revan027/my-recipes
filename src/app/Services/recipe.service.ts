@@ -7,6 +7,8 @@ import { RecipeSearch } from '../Models/RecipeSearch';
 import { Type } from '../Models/Entities/Type';
 import { Capacitor } from '@capacitor/core';
 import { MOCK_TYPES } from '../constants/mock-recipes';
+import { FileService } from './file.services.common/file.service';
+import { folder } from '../constants/folder';
 
 
 @Injectable({
@@ -16,14 +18,17 @@ export class RecipeService {
     private _recipeTypes = signal<Type[]>([]);
     private _recipeResult = signal<RecipeResult>(new RecipeResult());
     private _recipeSearch= signal<RecipeSearch>(new RecipeSearch());
+    private _documentURI = signal<string>("");
 
     recipeTypes = this._recipeTypes.asReadonly();
     recipeResult = this._recipeResult.asReadonly();
     recipeSearch = this._recipeSearch.asReadonly();
+    documentURI = this._documentURI.asReadonly();
+
 
     readonly take: number = 6;
 
-    constructor(private storageService: StorageService) {}
+    constructor(private storageService: StorageService, private fileService: FileService) {}
 
     async create(recipe: Recipe): Promise<boolean> {
         let isSuccess = true;
@@ -32,10 +37,10 @@ export class RecipeService {
             await this.storageService.getDb().beginTransaction();
 
             let sql = `
-                INSERT INTO ${tableName.recipe} (title, picture, typeID) 
+                INSERT INTO ${tableName.recipe} (title, srcPicture, typeID) 
                 VALUES (?, ?, ?)`;
 
-            let result = await this.storageService.getDb().run(sql, [recipe.title, recipe.picture, recipe.typeID], false);
+            let result = await this.storageService.getDb().run(sql, [recipe.title, recipe.srcPicture, recipe.typeID], false);
 
             // on créee les ingrédients
            await this.createIngredients(result.changes?.lastId ?? 0, recipe);
@@ -86,10 +91,10 @@ export class RecipeService {
 
             let sql = `
                 UPDATE ${tableName.recipe}
-                SET title = ?, picture = ?, typeID = ?
+                SET title = ?, srcPicture = ?, typeID = ?
                 WHERE id = ?`;
 
-            await this.storageService.getDb().run(sql, [recipe.title, recipe.picture, recipe.typeID, recipe.id], false);
+            await this.storageService.getDb().run(sql, [recipe.title, recipe.srcPicture, recipe.typeID, recipe.id], false);
 
             await this.deleteIngredients(recipe);
 
@@ -178,7 +183,7 @@ export class RecipeService {
     async fetchPage(take: number | undefined = undefined): Promise<Recipe[]> {
         let recipesResult = await this.storageService.getDb().query(`
             SELECT 
-                recipe.id, recipe.typeID, recipe.picture, recipe.title,
+                recipe.id, recipe.typeID, recipe.srcPicture, recipe.title,
                 type.name as typeName
             FROM ${tableName.recipe} as recipe 
             INNER JOIN ${tableName.type} AS type ON ${tableName.type}.id = typeID
@@ -205,7 +210,7 @@ export class RecipeService {
 
         Recipe.setSteps(stepsResult.values ?? [], recipes ?? []);
         Recipe.setIngredients(ingredientsResult.values ?? [], recipes ?? []);
-
+        
         ///alert(JSON.stringify(recipes, null, 2));
         return recipes ?? [];
     }
@@ -226,19 +231,7 @@ export class RecipeService {
     }
 
     getSrcPicture(recipe: Recipe){
-        const picture = recipe.picture;
-
-        if (!picture) {
-            return '';
-        }
-
-        // chemin d'asset ou URL (mocks) → on retourne tel quel
-        if (picture.startsWith('assets/') || picture.startsWith('http') || picture.startsWith('data:')) {
-            return picture;
-        }
-
-        // sinon c'est du base64 (photo prise par l'utilisateur)
-        return `data:image/jpeg;base64,${picture}`;
+        return this.fileService.getUrlWeb(this.fileService.getPathUri(this._documentURI(), recipe.srcPicture as string));
     }
 
     loadTypes(types: Type[]){
@@ -251,5 +244,9 @@ export class RecipeService {
 
     loadRecipeResult(recipeResult: RecipeResult){
         this._recipeResult.set({...recipeResult});
+    }
+
+    loadDocumentURI(uri: string){
+        this._documentURI.set(uri);
     }
 }

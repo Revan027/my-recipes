@@ -1,11 +1,16 @@
 @if(isEditable()){
-    <div class="recipe-picture-editable">
-        @if(recipeRequest().picture){
-            <div class="recipe-picture text-center" (click)="onClickPicture()">
+    <div class="recipe-picture-editable" (click)="onClickPicture()">
+        @if(previewSrc()){
+            <div class="recipe-picture text-center"> 
+                <img [src]="previewSrc()"/>
+            </div>
+        }
+        @else if(recipeRequest().srcPicture){
+            <div class="recipe-picture text-center">
                 <img [src]="getSrcPicture()"/>
             </div>   
         }@else{
-            <div class="recipe-picture-placeholder" (click)="onClickPicture()"> 
+            <div class="recipe-picture-placeholder"> 
                 <div class="recipe-picture-placeholder-text">
                     <mat-icon class="mb-1">photo</mat-icon>
                     <div>Ajouter une photo</div>
@@ -15,7 +20,7 @@
     </div>
 }@else {
     <div class="recipe-picture-no-editable">
-        @if(recipeRequest().picture){
+        @if(recipeRequest().srcPicture){
             <div class="recipe-picture"> 
                 <img [src]="getSrcPicture()"/>
             </div>

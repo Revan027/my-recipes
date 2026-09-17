@@ -1,4 +1,4 @@
-import { Component, input, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, input, Signal, signal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { Recipe } from '../../Models/Entities/Recipe';
 import { DecimalPipe } from '@angular/common';
@@ -19,6 +19,8 @@ import { RecipeListService } from '../../Services/recipe-list.service';
 import { Router } from '@angular/router';
 import { PDFService } from '../../Services/pdf.service';
 import { ShareService } from '../../Services/share.service';
+import { FileService } from '@common/file/file.service';
+import { folder } from '../../constants/folder';
 
 export function ingredientValidator(ingredientCount: number): ValidatorFn {
   return (control: AbstractControl<string>): {[key: string]: any} | null => {
@@ -44,7 +46,8 @@ export function ingredientValidator(ingredientCount: number): ValidatorFn {
     styleUrl: './recipe.component.scss',
 })
 export class RecipeComponent {
-    protected recipeRequest = signal(new Recipe());
+    protected recipeRequest = signal<Recipe>(new Recipe());
+    protected previewSrc = signal<string>('');
 
     readonly recipeTypes: Signal<Type[]>;
 
@@ -71,6 +74,7 @@ export class RecipeComponent {
         private router: Router,
         private PDFService: PDFService,
         private shareService: ShareService,
+        private fileService: FileService,
     ) {
         this.recipeTypes = this.recipeService.recipeTypes;
     }
@@ -115,7 +119,11 @@ export class RecipeComponent {
     async delete(){
         this.isSubmit = true;
 
-        const isSuccess = await this.recipeService.delete(this.recipeRequest());
+        let isSuccess = await this.recipeService.delete(this.recipeRequest());
+
+        if(this.recipeRequest().srcPicture){
+            await this.fileService.deleteFile(this.recipeRequest().srcPicture as string);
+        }   
 
         if(isSuccess){
             this.toastService.success(`Suppression effectuée`);
@@ -125,6 +133,8 @@ export class RecipeComponent {
         
         await this.recipeListService.reloadPage(); 
         await this.recipeListService.loadNextPage();
+
+        this.previewSrc.set("");
 
         this.isSubmit = false;
 
@@ -138,12 +148,18 @@ export class RecipeComponent {
             this.isSubmit = true;
 
             const value = this.formGroup.value;
+            let fileName: string;
+
+            if(this.previewSrc()){
+                fileName = await this.savePicture();
+            }
 
             // on reconstruit l'objet recette
             this.recipeRequest.update((recipe: Recipe) => { 
                 recipe.title = this.formGroup.get("title")?.value;
                 recipe.typeID = this.formGroup.get("typeID")?.value;
-                
+                recipe.srcPicture = fileName;
+            
                 recipe.ingredients = value.ingredients.map( (element: any) => {
                     return {name : element.ingredient} as Ingredient
                 });
@@ -166,6 +182,8 @@ export class RecipeComponent {
                     this.toastService.error(`Une erreur est survenue`);
                 }
 
+                this.loadPreviewSrc("");
+
                 this.isSubmit = false;
             }else{
                 const isSuccess = await this.recipeService.create(this.recipeRequest());
@@ -178,6 +196,8 @@ export class RecipeComponent {
                 
                 await this.recipeListService.reloadPage(); 
                 await this.recipeListService.loadNextPage();
+
+                this.loadPreviewSrc("");
 
                 this.isSubmit = false;
 
@@ -199,11 +219,16 @@ export class RecipeComponent {
             return;
 
         const photo = await this.mediaService.pickFromGallery(true);
-    
-        let recipeRequest = this.recipeRequest();
-        recipeRequest.picture = photo.base64String;
 
-        this.recipeRequest.set({...recipeRequest});
+        this.loadPreviewSrc(`data:image/jpeg;base64,${photo.base64String}`);
+    }
+
+    async savePicture(): Promise<string>{
+        const fileName = `${Date.now()}.jpeg`;
+
+        await this.fileService.writeFile(this.previewSrc(), fileName, folder.My_Recipes);
+
+        return `${folder.My_Recipes}/${fileName}`;
     }
 
     addIngredient(){
@@ -238,5 +263,9 @@ export class RecipeComponent {
 
     getSrcPicture(){
         return this.recipeService.getSrcPicture(this.recipeRequest());
+    }
+
+    private loadPreviewSrc(value: string){
+        this.previewSrc.set(value);
     }
 }

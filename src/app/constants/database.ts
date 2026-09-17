@@ -1,10 +1,19 @@
 import { tableName } from './table-names';
 
 export const DB_NAME = 'my_receipes_db';
-export const DB_VERSION = 2;
+export const DB_VERSION = 4;
+
+// a passer une fois les images sauvegardées
+export const version4: string[] = [
+  `ALTER TABLE ${tableName.recipe} DROP COLUMN picture;`,
+];
+
+export const version3: string[] = [
+  `ALTER TABLE ${tableName.recipe} ADD srcPicture TEXT NULL;`
+];
 
 export const version2: string[] = [
-`ALTER TABLE ${tableName.step} DROP COLUMN title;`
+  `ALTER TABLE ${tableName.step} DROP COLUMN title;`
 ];
 
 export const version1: string[] = [
@@ -43,4 +52,6 @@ export const version1: string[] = [
 export const DB_UPGRADES = [
   { toVersion: 1, statements: version1 },
   { toVersion: 2, statements: version2 },
+  { toVersion: 3, statements: version3 },
+  { toVersion: 4, statements: version4 },
 ];

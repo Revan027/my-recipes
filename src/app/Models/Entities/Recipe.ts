@@ -7,7 +7,7 @@ export class Recipe {
 
     id: number = 0;
     typeID!: number;
-    picture?: string;
+    srcPicture?: string;
     title!: string;
     type: Type = new Type();
     steps: Step[] = [];
@@ -17,7 +17,7 @@ export class Recipe {
         const recipe = new Recipe();
         recipe.id = data.id;
         recipe.typeID = data.typeID;
-        recipe.picture = data.picture;
+        recipe.srcPicture = data.srcPicture;
         recipe.title = data.title;
         recipe.type = { id: data.typeID, name: data.typeName };
         recipe.steps = [];

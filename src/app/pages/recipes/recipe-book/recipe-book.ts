@@ -1,8 +1,8 @@
-import { Component, DestroyRef, inject, ViewChild, WritableSignal } from '@angular/core';
+import { Component, DestroyRef, inject, Signal, viewChild, ViewChild, WritableSignal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProgressBar } from '../../../components/progress-bar/progress-bar';
-import { SwipeDirective } from '../../../Services/swipe.directive';
+import { SwipeDirective } from '../../../directives/swipe.directive';
 import { RecipeResult } from '../../../Models/RecipeResult';
 import { RecipeService } from '../../../Services/recipe.service';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,10 +19,10 @@ import { RecipeComponent } from '../../../components/recipe/recipe.component';
 export class RecipeBook {
     private destroyRef = inject(DestroyRef);
 
-    @ViewChild(SwipeDirective) swipeService!: SwipeDirective;
+    swipeDirective = viewChild(SwipeDirective);
 
-    recipeResult: WritableSignal<RecipeResult>;
-    currentBookPage: WritableSignal<number>;
+    recipeResult: Signal<RecipeResult>;
+    currentBookPage: Signal<number>;
 
     constructor(
         private recipeService: RecipeService,
@@ -42,15 +42,17 @@ export class RecipeBook {
             .subscribe(async (params) => {
                 const id = (params.get('id') || 0) as number;
                 const position = this.recipeResult().recipes.findIndex((x) => x.id == ((id ?? 0) as number)) + 1;
-                const page = this.swipeService.findPageElement((id ?? 0) as number);
+                const page = this.swipeDirective()?.findPageElement((id ?? 0) as number);
 
-                this.swipeService.removeAnimation();
-                this.currentBookPage.set(position);
-                this.swipeService.translateElement((page as HTMLElement).offsetLeft);
+                this.swipeDirective()?.removeAnimation();
 
-                this.recipeBookService.currentIDPage.set(id)
+                this.recipeBookService.loadCurrentBookPage(position);
 
-                setTimeout(() => this.swipeService.addAnimation(), 400); //on laisse le temps au css de faire le transform avant de remettre l'animation
+                this.swipeDirective()?.translateElement((page as HTMLElement).offsetLeft);
+
+                this.recipeBookService.loadCurrentIDPage(id);
+
+                setTimeout(() => this.swipeDirective()?.addAnimation(), 400); //on laisse le temps au css de faire le transform avant de remettre l'animation
             });
     }
 

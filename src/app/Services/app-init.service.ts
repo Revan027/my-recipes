@@ -2,9 +2,6 @@ import { Injectable, signal } from '@angular/core';
 import { StorageService } from '@common/storage/storage-service';
 import { Capacitor } from '@capacitor/core';
 import { RecipeService } from './recipe.service';
-import { Recipe } from '../Models/Entities/Recipe';
-import { RecipeResult } from '../Models/RecipeResult';
-import { MOCK_RECIPES, MOCK_TYPES } from '../constants/mock-recipes';
 import { RecipeListService } from './recipe-list.service';
 import { App } from '@capacitor/app';
 import { Location } from '@angular/common';
@@ -14,9 +11,11 @@ import { Router } from '@angular/router';
     providedIn: 'root',
 })
 export class AppInitService {
-    isAppReady = signal<boolean>(false);
-    isNativePlateform = signal<boolean>(false);
-    appVersion = signal<string>("");
+    private _isAppInit = signal<boolean>(false);
+    private _appVersion = signal<string>("");
+
+    readonly isAppInit = this._isAppInit.asReadonly();
+    readonly appVersion = this._appVersion.asReadonly();
 
     constructor(
         private storageService: StorageService,
@@ -26,9 +25,7 @@ export class AppInitService {
         private router: Router
     ) {}
 
-    async init(): Promise<void> {
-        this.isNativePlateform.set(Capacitor.isNativePlatform());
-
+    async init(): Promise<void>{
         if (Capacitor.isNativePlatform()) {
             await this.storageService.initPlugin();
 
@@ -37,12 +34,20 @@ export class AppInitService {
 
         this.intBackListener();   
 
-        await this.loadDatas(Capacitor.isNativePlatform());
+        const p1 = this.recipeListService.loadNextPage();
+        const p2 = this.recipeService.getTypes();
 
-        this.isAppReady.set(true);
+        // on attend la résolution des promises
+        Promise.all([p1, p2]).then((values) => {
+            this.recipeService.loadTypes(values[1]);
+
+            this._isAppInit.set(true);
+
+            this.router.navigateByUrl('recipes');
+        })
     }
 
-    intBackListener(){
+    private intBackListener(){
         App.addListener('backButton', (event: any) => {
             const regex = /recipes\/(\d)*\/edit/;
 
@@ -60,23 +65,7 @@ export class AppInitService {
 
     async loadAppVersion(){
         const info = await App.getInfo();
-        this.appVersion.set(info.version);
-    }
 
-    private async loadDatas(isNativePlateform: boolean): Promise<void> {
-        let recipes: Recipe[] = [];
-
-        if (isNativePlateform) {
-            await this.recipeListService.loadNextPage();
-            this.recipeService.recipeTypes.set(await this.recipeService.getTypes());
-        } else {
-            recipes = MOCK_RECIPES;
-
-            const recipeResult = new RecipeResult();
-            recipeResult.recipes = recipes;
-
-             this.recipeService.recipeTypes.set(MOCK_TYPES);
-            this.recipeService.recipeResult.set(recipeResult);
-        }
+        this._appVersion.set(info.version);
     }
 }

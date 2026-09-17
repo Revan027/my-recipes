@@ -1,4 +1,4 @@
-import { Component, input, signal, WritableSignal } from '@angular/core';
+import { Component, input, Signal, signal, WritableSignal } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { Recipe } from '../../Models/Entities/Recipe';
 import { DecimalPipe } from '@angular/common';
@@ -44,12 +44,12 @@ export function ingredientValidator(ingredientCount: number): ValidatorFn {
     styleUrl: './recipe.component.scss',
 })
 export class RecipeComponent {
-    recipeRequest = signal(new Recipe());
+    protected recipeRequest = signal(new Recipe());
+
+    readonly recipeTypes: Signal<Type[]>;
 
     recipe = input<Recipe>(new Recipe());
     isEditable = input<boolean>(false);
-
-    recipeTypes: WritableSignal<Type[]>;
 
     formGroup!: FormGroup;
     isSubmit: boolean = false;

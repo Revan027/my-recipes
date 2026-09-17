@@ -1,7 +1,7 @@
 import { Component, input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { Recipe } from '../../Models/Entities/Recipe';
-import { RecipeService } from '../../Services/recipe-service';
+import { RecipeService } from '../../Services/recipe.service';
 
 @Component({
     selector: 'app-recipe-card',

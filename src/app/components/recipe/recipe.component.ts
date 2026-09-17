@@ -8,15 +8,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { Type } from '../../Models/Entities/Type';
-import { RecipeService } from '../../Services/recipe-service';
+import { RecipeService } from '../../Services/recipe.service';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Ingredient } from '../../Models/Entities/Ingredient';
 import { ValidatorFn } from '@angular/forms';
 import { Step } from '../../Models/Entities/Step';
-import { MediaService } from '../../Services/media.services.common/media.service';
+import { MediaService } from '@common/media/media.service';
 import { ToastrService } from 'ngx-toastr';
 import { RecipeListService } from '../../Services/recipe-list.service';
 import { Router } from '@angular/router';
+import { PDFService } from '../../Services/pdf.service';
+import { ShareService } from '../../Services/share.service';
 
 export function ingredientValidator(ingredientCount: number): ValidatorFn {
   return (control: AbstractControl<string>): {[key: string]: any} | null => {
@@ -67,6 +69,8 @@ export class RecipeComponent {
         private recipeListService: RecipeListService,
         private toastService: ToastrService,
         private router: Router,
+        private PDFService: PDFService,
+        private shareService: ShareService,
     ) {
         this.recipeTypes = this.recipeService.recipeTypes;
     }
@@ -180,6 +184,12 @@ export class RecipeComponent {
                 this.router.navigate(["recipes"]);
             }  
         }
+    }
+
+    async onDownload(){
+        const uri = await this.PDFService.savePDF(this.recipe());
+
+        await this.shareService.share([uri]);
     }
 
     async onClickPicture(){

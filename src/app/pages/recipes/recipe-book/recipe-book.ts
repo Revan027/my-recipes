@@ -2,9 +2,9 @@ import { Component, DestroyRef, inject, ViewChild, WritableSignal } from '@angul
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ProgressBar } from '../../../components/progress-bar/progress-bar';
-import { SwipeDirective } from '../../../Services/swipe-directive';
+import { SwipeDirective } from '../../../Services/swipe.directive';
 import { RecipeResult } from '../../../Models/RecipeResult';
-import { RecipeService } from '../../../Services/recipe-service';
+import { RecipeService } from '../../../Services/recipe.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RecipeBookService } from '../../../Services/recipe-book.service';

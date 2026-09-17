@@ -6,15 +6,19 @@ import {
     provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
-
 import { provideToastr } from 'ngx-toastr';
 import { routes } from './app.routes';
 import { AppInitService } from './Services/app-init.service';
 import { ErrorService } from './Services/error.service';
+import { DecimalPipe } from '@angular/common';
 
 export const appConfig: ApplicationConfig = {
     providers: [
-        { provide: ErrorHandler, useClass: ErrorService },
+        { 
+            provide: ErrorHandler, 
+            useClass: ErrorService,
+        },
+        DecimalPipe,
         provideBrowserGlobalErrorListeners(),
          provideToastr({
             timeOut: 3000,

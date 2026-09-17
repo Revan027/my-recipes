@@ -65,6 +65,8 @@ export class SwipeDirective {
 
     @HostListener('touchend', ['$event'])
     onMoveEnd(e: TouchEvent) {
+        const isOneTouch = e.changedTouches[0].clientX == this.startClientX;
+
         this.setDirection(e.changedTouches[0].clientX);
 
         this.moveLineCoord[1] = {
@@ -82,7 +84,7 @@ export class SwipeDirective {
             Y: Math.round(e.changedTouches[0].clientY),
         };
 
-        if (!this.isVerticalSwipe()) 
+        if (!this.isVerticalSwipe() && !isOneTouch) 
             this.fetchPage();
     }
 

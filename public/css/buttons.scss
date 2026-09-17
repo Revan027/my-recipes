@@ -44,6 +44,24 @@ button{
   --mat-fab-focus-state-layer-opacity: 0.8;
 }
 
+.btn-mini-fab--empty {
+  .mat-mdc-button-persistent-ripple.mdc-fab__ripple{
+    border: 1px solid var(--color-lines);
+  }
+
+  mat-icon{
+    color: var(--color-accent);
+  }
+
+  --mat-fab-small-container-color:  white;
+  --mat-fab-small-container-shape: 50%;
+  --mat-fab-small-container-elevation-shadow: none;
+  --mat-fab-small-focus-container-elevation-shadow: none;
+  --mat-fab-small-pressed-container-elevation-shadow: none;
+  --mat-fab-small-hover-container-elevation-shadow: none;
+}
+
+
 .btn-back{
   --mat-fab-container-shape: 50%;
 }

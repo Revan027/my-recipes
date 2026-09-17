@@ -4,11 +4,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RecipeResult } from '../../../Models/RecipeResult';
-import { RecipeService } from '../../../Services/recipe-service';
+import { RecipeService } from '../../../Services/recipe.service';
 import { Recipe } from '../../../Models/Entities/Recipe';
 import { RecipeComponent } from '../../../components/recipe/recipe.component';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { DialogComponent } from '../../../components/dialog/dialog';
+
 
 @Component({
     selector: 'app-edit-recipe',
@@ -30,7 +31,7 @@ export class EditRecipe {
         private recipeService: RecipeService,
         private activatedRoute: ActivatedRoute,
         private matDialog: MatDialog,
-        private router: Router
+        private router: Router,
     ) {
         this.recipeResult = this.recipeService.recipeResult;
     }
@@ -46,7 +47,7 @@ export class EditRecipe {
             });
     }
 
-    onSubmit() {
+    async onSubmit() {
         // appelle la méthode du composant enfant
         this.recipeComponent().submit();
     }

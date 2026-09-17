@@ -5,15 +5,21 @@ import { Recipe } from '../Models/Entities/Recipe';
 import { RecipeResult } from '../Models/RecipeResult';
 import { RecipeSearch } from '../Models/RecipeSearch';
 import { Type } from '../Models/Entities/Type';
+import { Capacitor } from '@capacitor/core';
+import { MOCK_TYPES } from '../constants/mock-recipes';
 
 
 @Injectable({
     providedIn: 'root',
 })
 export class RecipeService {
-    recipeResult = signal<RecipeResult>(new RecipeResult());
-    recipeSearch = signal<RecipeSearch>(new RecipeSearch());
-    recipeTypes = signal<Type[]>([]);
+    private _recipeTypes = signal<Type[]>([]);
+    private _recipeResult = signal<RecipeResult>(new RecipeResult());
+    private _recipeSearch= signal<RecipeSearch>(new RecipeSearch());
+
+    recipeTypes = this._recipeTypes.asReadonly();
+    recipeResult = this._recipeResult.asReadonly();
+    recipeSearch = this._recipeSearch.asReadonly();
 
     readonly take: number = 6;
 
@@ -156,12 +162,17 @@ export class RecipeService {
     }
 
     async getTypes(): Promise<Type[]> {
-        const result = await this.storageService.getDb().query(`
+        if (Capacitor.isNativePlatform()) {
+            const result = await this.storageService.getDb().query(`
             SELECT 
                 type.id as id, type.name as name
             FROM ${tableName.type} as type`);
             
-        return result.values != undefined ? (result.values as Type[]) : [];
+            return result.values != undefined ? (result.values as Type[]) : [];
+
+        }else{
+            return Promise.resolve(MOCK_TYPES);
+        }     
     }
 
     async fetchPage(take: number | undefined = undefined): Promise<Recipe[]> {
@@ -228,5 +239,17 @@ export class RecipeService {
 
         // sinon c'est du base64 (photo prise par l'utilisateur)
         return `data:image/jpeg;base64,${picture}`;
+    }
+
+    loadTypes(types: Type[]){
+        this._recipeTypes.set(types);
+    }
+
+    loadRecipeSearch(recipeSearch: RecipeSearch){
+        this._recipeSearch.set({...recipeSearch});
+    }
+
+    loadRecipeResult(recipeResult: RecipeResult){
+        this._recipeResult.set({...recipeResult});
     }
 }

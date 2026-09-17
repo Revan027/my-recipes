@@ -2,10 +2,9 @@ import {
     Component,
     ElementRef,
     HostListener,
+    Signal,
     signal,
     viewChild,
-    ViewChild,
-    WritableSignal,
 } from '@angular/core';
 import { SearchField } from '../../../components/fields/search-field/search-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -37,31 +36,28 @@ import { Observable } from 'rxjs';
     styleUrl: './recipes-list.scss',
 })
 export class RecipesList {
-    @ViewChild('list') list!: ElementRef;
+    list = viewChild<ElementRef>("list");
     searchField = viewChild(SearchField);
 
-    isAppReady: WritableSignal<boolean>;
-    recipeResult: WritableSignal<RecipeResult>;
-    recipeSearch: WritableSignal<RecipeSearch>;
-    isLoading: WritableSignal<boolean>;
+    protected searchControl = signal<FormControl<any>>(new FormControl<any>(''));
+
+    recipeResult: Signal<RecipeResult>;
+    recipeSearch: Signal<RecipeSearch>;
+    isLoading: Signal<boolean>;
+    numVersion!: Signal<string>;
 
     recipeSearch$!: Observable<RecipeSearch>;
 
-    isPageReady = signal<boolean>(false);
-    searchControl = signal<FormControl<any>>(new FormControl<any>(''));
-
-    pictureClass: { key: number; class: string }[] = [];
+    private pictureClass: { key: number; class: string }[] = [];  
+    private timeout?: number = 0;
     formGroup!: FormGroup;
-    timeout?: number = 0;
-    numVersion!: string;
-
+   
     constructor(
         private appInitService: AppInitService,
         private recipeService: RecipeService,
         private recipeListService: RecipeListService,
         private formBuilder: FormBuilder
     ) {
-        this.isAppReady = this.appInitService.isAppReady;
         this.recipeResult = this.recipeService.recipeResult;
         this.recipeSearch = this.recipeService.recipeSearch;
         this.isLoading = this.recipeListService.isLoading;
@@ -71,7 +67,7 @@ export class RecipesList {
     async onScroll() {
         const offsetScroll = 50;
 
-        if (window.scrollY + window.innerHeight > this.list.nativeElement.scrollHeight - offsetScroll && !this.isLoading()) 
+        if (window.scrollY + window.innerHeight > this.list()?.nativeElement.scrollHeight - offsetScroll && !this.isLoading()) 
         {
     
             await this.recipeListService.loadNextPage();
@@ -81,11 +77,9 @@ export class RecipesList {
     }
 
     async ngOnInit() {
-        this.numVersion = this.appInitService.appVersion();
+        this.numVersion = this.appInitService.appVersion;
 
         this.setPictureClass();
-
-        this.isPageReady.set(true);
 
         this.createForm();
     }

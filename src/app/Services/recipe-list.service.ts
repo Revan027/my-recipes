@@ -1,14 +1,20 @@
 import { Injectable, signal } from '@angular/core';
 import { RecipeService } from './recipe.service';
 import { RecipeResult } from '../Models/RecipeResult';
+import { Capacitor } from '@capacitor/core';
+import { MOCK_RECIPES } from '../constants/mock-recipes';
 
 @Injectable({
     providedIn: 'root',
 })
 export class RecipeListService {
-    currentBookPage = signal<number>(1);
-    isLoading = signal<boolean>(false);
-    hasMore = signal<boolean>(true);
+    private _currentBookPage = signal<number>(1);
+    private _isLoading = signal<boolean>(false);
+    private _hasMore = signal<boolean>(true);
+
+    currentBookPage = this._currentBookPage.asReadonly();
+    isLoading = this._isLoading.asReadonly();
+    hasMore = this._hasMore.asReadonly();
 
     constructor(private recipeService: RecipeService) {}
 
@@ -19,32 +25,31 @@ export class RecipeListService {
     }
 
     async reloadPage(searchText: string = ""){
-        this.hasMore.set(true);
+        this._hasMore.set(true);
 
         let recipeSearch = this.recipeService.recipeSearch();
         recipeSearch.searchText = searchText;
         recipeSearch.page = 0; 
 
-        this.recipeService.recipeSearch.set(recipeSearch);
-
-        this.recipeService.recipeResult.set(new RecipeResult());
+        this.recipeService.loadRecipeSearch(recipeSearch);
+        this.recipeService.loadRecipeResult(new RecipeResult());
     }
 
     async refreshResult(){ 
-        this.isLoading.set(true);
+        this._isLoading.set(true);
 
         let recipeResult = this.recipeService.recipeResult();
         let recipeSearch = this.recipeService.recipeSearch();
         recipeSearch.page = 1; 
 
-        this.recipeService.recipeSearch.set(recipeSearch);
+        this.recipeService.loadRecipeSearch(recipeSearch);
 
         const recipes = await this.recipeService.fetchPage(this.recipeService.recipeResult().countTotal);
         recipeResult.recipes = recipes;
 
-        this.recipeService.recipeResult.set(recipeResult);
+        this.recipeService.loadRecipeResult(recipeResult);
 
-        this.isLoading.set(false);
+        this._isLoading.set(false);
     }
 
     async loadNextPage(): Promise<void> {
@@ -52,31 +57,37 @@ export class RecipeListService {
             return;
         }
 
-        this.isLoading.set(true);
+        this._isLoading.set(true);
 
-        let recipeSearch = this.recipeService.recipeSearch();
-        recipeSearch.page++;
-
-        this.recipeService.recipeSearch.set(recipeSearch);
-
-        const recipes = await this.recipeService.fetchPage();
         const recipeResult = this.recipeService.recipeResult();
 
-        if (recipes.length == 0) {
-            this.hasMore.set(false);
+        if (Capacitor.isNativePlatform()) {
+            let recipeSearch = this.recipeService.recipeSearch();
+            recipeSearch.page++;
+
+            this.recipeService.loadRecipeSearch(recipeSearch);
+
+            const recipes = await this.recipeService.fetchPage();
+           
+            if (recipes.length == 0) {
+                this._hasMore.set(false);
+            }
+
+            if (recipeSearch.page > 1) {
+                recipeResult.recipes = recipeResult.recipes.concat(recipes);
+            } 
+            else {
+                recipeResult.recipes = recipes;
+
+                // premiere page on va chercher le total de resultat de la requete
+                recipeResult.countTotal = await this.recipeService.countQueryResult();
+            }
+        }else{
+            recipeResult.recipes = MOCK_RECIPES;
         }
 
-        if (recipeSearch.page > 1) {
-            recipeResult.recipes = recipeResult.recipes.concat(recipes);
-        } else {
-            recipeResult.recipes = recipes;
-
-            // premiere page on va chercher le total de resultat de la requete
-            recipeResult.countTotal = await this.recipeService.countQueryResult();
-        }
-
-        this.recipeService.recipeResult.set(recipeResult);
-        this.isLoading.set(false);
+        this.recipeService.loadRecipeResult(recipeResult);
+        this._isLoading.set(false);
     }
 
     getPictureClass(): { key: number; class: string }[] {

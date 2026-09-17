@@ -1,5 +1,5 @@
 import { Directive, ElementRef, HostListener, Renderer2 } from '@angular/core';
-import { RecipeBookService } from './recipe-book.service';
+import { RecipeBookService } from '../Services/recipe-book.service';
 
 @Directive({
     selector: '[appSwipe]',
@@ -65,8 +65,6 @@ export class SwipeDirective {
 
     @HostListener('touchend', ['$event'])
     onMoveEnd(e: TouchEvent) {
-        const isOneTouch = e.changedTouches[0].clientX == this.startClientX;
-
         this.setDirection(e.changedTouches[0].clientX);
 
         this.moveLineCoord[1] = {
@@ -84,7 +82,7 @@ export class SwipeDirective {
             Y: Math.round(e.changedTouches[0].clientY),
         };
 
-        if (!this.isVerticalSwipe() && !isOneTouch) 
+        if (!this.isVerticalSwipe() && !this.isOneTouch(e.changedTouches[0].clientX)) 
             this.fetchPage();
     }
 
@@ -102,6 +100,10 @@ export class SwipeDirective {
         corner = corner < 0 ? corner * -1 : corner;
 
         return corner > 50;
+    }
+
+    private isOneTouch(endClientX: number){
+        return Math.round(endClientX) == Math.round(this.startClientX)
     }
 
     private getSlope(coordB: any, coordA: any) {
@@ -158,13 +160,13 @@ export class SwipeDirective {
         const pageElement = Array.from(this.el.nativeElement.querySelectorAll(".recipe-page"))
             .find((e, index: number) => index + 1 ==  this.recipeBookService.currentBookPage())
 
-        this.recipeBookService.currentIDPage.set((pageElement?.getAttribute("data-id") ?? 0) as number)
+        this.recipeBookService.loadCurrentIDPage((pageElement?.getAttribute("data-id") ?? 0) as number);
     }
 
     next() {
         this.translateElement(this.recipeBookService.currentBookPage() * this.pageWidth); // on prend la taille max d'une page et on * par la position de la page pour avoirt le décalage réel
 
-        this.recipeBookService.currentBookPage.set(this.recipeBookService.currentBookPage() + 1);
+        this.recipeBookService.loadCurrentBookPage(this.recipeBookService.currentBookPage() + 1);
     }
 
     previous() {
@@ -172,7 +174,7 @@ export class SwipeDirective {
 
         this.translateElement((currentBookPage - 1) * this.pageWidth - this.pageWidth); // on prend la taille min d'une page
 
-        this.recipeBookService.currentBookPage.set(currentBookPage - 1);
+        this.recipeBookService.loadCurrentBookPage(currentBookPage - 1);
     }
 
     translateElement(pxMove: number) {

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal, viewChild, WritableSignal } from '@angular/core';
+import { Component, DestroyRef, inject, Signal, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,14 +18,15 @@ import { DialogComponent } from '../../../components/dialog/dialog';
     styleUrl: './edit-recipe.scss',
 })
 export class EditRecipe {
-    recipeComponent = viewChild.required(RecipeComponent);
-
     private destroyRef = inject(DestroyRef);
+
+    recipeComponent = viewChild.required(RecipeComponent);
 
     recipe = signal<Recipe>(new Recipe());
 
-    recipeResult: WritableSignal<RecipeResult>;
-    id?: number | null;
+    recipeResult: Signal<RecipeResult>;
+    
+    private id?: number | null;
 
     constructor(
         private recipeService: RecipeService,

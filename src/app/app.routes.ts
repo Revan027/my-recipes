@@ -1,9 +1,14 @@
 import { Routes } from '@angular/router';
-import { Loading } from './pages/loading/loading';
+import { LoadingPage } from './pages/loading/loading.page';
+import { InitAppGuard } from './guards/init-app.guard';
 
 export const routes: Routes = [
-    { path: '', redirectTo: 'recipes', pathMatch: 'full' }, // route par default
-    { path: 'loading', component: Loading },
+    { path: '', redirectTo: 'loading', pathMatch: 'full' }, // route par default
+    { 
+        path: 'loading', 
+        component: LoadingPage,
+        canActivate: [InitAppGuard],
+    },
     {
         path: 'recipes',
         loadChildren: () => import('./pages/recipes/recipes.routes').then((m) => m.routes),

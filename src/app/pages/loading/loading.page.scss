@@ -1,0 +1,33 @@
+.loading-content{
+    margin-top: 40vh;
+    text-align: center;
+    background: var(--color-background);
+
+    .loading-content__header{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+
+        .loading-content__icon mat-icon{
+            color: var(--color-accent); 
+            font-size: var(--font-size-3xl);
+            height: auto;
+            width: auto;
+        }
+
+        .loading-content__title{
+            font-size: var(--font-size-3xl);
+            color: var(--color-accent);
+        }
+    }
+   
+    .loading-content__text{ 
+        font-size: var(--font-size-xl);
+        color: var(--color-main-text);
+
+        .loading-content__dots{ 
+            line-height: 0; font-size: var(--font-size-3xl);
+        }   
+    }
+} 

@@ -1,14 +1,12 @@
 import {
     ApplicationConfig,
     ErrorHandler,
-    inject,
     provideAppInitializer,
     provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { provideRouter, withInMemoryScrolling } from '@angular/router';
 import { provideToastr } from 'ngx-toastr';
 import { routes } from './app.routes';
-import { AppInitService } from './Services/app-init.service';
 import { ErrorService } from './Services/error.service';
 import { DecimalPipe } from '@angular/common';
 
@@ -32,9 +30,7 @@ export const appConfig: ApplicationConfig = {
             }),
         ),
         provideAppInitializer(async () => {
-            const appInitService = inject(AppInitService);
-
-            await appInitService.init();
+            // on peut injecter un service et appeller une méthode de celle ci au lancement de l'application
         }),
     ],
 };

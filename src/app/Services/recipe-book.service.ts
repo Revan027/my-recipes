@@ -4,8 +4,19 @@ import { Injectable, signal } from '@angular/core';
     providedIn: 'root',
 })
 export class RecipeBookService {
-    currentBookPage = signal<number>(1);
-    currentIDPage = signal<number>(0);
+    private _currentBookPage = signal<number>(1);
+    private _currentIDPage = signal<number>(0);
+
+    currentBookPage = this._currentBookPage.asReadonly();
+    currentIDPage = this._currentIDPage.asReadonly();
 
     constructor() {}
+
+    loadCurrentBookPage(page: number){
+        this._currentBookPage.set(page);
+    }
+
+    loadCurrentIDPage(id: number){
+        this._currentIDPage.set(id);
+    }
 }

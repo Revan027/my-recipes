@@ -67,7 +67,7 @@ button{
 }
 
 .btn-tonal--empty{
-  --mat-button-tonal-container-color: transparent;
+  --mat-button-tonal-container-color: var(--color-surface);
   --mat-button-tonal-label-text-color: var(--color-accent);
   width: 100%;
   --mat-button-tonal-container-height: 60px;

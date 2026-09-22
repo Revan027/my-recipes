@@ -13,13 +13,13 @@ import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule
 import { Ingredient } from '../../Models/Entities/Ingredient';
 import { ValidatorFn } from '@angular/forms';
 import { Step } from '../../Models/Entities/Step';
-import { MediaService } from '@common/media/media.service';
+import { MediaService } from '@common/capacitor/media.service';
 import { ToastrService } from 'ngx-toastr';
 import { RecipeListService } from '../../Services/recipe-list.service';
 import { Router } from '@angular/router';
 import { PDFService } from '../../Services/pdf.service';
 import { ShareService } from '../../Services/share.service';
-import { FileService } from '@common/file/file.service';
+import { FileService } from '@common/capacitor/file.service';
 import { folder } from '../../constants/folder';
 
 export function ingredientValidator(ingredientCount: number): ValidatorFn {

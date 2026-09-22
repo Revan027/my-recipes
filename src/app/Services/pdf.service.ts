@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Directory } from '@capacitor/filesystem';
-import { FileService } from './file.services.common/file.service';
+import { FileService } from '@common/capacitor/file.service';
 import { folder } from '../constants/folder';
 // Les polices de la fiche recette non éditable, telles que déclarées dans public/css/fonts.scss.
 // Le bundler les inline en base64 ("loader" dans angular.json), donc ces constantes contiennent

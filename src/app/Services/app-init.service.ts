@@ -1,12 +1,12 @@
 import { Injectable, signal } from '@angular/core';
-import { StorageService } from '@common/storage/storage-service';
+import { StorageService } from '@common/capacitor/storage-service';
 import { Capacitor } from '@capacitor/core';
 import { RecipeService } from './recipe.service';
 import { RecipeListService } from './recipe-list.service';
 import { App } from '@capacitor/app';
 import { Location } from '@angular/common';
 import { Router } from '@angular/router';
-import { FileService } from './file.services.common/file.service';
+import { FileService } from '@common/capacitor/file.service';
 
 @Injectable({
     providedIn: 'root',

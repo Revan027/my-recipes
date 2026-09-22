@@ -40,11 +40,13 @@
                     {{ recipeRequest().type.name }}
                 </div>
 
-                <div>
-                    <button matMiniFab class="btn-mini-fab--empty" (click)="onDownload()">
-                        <mat-icon>download</mat-icon>
-                    </button>
-                </div>
+                @if(!isEditable()){
+                    <div>
+                        <button matMiniFab class="btn-mini-fab--empty" (click)="onDownload()">
+                            <mat-icon>download</mat-icon>
+                        </button>
+                    </div>
+                } 
             </div>         
         </div>
         

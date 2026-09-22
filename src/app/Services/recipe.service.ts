@@ -1,13 +1,13 @@
 import { Injectable, signal } from '@angular/core';
 import { tableName } from '../constants/table-names';
-import { StorageService } from '@common/storage/storage-service';
+import { StorageService } from '@common/capacitor/storage-service';
 import { Recipe } from '../Models/Entities/Recipe';
 import { RecipeResult } from '../Models/RecipeResult';
 import { RecipeSearch } from '../Models/RecipeSearch';
 import { Type } from '../Models/Entities/Type';
 import { Capacitor } from '@capacitor/core';
 import { MOCK_TYPES } from '../constants/mock-recipes';
-import { FileService } from './file.services.common/file.service';
+import { FileService } from '@common/capacitor/file.service';
 import { folder } from '../constants/folder';
 
 

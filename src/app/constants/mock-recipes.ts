@@ -332,7 +332,6 @@ export const MOCK_INGREDIENTS: Ingredient[] = [
     { id: 19, recipeID: 4, name: 'Beurre' },
     { id: 20, recipeID: 4, name: 'Œufs' },
     { id: 21, recipeID: 4, name: 'Sucre' },
-    { id: 22, recipeID: 4, name: 'Farine' },
 
     // Recette 5 - Tarte aux pommes
     { id: 23, recipeID: 5, name: 'Pâte brisée' },

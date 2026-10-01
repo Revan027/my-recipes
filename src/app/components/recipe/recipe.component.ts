@@ -148,7 +148,7 @@ export class RecipeComponent {
             this.isSubmit = true;
 
             const value = this.formGroup.value;
-            let fileName: string;
+            let fileName = this.recipeRequest().srcPicture;
 
             if(this.previewSrc()){
                 fileName = await this.savePicture();

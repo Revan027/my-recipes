@@ -6,18 +6,17 @@ import { RecipeBookService } from '../Services/recipe-book.service';
     standalone: true,
 })
 export class SwipeDirective {
-    private startClientX: number = 0;
 
+    private readonly directions = { Next: 'NEXT', Prev: 'PREV' };
+    private startClientX: number = 0;
     private moveLineCoord: { X: number; Y: number }[] = [];
     private horizontalLineCoord: { X: number; Y: number }[] = [];
-
+    private currentDirection: string = '';
+    private pageWidth = 0;
     private previousClientX: number = 0;
     private isSwipeBlocked = false;
     private totalPxMove: number = 0;
-    private currentDirection: string = '';
-    private pageWidth = 0;
-    private readonly directions = { Next: 'NEXT', Prev: 'PREV' };
-
+   
     constructor(
         private el: ElementRef<HTMLElement>,
         private renderer: Renderer2,
@@ -82,8 +81,9 @@ export class SwipeDirective {
             Y: Math.round(e.changedTouches[0].clientY),
         };
 
-        if (!this.isVerticalSwipe() && !this.isOneTouch(e.changedTouches[0].clientX)) 
+        if (!this.isVerticalSwipe() && !this.isOneTouch(e.changedTouches[0].clientX)){
             this.fetchPage();
+        }      
     }
 
     private isVerticalSwipe() {
@@ -124,6 +124,8 @@ export class SwipeDirective {
 
         this.handleAdvancement();
 
+        this.resizeBookHeight();
+
         this.isSwipeBlocked = false;
     }
 
@@ -135,8 +137,12 @@ export class SwipeDirective {
         this.previousClientX = clientX;
     }
 
-    findPageElement(id: number): Element | null {
-        return this.el.nativeElement.querySelector('#page-' + id.toString());
+    findPageElementByIndex(index: number): Element | null {
+        return this.el.nativeElement.querySelector(`[index=page-${index.toString()}]`);
+    }
+
+    findPageElementByID(id: number): Element | null {
+        return this.el.nativeElement.querySelector("[data-id='"+id.toString()+"']");
     }
 
     findPageListElement(): Element | null {
@@ -181,6 +187,14 @@ export class SwipeDirective {
         this.totalPxMove = pxMove; //on avance le total
         this.renderer.setStyle(this.el.nativeElement, 'will-change', 'transform');
         this.renderer.setStyle(this.el.nativeElement, 'transform', `translateX(${-pxMove}px)`);
+    }
+
+    resizeBookHeight(){
+        const page = this.findPageElementByIndex(this.recipeBookService.currentBookPage());
+        const heightComponent = (page?.querySelector(".recipe-picture-no-editable")?.clientHeight ?? 0) +(page?.querySelector("form")?.clientHeight ?? 0)
+    
+        // resize de la hauteur de l'élement book qui contient toute les pages par celle du composant de la recette visible pour éviter les scroll
+        this.renderer.setStyle(document.querySelector(".recipe-book"), "height", `${heightComponent > this.el.nativeElement.clientHeight ? heightComponent + 20 : heightComponent}px`)
     }
 
     removeAnimation() {

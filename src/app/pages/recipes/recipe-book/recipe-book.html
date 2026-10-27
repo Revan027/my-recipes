@@ -23,8 +23,8 @@
     </div>
 
     <div #list appSwipe class="recipe-pages">
-        @for (recipe of recipeResult().recipes; track recipe.id) {
-            <div [attr.data-id]="recipe.id" [id]="`page-${recipe.id}`" class="recipe-page">
+        @for (recipe of recipeResult().recipes; track recipe.id; let idx = $index){ 
+            <div [attr.data-id]="recipe.id" [attr.index]="`page-${idx+1}`" class="recipe-page">
                 <app-recipe-component [recipe]="recipe" ></app-recipe-component>
             </div>
         } @empty {

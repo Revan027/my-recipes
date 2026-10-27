@@ -1,6 +1,7 @@
 .recipe-book{
     overflow-x: hidden;
-
+    overflow-y: hidden;
+    
     // retrait de la barre de scroll native
     &::-webkit-scrollbar {
         display: none;

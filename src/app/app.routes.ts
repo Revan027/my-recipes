@@ -10,6 +10,10 @@ export const routes: Routes = [
         canActivate: [InitAppGuard],
     },
     {
+        path: 'home',
+        redirectTo: 'recipes'
+    },
+    {
         path: 'recipes',
         loadChildren: () => import('./pages/recipes/recipes.routes').then((m) => m.routes),
     },

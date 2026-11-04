@@ -1,15 +1,9 @@
 <div class="menu">
     <div class="menu-list">
-        <div class="menu-item" [class.active]="menuActive() === MenuTabEnum.Home" (click)="onNavigate(MenuTabEnum.Home)">
-            <mat-icon>home</mat-icon> Accueil
-        </div>
-
-        <div class="menu-item" [class.active]="menuActive() === MenuTabEnum.Book" (click)="onNavigate(MenuTabEnum.Book)">
-            <mat-icon>menu_book</mat-icon> Book      
-        </div>
-
-        <div class="menu-item" [class.active]="menuActive() === MenuTabEnum.Menus" (click)="onNavigate(MenuTabEnum.Menus)">
-            <mat-icon>restaurant_menu</mat-icon> Menus     
-        </div>
+        @for(menu of menus(); track menu.name){
+            <div class="menu-item" [class.active]="menuActive().name == menu.name" (click)="onNavigate(menu)">
+                <mat-icon> {{menu.icon}}</mat-icon> {{menu.name}}
+            </div>
+        }
     </div>
 </div>

@@ -1,0 +1,9 @@
+<div class="menu">
+    <div class="menu-list">
+        @for(menu of menus(); track menu.name){
+            <div class="menu-item" [class.active]="menuActive().name == menu.name" (click)="onNavigate(menu)">
+                <mat-icon> {{menu.icon}}</mat-icon> {{menu.name}}
+            </div>
+        }
+    </div>
+</div>

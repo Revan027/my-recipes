@@ -43,7 +43,7 @@ export class RecipeBook {
                 const id = (params.get('id') || 0) as number;
                 const position = this.recipeResult().recipes.findIndex((x) => x.id == ((id ?? 0) as number)) + 1;
                 const page = this.swipeDirective()?.findPageElementByID((id ?? 0) as number);
-
+  
                 this.swipeDirective()?.removeAnimation();
 
                 this.recipeBookService.loadCurrentBookPage(position);

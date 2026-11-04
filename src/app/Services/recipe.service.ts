@@ -166,6 +166,14 @@ export class RecipeService {
         await this.storageService.getDb().run(sql, [recipe.id], false);
     }
 
+    async getFirstRecipeID(){
+        let result = await this.storageService.getDb().query(`
+            SELECT MIN(id) as id
+            FROM ${tableName.recipe}`);
+
+        return result.values != undefined ? (result.values[0].id as number) : 0;
+    }
+
     async getTypes(): Promise<Type[]> {
         if (Capacitor.isNativePlatform()) {
             const result = await this.storageService.getDb().query(`

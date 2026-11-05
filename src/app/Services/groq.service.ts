@@ -44,7 +44,7 @@ export class GroqService {
 
                         SPÉCIFICITÉS DES REPAS DU MIDI
 
-                       Pour tous les repas du MIDI (period: 1), imposer exclusivement des repas de type déjeuner léger, à manger facilement au quotidien.
+                        Pour tous les repas du MIDI (period: 1), imposer exclusivement des repas de type déjeuner léger, à manger facilement au quotidien.
 
                         Privilégier obligatoirement :
                         - Les tartines gourmandes : tomates, fromage, jambon, légumes grillés, etc.
@@ -67,6 +67,7 @@ export class GroqService {
                         - Les tartines gourmandes : tartines de tomates, fromage, jambon, légumes grillés, etc.
                         - Les salades composées et les préparations à base de légumes frais.
                         - Les préparations à base de tomates, légumes de saison, fromage et œufs.
+
 
                         Ne pas proposer d'autres catégories de repas pour les déjeuners.
 
@@ -91,12 +92,15 @@ export class GroqService {
                         - Ne pas proposer de recettes issues d'autres cuisines du monde (asiatique, mexicaine, indienne, américaine, etc.).
                         - Pour les recettes originales, rester dans l'esprit de la cuisine française ou italienne.
                         - Varier les inspirations françaises et italiennes sur l'ensemble de la semaine.
+                        - Pas de pizza et de soupe.
 
                         CONTRAINTES DE STRUCTURE
 
                         Chaque recette doit comporter les propriétés suivantes :
                         - day : les trois premières lettres du jour de la semaine en français, en commençant par lundi (lun, mar, mer, jeu, ven, sam, dim).
                         - period : 1 pour le MIDI et 2 pour le SOIR.
+                        - year : l'année du menu au format YYYY (exemple : 2026). Cette valeur doit être identique pour les 14 recettes.
+                        - dayWeek : le numéro de la semaine dans l'année, au format chaîne de caractères sur exactement 2 chiffres (exemples : "01", "09", "42", "52"). Cette valeur doit être identique pour les 14 recettes.
 
                         Respecter strictement ces valeurs pour chaque recette.
 
@@ -123,16 +127,18 @@ export class GroqService {
                     name: "response",
                     strict: true,
                     schema: {
-                        type: "object", 
+                        type: "object", // MenuWeek
                         properties: {
+                            year: { type: "number" },
+                            dayWeek: { type: "number" },
                             menuDays: {
-                                type: "array",
+                                type: "array", // MenuDays
                                 items: {
                                     type: "object",
                                     properties: {
                                         day: { type: "string" },
                                         menuDayPeriods: { 
-                                            type: "array",
+                                            type: "array",// MenuDayPeriods
                                             items: {
                                                 type: "object",  
                                                 properties: {
@@ -149,7 +155,7 @@ export class GroqService {
                                 }
                             },                        
                         },
-                        required: ["menuDays"],
+                        required: ["year","dayWeek","menuDays"],
                         additionalProperties: false 
                     }
                 }

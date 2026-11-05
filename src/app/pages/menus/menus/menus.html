@@ -11,23 +11,22 @@
         <div class="menuWeek mt-3">
             @for(menuDay of menuWeek()?.menuDays; track menuDay){
                 <div class="menuWeek-line pb-1 mt-1">
-                    <div class="kicker">
-                        {{menuDay.day}}
+                    <div class="menuWeek-day kicker">
+                        {{menuDay.day}} 
                     </div>
 
                     <div>
-                         @for(menuDayPeriod of menuDay.menuDayPeriods; track menuDayPeriod.recipeName){
-                        <div class="mb-1">
-                            <div  class="kicker--8a8073"> 
-                                {{(menuDayPeriod.period == 1 ? "MATIN" : "SOIR")}}
-                            </div>
+                        @for(menuDayPeriod of menuDay.menuDayPeriods; track menuDayPeriod.recipeName){
+                            <div class="mb-1">
+                                <div  class="kicker--8a8073"> 
+                                    {{(menuDayPeriod.period == 1 ? "MATIN" : "SOIR")}}
+                                </div>
 
-                            <div>
-                                <h4 class="m-0"> {{menuDayPeriod.recipeName}}</h4>
+                                <div class="card-title">
+                                    {{menuDayPeriod.recipeName}}
+                                </div>                   
                             </div>
-                        
-                        </div>
-                    }
+                        }
                     </div>                
                 </div>
             }    

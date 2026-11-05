@@ -7,6 +7,10 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MenuWeek } from '../../../Models/Entities/MenuWeek';
 import { RecipeService } from '../../../Services/recipe.service';
 import { MOCK_RECIPES } from '../../../constants/mock-recipes';
+import { Capacitor } from '@capacitor/core';
+import { GroqApiError } from '../../../Models/Entities/GroqApiError';
+import { MenuWeekService } from '../../../Services/menuWeek.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
     selector: 'app-menus',
@@ -18,20 +22,44 @@ export class Menus {
     protected hasLoading = signal<boolean>(false);
     protected menuWeek = signal<MenuWeek | undefined>(undefined);
 
-    constructor(private groqService: GroqService, private recipeService: RecipeService){
-
-    }
+    constructor(
+        private groqService: GroqService, 
+        private recipeService: RecipeService, 
+        private menuWeekService: MenuWeekService, 
+        private toastService: ToastrService){}
 
     async onGenerateIdea(){
         this.setHasLoading(true);
-        //const recipes = await this.recipeService.getAllLight();
-        const response = await this.groqService.generateMenuRequest(MOCK_RECIPES);
-        //gestino d'erreur a faire. faire ajouter le joru de la semine et l'anné à grocq
-        // lui expliquer que perdio MATIN SOIR en string
+
+        // recupération des recettes du carnet
+        const recipes = Capacitor.isNativePlatform()
+            ? await this.recipeService.getAllLight()
+            : MOCK_RECIPES;
+
+        let response;
+
+        try{
+            response = await this.groqService.generateMenuRequest(recipes);
+        }catch(e: any){
+            this.setHasLoading(false);
+
+            throw new GroqApiError (e);
+        }
+
+        // recupération de la semaine précédente  
+
         const menuWeek = JSON.parse(response.choices[0].message.content as string) as MenuWeek;
+ alert(JSON.stringify(await this.menuWeekService.getAllLight(), null, 2));
+        //on ajoute le resultat en base
+       /*const isSuccess = await this.menuWeekService.create(menuWeek);
+       
+        if(isSuccess){
+            this.toastService.success(`Sauvegarde du menu effectuée`);
+        }else{
+            this.toastService.error(`Une erreur est survenue`);
+        }*/
+
         this.setMenuWeek(menuWeek)
-         console.log(menuWeek);
-        //alert(JSON.stringify(menuWeek, null, 2));
         this.setHasLoading(false);
     }
 

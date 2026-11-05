@@ -5,9 +5,9 @@ export const DB_VERSION = 5;
 
 export const version5: string[] = [
   `CREATE TABLE IF NOT EXISTS ${tableName.menuWeek} (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     year INTEGER NOT NULL,
-    dateWeek INTEGER NOT NULL,
-    PRIMARY KEY (year, dateWeek)
+    dateWeek INTEGER NOT NULL
   );`,
   `CREATE TABLE IF NOT EXISTS ${tableName.menuDay} (
     id INTEGER PRIMARY KEY AUTOINCREMENT,

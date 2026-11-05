@@ -10,5 +10,9 @@
         display: flex;
         gap: 20px;   
         border-bottom: 1px solid var(--color-e8dfcd);
+
+        .menuWeek-day{
+            align-content: center;
+        }
     }
 }

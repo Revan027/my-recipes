@@ -37,13 +37,13 @@ export class RecipeService {
             await this.storageService.getDb().beginTransaction();
 
             let sql = `
-                INSERT INTO ${tableName.recipe} (title, srcPicture, typeID) 
+                INSERT INT ${tableName.recipe} (title, srcPicture, typeID) 
                 VALUES (?, ?, ?)`;
 
             let result = await this.storageService.getDb().run(sql, [recipe.title, recipe.srcPicture, recipe.typeID], false);
 
             // on créee les ingrédients
-           await this.createIngredients(result.changes?.lastId ?? 0, recipe);
+            await this.createIngredients(result.changes?.lastId ?? 0, recipe);
 
             // on créée les étapes
             await this.createSteps(result.changes?.lastId ?? 0, recipe);

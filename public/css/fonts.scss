@@ -110,3 +110,11 @@ h3 { font-size: var(--font-size-xl); }
   font-size: var(--font-size-lg);
   line-height: 1.62;
 }
+
+.card-title{
+  font-family: var(--font-heading-family);
+  font-weight: var(--font-heading-weight);
+  letter-spacing: var(--font-heading-tracking);
+   font-size: var(--font-size-lg);
+  line-height: 1.04;
+}

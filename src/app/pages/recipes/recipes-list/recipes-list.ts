@@ -32,7 +32,6 @@ import { PageHeader } from '../../../components/page-header/page-header';
         MatProgressSpinnerModule,
         RouterLink,
         ReactiveFormsModule,
-        VersionNumber,
         PageHeader
     ],
     templateUrl: './recipes-list.html',

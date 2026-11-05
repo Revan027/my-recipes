@@ -1,9 +1,27 @@
 import { tableName } from './table-names';
 
 export const DB_NAME = 'my_receipes_db';
-export const DB_VERSION = 4;
+export const DB_VERSION = 5;
 
-// a passer une fois les images sauvegardées
+export const version5: string[] = [
+  `CREATE TABLE IF NOT EXISTS ${tableName.menuWeek} (
+    year INTEGER NOT NULL,
+    dateWeek INTEGER NOT NULL,
+    PRIMARY KEY (year, dateWeek)
+  );`,
+  `CREATE TABLE IF NOT EXISTS ${tableName.menuDay} (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    menuWeekID INTEGER NOT NULL,
+    day TEXT NOT NULL
+  );`,
+  `CREATE TABLE IF NOT EXISTS ${tableName.menuDayPeriod} (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    menuDayID INTEGER NOT NULL,
+    recipeName TEXT NOT NULL,
+    period INTEGER NOT NULL
+  );`,
+];
+
 export const version4: string[] = [
   `ALTER TABLE ${tableName.recipe} DROP COLUMN picture;`,
 ];
@@ -17,18 +35,18 @@ export const version2: string[] = [
 ];
 
 export const version1: string[] = [
-    `CREATE TABLE IF NOT EXISTS ${tableName.type} (
+  `CREATE TABLE IF NOT EXISTS ${tableName.type} (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL
   );`,
-    `CREATE TABLE IF NOT EXISTS ${tableName.recipe} (
+  `CREATE TABLE IF NOT EXISTS ${tableName.recipe} (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     picture TEXT NULL,
     typeID INTEGER NOT NULL,
     FOREIGN KEY(typeID) REFERENCES ${tableName.type}(id)
   );`,
-    `CREATE TABLE IF NOT EXISTS ${tableName.step} (
+  `CREATE TABLE IF NOT EXISTS ${tableName.step} (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     content TEXT NOT NULL,
@@ -36,13 +54,13 @@ export const version1: string[] = [
     recipeID INTEGER NOT NULL,
     FOREIGN KEY(recipeID) REFERENCES ${tableName.recipe}(id)
   );`,
-    `CREATE TABLE IF NOT EXISTS ${tableName.ingredient} (
+  `CREATE TABLE IF NOT EXISTS ${tableName.ingredient} (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     recipeID INTEGER NOT NULL,
     FOREIGN KEY(recipeID) REFERENCES ${tableName.recipe}(id)
   );`,
-    `INSERT INTO ${tableName.type} (name) VALUES
+  `INSERT INTO ${tableName.type} (name) VALUES
     ('Plat'),
     ('Entrée'),
     ('Salade'),
@@ -54,4 +72,5 @@ export const DB_UPGRADES = [
   { toVersion: 2, statements: version2 },
   { toVersion: 3, statements: version3 },
   { toVersion: 4, statements: version4 },
+  { toVersion: 5, statements: version5 },
 ];

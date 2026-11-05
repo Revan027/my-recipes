@@ -3,4 +3,7 @@ export const tableName = {
     step: 'Step',
     type: 'Type',
     ingredient: 'Ingredient',
+    menuWeek: 'MenuWeek',
+    menuDay: 'MenuDay',
+    menuDayPeriod: 'MenuDayPeriod',
 };

@@ -11,14 +11,14 @@ export class GroqService {
     constructor() {     
     }
 
-    async send(){
+    async generateMenuRequest(){
         const groq = new Groq({ apiKey: environment.groqApiKey,  dangerouslyAllowBrowser: true });
 
         const response = await groq.chat.completions.create({
             messages: [
-                /*{
+                {
                     role: "system",
-                    content: `
+                    /*content: `
                         Tu es un chef cuisinier professionnel, spécialisé dans la cuisine familiale et quotidienne.
 
                         Tu maîtrises :
@@ -55,19 +55,86 @@ export class GroqService {
                         Toujours proposer exactement 14 repas.
                         Ne jamais proposer deux fois la même recette.
                         Privilégier la diversité, la simplicité et la cohérence du menu.
+                        La propriété period doit etre 1 = MIDI et 2 = SOIR
+                        La propriété day au jour 3 première lettres du jour de la semaine en commencant par lundi.
                         `
                 },*/
-                {
-                    role: "user",
-                    content:"Dit bonjour",
-                    
+                 content: `
+                        Tu es un chef cuisinier professionnel, spécialisé dans la cuisine familiale et quotidienne.
+
+                        Tu maîtrises :
+                        Les techniques culinaires.
+                        Les associations de saveurs.
+                        La création de recettes.
+                        La cuisine simple, économique et accessible.
+
+                        OBJECTIF
+                        Créer un menu hebdomadaire complet comprenant 2 repas par jour (midi et soir), du lundi au dimanche, soit exactement 14 recettes.
+
+                        RÈGLES DE CRÉATION DU MENU
+                       
+                        Ne jamais proposer deux fois la même recette au cours de la semaine, même sous une appellation légèrement différente.
+                       
+                        Privilégier les recettes simples, faciles à réaliser et adaptées à la cuisine de tous les jours.
+                        Varier les ingrédients, les protéines, les accompagnements et les types de plats sur l'ensemble de la semaine.
+                        Éviter de proposer systématiquement les mêmes associations d'ingrédients.
+                       
+                       
+
+                        Pour composer les 14 repas :
+                        Répartir les recettes de manière équilibrée sur les 7 jours.
+
+                        CONTRAINTES GÉNÉRALES
+                        Répondre exclusivement en français.
+                        Respecter strictement les données transmises.
+                        Toujours proposer exactement 14 repas.
+                        Ne jamais proposer deux fois la même recette.
+                        Privilégier la diversité, la simplicité et la cohérence du menu.
+                        La propriété period doit etre 1 = MIDI et 2 = SOIR
+                        La propriété day au jour 3 première lettres du jour de la semaine en commencant par lundi.
+                        `
                 },
             ],
             model: "openai/gpt-oss-120b",
+            response_format: {
+                type: "json_schema",
+                json_schema: {
+                    name: "response",
+                    strict: true,
+                    schema: {
+                        type: "object", 
+                        properties: {
+                            menuDays: {
+                                type: "array",
+                                items: {
+                                    type: "object",
+                                    properties: {
+                                        day: { type: "string" },
+                                        menuDayPeriods: { 
+                                            type: "array",
+                                            items: {
+                                                type: "object",  
+                                                properties: {
+                                                    period: { type: "number" },
+                                                    recipeName: { type: "string" }, 
+                                                } ,
+                                                required: ["period", "recipeName"],
+                                                additionalProperties: false  
+                                            }                            
+                                        },
+                                    },
+                                    required: ["day", "menuDayPeriods"],
+                                    additionalProperties: false    
+                                }
+                            },                        
+                        },
+                        required: ["menuDays"],
+                        additionalProperties: false 
+                    }
+                }
+            }
         });
 
         return response;
-    }
-
-   
+    } 
 }

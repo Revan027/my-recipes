@@ -4,10 +4,11 @@ import { MenuService } from '../../Services/menu.service';
 import { NavigationStart, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MenuItem } from '../../Models/MenuItem';
+import { VersionNumber } from '../version-number/version-number';
 
 @Component({
     selector: 'app-menu',
-    imports: [MatIconModule],
+    imports: [MatIconModule, VersionNumber],
     templateUrl: './menu.html',
     styleUrl: './menu.scss',
 })

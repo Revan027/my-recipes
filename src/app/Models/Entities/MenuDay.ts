@@ -5,5 +5,5 @@ export class MenuDay {
 
     id: number = 0;
     day!: string;
-    menuDays: MenuDayPeriod[] = [];
+    menuDayPeriods: MenuDayPeriod[] = [];
 }

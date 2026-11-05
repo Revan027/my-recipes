@@ -13,11 +13,11 @@ button{
 }
 
 .btn-link--accent {
-  --mat-button-text-label-text-color: var(--color-accent);
+  --mat-button-text-label-text-color: var(--color-bf5333);
 }
 
 .btn-link--danger {
-  --mat-button-text-label-text-color: var(--color-danger);
+  --mat-button-text-label-text-color: var(--color-680202);
 }
 
 .btn-link--black {
@@ -25,12 +25,12 @@ button{
 }
 
 .btn-link--secondary-text {
-  --mat-button-text-label-text-color: var(--color-secondary-text);
+  --mat-button-text-label-text-color: var(--color-8a8073);
   font-weight: 100!important;
 }
 
 .btn-fab--accent {
-  --mat-fab-container-color: var(--color-accent);
+  --mat-fab-container-color: var(--color-bf5333);
   --mat-fab-foreground-color: #fff;
   --mat-fab-container-shape: 50%;
 }
@@ -38,7 +38,7 @@ button{
 .btn-fab--empty {
   --mat-fab-container-color: white;
   --mat-fab-foreground-color: black;
-  --mat-fab-state-layer-color: var(--color-accent);
+  --mat-fab-state-layer-color: var(--color-bf5333);
   --mat-fab-hover-state-layer-opacity: 0.8;
   --mat-fab-pressed-state-layer-opacity: 0.8;
   --mat-fab-focus-state-layer-opacity: 0.8;
@@ -46,11 +46,11 @@ button{
 
 .btn-mini-fab--empty {
   .mat-mdc-button-persistent-ripple.mdc-fab__ripple{
-    border: 1px solid var(--color-lines);
+    border: 1px solid var(--color-e8dfcd);
   }
 
   mat-icon{
-    color: var(--color-accent);
+    color: var(--color-bf5333);
   }
 
   --mat-fab-small-container-color:  white;
@@ -66,21 +66,23 @@ button{
 }
 
 .btn-tonal--accent{
-  --mat-button-tonal-container-color: var(--color-accent);
+  --mat-button-tonal-container-color: var(--color-bf5333);
   --mat-button-tonal-label-text-color: white;
   width: 100%;
   --mat-button-tonal-container-height: 50px;
-  --mat-button-tonal-ripple-color: var(--color-ec8363);
-  --mat-button-tonal-state-layer-color: var(--color-ec8363);
+  --mat-button-tonal-ripple-color: var(--color-c29080);
+  --mat-button-tonal-state-layer-color: var(--color-c29080);
+  --mat-button-tonal-disabled-container-color: var(--color-c29080);
+  --mat-button-tonal-disabled-label-text-color: white;
 }
 
 .btn-tonal--empty{
-  --mat-button-tonal-container-color: var(--color-surface);
-  --mat-button-tonal-label-text-color: var(--color-accent);
+  --mat-button-tonal-container-color: var(--color-fffdf8);
+  --mat-button-tonal-label-text-color: var(--color-bf5333);
   width: 100%;
   --mat-button-tonal-container-height: 50px;
 
   .mat-mdc-button-persistent-ripple{
-    border: 1px dashed var(--color-lines);
+    border: 1px dashed var(--color-e8dfcd);
   }
 }

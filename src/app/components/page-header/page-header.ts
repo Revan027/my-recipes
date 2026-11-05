@@ -8,4 +8,5 @@ import { Component, input } from '@angular/core';
 })
 export class PageHeader {
     title = input.required<string>();
+    subTitle = input<string>();
 }

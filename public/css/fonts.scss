@@ -67,3 +67,46 @@ h1, h2, h3 {
 h1 { font-size: var(--font-size-3xl); line-height: 1.0; margin: 0; }
 h2 { font-size: var(--font-size-2xl); }
 h3 { font-size: var(--font-size-xl); }
+
+.kicker,
+.kicker--8a8073{
+  text-transform: uppercase;
+  color: var(--color-bf5333);
+  font-size: var(--font-size-md);
+  font-weight: 700;
+  letter-spacing: 0.20em;
+  line-height: 2;
+}
+
+.kicker--8a8073{
+   color: var(--color-8a8073);
+}
+
+.meta{
+  font-weight: 400;
+  font-size: var(--font-size-xs);
+  color: var(--color-8a8073);
+}
+
+.alert-danger{
+  font-size: var(--font-size-sm);
+  color: red;
+  margin: 10px 0;
+}
+
+.text-center{
+  text-align: center;
+}
+
+.subTitle{
+  font-weight: 400;
+  font-size: var(--font-size-lg);
+  color: var(--color-8a8073);
+}
+
+.current-text{
+  font-family: "Karla", sans-serif;
+  font-weight: 400;
+  font-size: var(--font-size-lg);
+  line-height: 1.62;
+}

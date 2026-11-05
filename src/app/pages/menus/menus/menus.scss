@@ -1,0 +1,14 @@
+.empty-menuWeek{
+    text-align: center;
+    border-radius: 15px;
+    border: 1px var(--color-e8dfcd) dashed;
+    padding: 40px;
+}
+
+.menuWeek{
+    .menuWeek-line{
+        display: flex;
+        gap: 20px;   
+        border-bottom: 1px solid var(--color-e8dfcd);
+    }
+}

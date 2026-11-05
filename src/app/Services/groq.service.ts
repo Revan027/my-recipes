@@ -1,5 +1,4 @@
-import { Injectable, signal } from '@angular/core';
-import { MenuItem } from '../Models/MenuItem';
+import { Injectable } from '@angular/core';
 import Groq from 'groq-sdk';
 import { environment } from '../../environments/environment';
 import { Recipe } from '../Models/Entities/Recipe';
@@ -9,8 +8,7 @@ import { Recipe } from '../Models/Entities/Recipe';
 })
 export class GroqService {
 
-    constructor() {     
-    }
+    constructor() { }
 
     async generateMenuRequest(recipes: Recipe[]){
         const groq = new Groq({ apiKey: environment.groqApiKey,  dangerouslyAllowBrowser: true });
@@ -84,6 +82,15 @@ export class GroqService {
                         - Privilégier les recettes historiques pour les repas du soir.
                         - Répartir les recettes historiques de manière équilibrée sur les 7 soirs.
                         - Ne jamais utiliser une recette historique déjà présente dans le menu de la semaine précédente.
+
+                        Cuisine de référence :
+
+                        - Les recettes doivent être exclusivement inspirées de la cuisine française et italienne.
+                        - Privilégier les recettes traditionnelles et familiales de ces deux cuisines, ainsi que leurs variantes modernes et quotidiennes.
+                        - Respecter les ingrédients, les associations de saveurs et les techniques culinaires propres à chaque cuisine.
+                        - Ne pas proposer de recettes issues d'autres cuisines du monde (asiatique, mexicaine, indienne, américaine, etc.).
+                        - Pour les recettes originales, rester dans l'esprit de la cuisine française ou italienne.
+                        - Varier les inspirations françaises et italiennes sur l'ensemble de la semaine.
 
                         CONTRAINTES DE STRUCTURE
 

@@ -6,6 +6,7 @@ import { GroqService } from '../../../Services/groq.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MenuWeek } from '../../../Models/Entities/MenuWeek';
+import { RecipeService } from '../../../Services/recipe.service';
 
 @Component({
     selector: 'app-menus',
@@ -16,17 +17,19 @@ import { MenuWeek } from '../../../Models/Entities/MenuWeek';
 export class Menus {
     protected hasLoading = signal<boolean>(false);
 
-    constructor(private groqService: GroqService){
+    constructor(private groqService: GroqService, private recipeService: RecipeService){
 
     }
 
     async onGenerateIdea(){
         this.setHasLoading(true);
-        const response = await this.groqService.generateMenuRequest();
+        const recipes = await this.recipeService.getAllLight();
+        const response = await this.groqService.generateMenuRequest(recipes);
         //gestino d'erreur a faire. faire ajouter le joru de la semine et l'anné à grocq
+        // lui expliquer que perdio MATIN SOIR en string
         const menuWeek = JSON.parse(response.choices[0].message.content as string) as MenuWeek;
-        menuWeek.dayWeek = 1;
         console.log(menuWeek);
+        alert(JSON.stringify(menuWeek, null, 2));
         this.setHasLoading(false);
     }
 

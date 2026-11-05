@@ -166,6 +166,29 @@ export class RecipeService {
         await this.storageService.getDb().run(sql, [recipe.id], false);
     }
 
+    async countQueryResult(): Promise<number> {
+        let result = await this.storageService.getDb().query(`
+            SELECT COUNT(*) as countTotal
+            FROM ${tableName.recipe}
+            ${this.getQuerySearch()}`);
+
+        return result.values != undefined ? (result.values[0].countTotal as number) : 0;
+    }
+
+    async getAllLight(): Promise<Recipe[]>{
+        let recipesResult = await this.storageService.getDb().query(`
+            SELECT recipe.title
+            FROM ${tableName.recipe} as recipe`);
+
+        return recipesResult.values?.map((item) => Recipe.createRecipe(item)) ?? [];
+    }
+
+    private getQuerySearch() {
+        const searchText = this.recipeSearch().searchText ?? '';
+
+        return `WHERE ${searchText.length > 0 ? 'FALSE' : 'TRUE'} OR lower(recipe.title) LIKE '%${searchText.toLowerCase()}%'`;
+    }
+
     async getFirstRecipeID(){
         if (Capacitor.isNativePlatform()) {
             let result = await this.storageService.getDb().query(`
@@ -190,6 +213,10 @@ export class RecipeService {
         }else{
             return Promise.resolve(MOCK_TYPES);
         }     
+    }
+
+    getSrcPicture(recipe: Recipe){
+        return this.fileService.getUrlWeb(this.fileService.getPathUri(this._documentURI(), recipe.srcPicture as string));
     }
 
     async fetchPage(take: number | undefined = undefined): Promise<Recipe[]> {
@@ -225,40 +252,21 @@ export class RecipeService {
         
         ///alert(JSON.stringify(recipes, null, 2));
         return recipes ?? [];
-    }
+    } 
 
-    private getQuerySearch() {
-        const searchText = this.recipeSearch().searchText ?? '';
-
-        return `WHERE ${searchText.length > 0 ? 'FALSE' : 'TRUE'} OR lower(recipe.title) LIKE '%${searchText.toLowerCase()}%'`;
-    }
-
-    async countQueryResult(): Promise<number> {
-        let result = await this.storageService.getDb().query(`
-            SELECT COUNT(*) as countTotal
-            FROM ${tableName.recipe}
-            ${this.getQuerySearch()}`);
-
-        return result.values != undefined ? (result.values[0].countTotal as number) : 0;
-    }
-
-    getSrcPicture(recipe: Recipe){
-        return this.fileService.getUrlWeb(this.fileService.getPathUri(this._documentURI(), recipe.srcPicture as string));
-    }
-
-    loadTypes(types: Type[]){
+    setTypes(types: Type[]){
         this._recipeTypes.set(types);
     }
 
-    loadRecipeSearch(recipeSearch: RecipeSearch){
+    setRecipeSearch(recipeSearch: RecipeSearch){
         this._recipeSearch.set({...recipeSearch});
     }
 
-    loadRecipeResult(recipeResult: RecipeResult){
+    setRecipeResult(recipeResult: RecipeResult){
         this._recipeResult.set({...recipeResult});
     }
 
-    loadDocumentURI(uri: string){
+    setDocumentURI(uri: string){
         this._documentURI.set(uri);
     }
 }

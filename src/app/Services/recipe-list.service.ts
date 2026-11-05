@@ -31,8 +31,8 @@ export class RecipeListService {
         recipeSearch.searchText = searchText;
         recipeSearch.page = 0; 
 
-        this.recipeService.loadRecipeSearch(recipeSearch);
-        this.recipeService.loadRecipeResult(new RecipeResult());
+        this.recipeService.setRecipeSearch(recipeSearch);
+        this.recipeService.setRecipeResult(new RecipeResult());
     }
 
     async refreshResult(){ 
@@ -42,12 +42,12 @@ export class RecipeListService {
         let recipeSearch = this.recipeService.recipeSearch();
         recipeSearch.page = 1; 
 
-        this.recipeService.loadRecipeSearch(recipeSearch);
+        this.recipeService.setRecipeSearch(recipeSearch);
 
         const recipes = await this.recipeService.fetchPage(this.recipeService.recipeResult().countTotal);
         recipeResult.recipes = recipes;
 
-        this.recipeService.loadRecipeResult(recipeResult);
+        this.recipeService.setRecipeResult(recipeResult);
 
         this._isLoading.set(false);
     }
@@ -65,7 +65,7 @@ export class RecipeListService {
             let recipeSearch = this.recipeService.recipeSearch();
             recipeSearch.page++;
 
-            this.recipeService.loadRecipeSearch(recipeSearch);
+            this.recipeService.setRecipeSearch(recipeSearch);
 
             const recipes = await this.recipeService.fetchPage();
            
@@ -86,7 +86,7 @@ export class RecipeListService {
             recipeResult.recipes = MOCK_RECIPES;
         }
 
-        this.recipeService.loadRecipeResult(recipeResult);
+        this.recipeService.setRecipeResult(recipeResult);
         this._isLoading.set(false);
     }
 

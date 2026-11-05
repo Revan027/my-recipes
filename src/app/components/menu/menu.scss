@@ -1,5 +1,5 @@
 .menu{
-    position: fixed;
+    position: sticky;
     bottom: 0;
     background-color: white;
     left: 0;
@@ -11,7 +11,7 @@
 
 .menu-list{
     display: flex;
-    padding: 30px;
+    padding: 20px;
     justify-content: space-evenly;
 }
 
@@ -20,9 +20,11 @@
     font-size: var(--font-size-md);
     font-weight: 500;
     color: var(--color-secondary-text);
+    align-items: center;
+    display: flex;
 
     mat-icon{
-        transform: translateY(5px);
+        margin-right: 5px;
     }
 }
 

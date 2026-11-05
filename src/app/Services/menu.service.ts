@@ -31,7 +31,7 @@ export class MenuService {
 
             return this.menus().find(x => x.name == "Home");      
         }
-        else if(url.startsWith("menus")){
+        else if(url.startsWith("/menus")){
             return this.menus().find(x => x.name == "Menus");   
         }
 

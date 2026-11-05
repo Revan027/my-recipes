@@ -13,6 +13,8 @@
 
 html {
   height: 100%;
+  // désactive l'effet d'étirement (overscroll) en haut/bas de page sur Android
+  overscroll-behavior: none;
   @include mat.theme(
     (
       color: (
@@ -23,6 +25,9 @@ html {
       density: 0,
     )
   );
+}
+.app-content{
+  min-height: 100dvh;
 }
 
 body {
@@ -41,14 +46,7 @@ body {
   font-weight: 400;
   margin: 0;
   height: 100%;
-}
-
-.app-version{
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  font-size: var(--font-size-xs); 
-  color: var(--color-accent);
+  overscroll-behavior: none;
 }
 
 // ESPACEMENTS
@@ -125,6 +123,14 @@ body {
 
 .spinner {
   --mat-progress-spinner-active-indicator-color: var(--color-accent);
+}
+
+.spinner--white {
+  --mat-progress-spinner-active-indicator-color: white;
+}
+
+.spinner--inline {
+  display: inline-block!important;
 }
 
 //CHIPS

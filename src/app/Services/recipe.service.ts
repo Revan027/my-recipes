@@ -6,7 +6,7 @@ import { RecipeResult } from '../Models/RecipeResult';
 import { RecipeSearch } from '../Models/RecipeSearch';
 import { Type } from '../Models/Entities/Type';
 import { Capacitor } from '@capacitor/core';
-import { MOCK_TYPES } from '../constants/mock-recipes';
+import { MOCK_RECIPES, MOCK_TYPES } from '../constants/mock-recipes';
 import { FileService } from '@common/capacitor/file.service';
 import { folder } from '../constants/folder';
 
@@ -167,11 +167,15 @@ export class RecipeService {
     }
 
     async getFirstRecipeID(){
-        let result = await this.storageService.getDb().query(`
-            SELECT MIN(id) as id
-            FROM ${tableName.recipe}`);
+        if (Capacitor.isNativePlatform()) {
+            let result = await this.storageService.getDb().query(`
+                SELECT MIN(id) as id
+                FROM ${tableName.recipe}`);
 
-        return result.values != undefined ? (result.values[0].id as number) : 0;
+            return result.values != undefined ? (result.values[0].id as number) : 0;
+        }else{
+            return Promise.resolve(MOCK_RECIPES[0].id);
+        }
     }
 
     async getTypes(): Promise<Type[]> {

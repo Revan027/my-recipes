@@ -11,7 +11,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RecipeService } from '../../../Services/recipe.service';
-import { AppInitService } from '../../../Services/app-init.service';
 import { RecipeResult } from '../../../Models/RecipeResult';
 import { RecipeCard } from '../../../components/recipe-card/recipe-card';
 import { RouterLink } from '@angular/router';
@@ -19,6 +18,8 @@ import { RecipeListService } from '../../../Services/recipe-list.service';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RecipeSearch } from '../../../Models/RecipeSearch';
 import { Observable } from 'rxjs';
+import { VersionNumber } from '../../../components/version-number/version-number';
+import { PageHeader } from '../../../components/page-header/page-header';
 
 
 @Component({
@@ -31,6 +32,8 @@ import { Observable } from 'rxjs';
         MatProgressSpinnerModule,
         RouterLink,
         ReactiveFormsModule,
+        VersionNumber,
+        PageHeader
     ],
     templateUrl: './recipes-list.html',
     styleUrl: './recipes-list.scss',
@@ -44,7 +47,6 @@ export class RecipesList {
     recipeResult: Signal<RecipeResult>;
     recipeSearch: Signal<RecipeSearch>;
     isLoading: Signal<boolean>;
-    numVersion!: Signal<string>;
 
     recipeSearch$!: Observable<RecipeSearch>;
 
@@ -53,7 +55,6 @@ export class RecipesList {
     formGroup!: FormGroup;
    
     constructor(
-        private appInitService: AppInitService,
         private recipeService: RecipeService,
         private recipeListService: RecipeListService,
         private formBuilder: FormBuilder
@@ -77,8 +78,6 @@ export class RecipesList {
     }
 
     async ngOnInit() {
-        this.numVersion = this.appInitService.appVersion;
-
         this.setPictureClass();
 
         this.createForm();

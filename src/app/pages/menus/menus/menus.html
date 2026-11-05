@@ -1,0 +1,14 @@
+<app-version-number></app-version-number>
+
+<div class="recipes content-padding">
+    <app-page-header title="Mes menus"></app-page-header>
+
+     <button matButton="tonal" class="btn-tonal--accent" (click)="onGenerateIdea()" [disabled]="hasLoading()">
+        <mat-icon>refresh</mat-icon>
+     
+        Générer des idées   
+        @if(hasLoading()){
+            <mat-spinner class="spinner--white spinner--inline" diameter="15"></mat-spinner>
+        }
+    </button>
+</div>

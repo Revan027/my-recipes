@@ -61,17 +61,25 @@ button{
   --mat-fab-small-hover-container-elevation-shadow: none;
 }
 
-
 .btn-back{
   --mat-fab-container-shape: 50%;
+}
+
+.btn-tonal--accent{
+  --mat-button-tonal-container-color: var(--color-accent);
+  --mat-button-tonal-label-text-color: white;
+  width: 100%;
+  --mat-button-tonal-container-height: 50px;
+  --mat-button-tonal-ripple-color: var(--color-ec8363);
+  --mat-button-tonal-state-layer-color: var(--color-ec8363);
 }
 
 .btn-tonal--empty{
   --mat-button-tonal-container-color: var(--color-surface);
   --mat-button-tonal-label-text-color: var(--color-accent);
   width: 100%;
-  --mat-button-tonal-container-height: 60px;
-  
+  --mat-button-tonal-container-height: 50px;
+
   .mat-mdc-button-persistent-ripple{
     border: 1px dashed var(--color-lines);
   }

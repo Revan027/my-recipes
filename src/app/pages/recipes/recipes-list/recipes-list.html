@@ -1,11 +1,7 @@
-<div class="app-version">V {{numVersion()}}</div>
+<app-version-number></app-version-number>
 
 <div class="recipes content-padding">
-    <div class="kicker mb-1">Le Carnet</div>
-
-    <div class="recipes-title mb-2">
-        <h1>Mes recettes</h1>
-    </div>
+    <app-page-header title="Mes recettes"></app-page-header>
 
     <div class="recipes-search mb-2">
         <form [formGroup]="formGroup" novalidate>

@@ -17,4 +17,8 @@ export const routes: Routes = [
         path: 'recipes',
         loadChildren: () => import('./pages/recipes/recipes.routes').then((m) => m.routes),
     },
+    {
+        path: 'menus',
+        loadChildren: () => import('./pages/menus/menus.routes').then((m) => m.routes),
+    },
 ];

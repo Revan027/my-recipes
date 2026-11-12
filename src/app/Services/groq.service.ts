@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import Groq from 'groq-sdk';
 import { environment } from '../../environments/environment';
 import { Recipe } from '../Models/Entities/Recipe';
+import { MenuWeek } from '../Models/Entities/MenuWeek';
 
 @Injectable({
     providedIn: 'root',
@@ -10,7 +11,7 @@ export class GroqService {
 
     constructor() { }
 
-    async generateMenuRequest(recipes: Recipe[]){
+    async generateMenuRequest(booRecipes: Recipe[], lastMenuWeek: string[]){
         const groq = new Groq({ apiKey: environment.groqApiKey,  dangerouslyAllowBrowser: true });
 
         const response = await groq.chat.completions.create({
@@ -60,16 +61,7 @@ export class GroqService {
 
                         SPÉCIFICITÉS DES REPAS DU SOIR
 
-                        Les repas du soir doivent être plus complets et constituer les principaux repas cuisinés de la journée.
-
-                        Privilégier impérativement :
-                        - Les entrées chaudes : croque-monsieur, quiches, feuilletés, tartes salées, cakes salés, etc.
-                        - Les tartines gourmandes : tartines de tomates, fromage, jambon, légumes grillés, etc.
-                        - Les salades composées et les préparations à base de légumes frais.
-                        - Les préparations à base de tomates, légumes de saison, fromage et œufs.
-
-
-                        Ne pas proposer d'autres catégories de repas pour les déjeuners.
+                        Les repas du soir doivent être plus complets.
 
                         Les recettes issues de l'historique doivent être prioritairement réservées aux repas du soir.
 
@@ -85,7 +77,6 @@ export class GroqService {
                         - Ne jamais utiliser une recette historique déjà présente dans le menu de la semaine précédente.
 
                         Cuisine de référence :
-
                         - Les recettes doivent être exclusivement inspirées de la cuisine française et italienne.
                         - Privilégier les recettes traditionnelles et familiales de ces deux cuisines, ainsi que leurs variantes modernes et quotidiennes.
                         - Respecter les ingrédients, les associations de saveurs et les techniques culinaires propres à chaque cuisine.
@@ -100,7 +91,8 @@ export class GroqService {
                         - day : les trois premières lettres du jour de la semaine en français, en commençant par lundi (lun, mar, mer, jeu, ven, sam, dim).
                         - period : 1 pour le MIDI et 2 pour le SOIR.
                         - year : l'année du menu au format YYYY (exemple : 2026). Cette valeur doit être identique pour les 14 recettes.
-                        - dayWeek : le numéro de la semaine dans l'année, au format chaîne de caractères sur exactement 2 chiffres (exemples : "01", "09", "42", "52"). Cette valeur doit être identique pour les 14 recettes.
+                        - dateWeek : le numéro de la semaine actuelle en cours dans l'année, au format chaîne de caractères sur exactement 2 chiffres (exemples : "01", "09", "42", "52"). Cette valeur doit être identique pour les 14 recettes.
+                        - dateWeek doit etre le numéro de la semaine de la date du jour actuelle ou le prompt est lancé. 
 
                         Respecter strictement ces valeurs pour chaque recette.
 
@@ -113,11 +105,13 @@ export class GroqService {
                         - Privilégier la diversité, la simplicité et la cohérence du menu.
                         - Ne pas placer artificiellement des recettes historiques le midi pour atteindre le quota de 30 %.
                         - Respecter les préférences de repas du midi et du soir avant tout.
+                        - Les noms de recettes ne doivent pas contenir des caractères spéciaux.
+                        - Pas de recette de dessert
                         `
                 },
                 {
-                role: "user",
-                content: "Voici les recettes que j'ai dans mon carnet : "  + JSON.stringify(recipes)
+                    role: "user",
+                    content: "Voici les recettes que j'ai dans mon carnet : "  + JSON.stringify(booRecipes) + ". Et voici le menu de la semaine précédente : "  + JSON.stringify(lastMenuWeek.toString())
                 }
             ],
             model: "openai/gpt-oss-120b",
@@ -130,7 +124,7 @@ export class GroqService {
                         type: "object", // MenuWeek
                         properties: {
                             year: { type: "number" },
-                            dayWeek: { type: "number" },
+                            dateWeek: { type: "number" },
                             menuDays: {
                                 type: "array", // MenuDays
                                 items: {
@@ -155,7 +149,7 @@ export class GroqService {
                                 }
                             },                        
                         },
-                        required: ["year","dayWeek","menuDays"],
+                        required: ["year","dateWeek","menuDays"],
                         additionalProperties: false 
                     }
                 }

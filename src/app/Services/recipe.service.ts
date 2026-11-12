@@ -175,7 +175,7 @@ export class RecipeService {
         return result.values != undefined ? (result.values[0].countTotal as number) : 0;
     }
 
-    async getAllLight(): Promise<Recipe[]>{
+    async getTitles(): Promise<Recipe[]>{
         let recipesResult = await this.storageService.getDb().query(`
             SELECT recipe.title
             FROM ${tableName.recipe} as recipe`);

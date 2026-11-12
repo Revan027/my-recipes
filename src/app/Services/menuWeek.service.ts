@@ -4,7 +4,6 @@ import { tableName } from '../constants/table-names';
 import { MenuWeek } from '../Models/Entities/MenuWeek';
 import { MenuDay } from '../Models/Entities/MenuDay';
 import { MenuDayPeriod } from '../Models/Entities/MenuDayPeriod';
-
 @Injectable({
     providedIn: 'root',
 })
@@ -21,16 +20,17 @@ export class MenuWeekService {
             let sql = `
                 INSERT INTO ${tableName.menuWeek} (year, dateWeek) 
                 VALUES (?, ?)`;
-alert(1)
-            let result = await this.storageService.getDb().run(sql, [menuWeek.year, menuWeek.dayWeek], false);
-alert(result.changes?.lastId)
+
+            let result = await this.storageService.getDb().run(sql, [menuWeek.year, menuWeek.dateWeek], false);
+
             await this.createMenuDay(result.changes?.lastId ?? 0, menuWeek.menuDays);
 
             // tout est validé d'un coup
             await this.storageService.getDb().commitTransaction(); 
-        } catch (err) {
+        } 
+        catch (err) {
             isSuccess = false;
-alert()
+
             if ((await this.storageService.getDb()?.isTransactionActive()).result) {
                 await this.storageService.getDb()?.rollbackTransaction();   // tout est annulé si une erreur survient
             }
@@ -63,19 +63,82 @@ alert()
         }
     }
 
-     async getAllLight(): Promise<MenuWeek[]>{
-try{
- let recipesResult = await this.storageService.getDb().query(`
-            SELECT menuWeek.id as mwid, menuWeek.year as year, menuWeek.dateWeek as dateWeek, menuDay.day as day, menuDay.id as mdid,  menuDayPeriod.recipeName, menuDayPeriod.period         
-            FROM ${tableName.menuWeek} as menuWeek
-            INNER JOIN ${tableName.menuDay} AS menuDay ON ${tableName.menuDay}.menuWeekID = mwid
-            INNER JOIN ${tableName.menuDayPeriod} AS menuDayPeriod ON ${tableName.menuDayPeriod}.menuDayID = mdid;`);
-alert(JSON.stringify(recipesResult.values, null, 2));
-}catch(e){
-alert(e)
-}
-      
-return [];
-        //return recipesResult.values?.map((item) => MenuWeek.createMenuWeek(item)) ?? [];
+    async deleteMenuWeek(year: number, dateWeek: number){     
+        // si un menu est trovué sur cette semaine on le supprime
+        let sql = `
+            SELECT id, year, dateWeek 
+            FROM ${tableName.menuWeek} 
+            WHERE year = ? AND dateWeek = ?
+            LIMIT 1`;
+
+        let result = ((await this.storageService.getDb().query(sql)).values ?? [year, dateWeek]) as MenuWeek[];
+
+        if(result.length == 0){
+            return;
+        }
+        
+        const menuWeek = result[0];
+
+        sql = `
+            DELETE FROM ${tableName.menuDayPeriod}
+            WHERE menuDayID IN (?)`;
+
+        await this.storageService.getDb().run(sql, [menuWeek.menuDays.map(x => x.id).toString()], false);
+
+        sql = `
+            DELETE FROM ${tableName.menuDay}
+            WHERE id IN (?)`;
+
+        await this.storageService.getDb().run(sql, [menuWeek.menuDays.map(x => x.id).toString()], false);
+
+        sql = `
+            DELETE FROM ${tableName.menuWeek}
+            WHERE id = ?`;
+
+        await this.storageService.getDb().run(sql, [menuWeek.id], false);
+    }
+
+    async getLastRecipes(): Promise<string[]>{
+        // a optimiser
+        let recipes: string[] = [];
+
+        let sql = `
+            SELECT id, year, dateWeek 
+            FROM ${tableName.menuWeek} 
+            ORDER BY year DESC, dateWeek DESC 
+            LIMIT 1`;
+
+        let menuWeek = ((await this.storageService.getDb().query(sql)).values ?? []) as MenuWeek[];
+
+        if(menuWeek[0] == undefined)
+            return [];
+
+        sql = `
+            SELECT id, day, menuWeekID
+            FROM ${tableName.menuDay}
+            WHERE menuWeekID = ${menuWeek[0].id}`;
+            
+        menuWeek[0].menuDays = ((await this.storageService.getDb().query(sql)).values ?? []) as MenuDay[];
+
+        for(let menuDay of menuWeek[0].menuDays){
+            sql = `
+                SELECT menuDayID, recipeName, period
+                FROM ${tableName.menuDayPeriod}
+                WHERE menuDayID = ${menuDay.id}`;
+
+            menuDay.menuDayPeriods = ((await this.storageService.getDb().query(sql)).values ?? []) as MenuDayPeriod[];  
+
+            recipes.concat( menuDay.menuDayPeriods.map(x => x.recipeName))
+        }
+
+        return recipes;
+    }
+
+      async countQueryResult(): Promise<number> {
+        let result = await this.storageService.getDb().query(`
+            SELECT COUNT(*) as countTotal
+            FROM ${tableName.menuWeek}`);
+
+        return result.values != undefined ? (result.values[0].countTotal as number) : 0;
     }
 }

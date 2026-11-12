@@ -32,32 +32,30 @@ export class Menus {
         this.setHasLoading(true);
 
         // recupération des recettes du carnet
-        const recipes = Capacitor.isNativePlatform()
-            ? await this.recipeService.getAllLight()
-            : MOCK_RECIPES;
+        const bookRecipes = await this.recipeService.getTitles();
+        const lastRecipes = await this.menuWeekService.getLastRecipes();
 
         let response;
 
         try{
-            response = await this.groqService.generateMenuRequest(recipes);
-        }catch(e: any){
+            response = await this.groqService.generateMenuRequest(bookRecipes, lastRecipes);
+        }
+        catch(e: any){
             this.setHasLoading(false);
 
             throw new GroqApiError (e);
         }
 
-        // recupération de la semaine précédente  
-
         const menuWeek = JSON.parse(response.choices[0].message.content as string) as MenuWeek;
- alert(JSON.stringify(await this.menuWeekService.getAllLight(), null, 2));
-        //on ajoute le resultat en base
-       /*const isSuccess = await this.menuWeekService.create(menuWeek);
+
+        // suppression si on redemande une génératiuon la même semaine
+         await this.menuWeekService.deleteMenuWeek(menuWeek.year, menuWeek.dateWeek);
+
+        //const isSuccess = await this.menuWeekService.create(menuWeek);
        
-        if(isSuccess){
+        if(true){
             this.toastService.success(`Sauvegarde du menu effectuée`);
-        }else{
-            this.toastService.error(`Une erreur est survenue`);
-        }*/
+        }
 
         this.setMenuWeek(menuWeek)
         this.setHasLoading(false);

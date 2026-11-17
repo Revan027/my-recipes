@@ -1,0 +1,11 @@
+.backup-content{
+    display: flex;
+    align-items: center;
+    min-height: 500px;
+    flex-direction: column;
+    justify-content: center;
+
+    .backup-line{
+        width: 100%;
+    }
+}

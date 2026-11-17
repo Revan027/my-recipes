@@ -18,8 +18,8 @@ export const appConfig: ApplicationConfig = {
         },
         DecimalPipe,
         provideBrowserGlobalErrorListeners(),
-         provideToastr({
-            timeOut: 3000,
+        provideToastr({
+            timeOut: 10000,
             preventDuplicates: true,
         }),
         provideRouter(

@@ -1,6 +1,6 @@
 .search-field{
     position: relative;
-    color: var(--color-secondary-text);
+    color: var(--color-8a8073);
 
     input[type=search]{
         border-radius: 17px;
@@ -9,7 +9,7 @@
         font-weight: 400;
         width: 100%;
         font-size: var(--font-size-base);
-        border: 1px solid var(--color-lines);
+        border: 1px solid var(--color-e8dfcd);
         box-shadow: 0 6px 16px -12px rgba(0, 0, 0, 0.4);
         transition: border 0.5s ease-out;
         outline: none;
@@ -18,7 +18,7 @@
     input[type=search]:focus,
     input[type=search]:active {
         border-radius: 17px;
-        border: 1px solid var(--color-accent);
+        border: 1px solid var(--color-bf5333);
         outline: none;
     }
 

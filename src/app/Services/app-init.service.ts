@@ -45,8 +45,8 @@ export class AppInitService {
 
         // on attend la résolution des promises
         Promise.all([p1, p2, p3, p4]).then((values) => {
-            this.recipeService.loadTypes(values[1]);         
-            this.recipeService.loadDocumentURI(values[2]);
+            this.recipeService.setTypes(values[1]);         
+            this.recipeService.setDocumentURI(values[2]);
 
             this.menuService.setMenus(this.menuService.getAll(values[3]));
 

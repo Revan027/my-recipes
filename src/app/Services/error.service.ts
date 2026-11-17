@@ -1,20 +1,25 @@
 import { Injectable, ErrorHandler } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
-
-import { Capacitor } from '@capacitor/core';
+import { GroqApiError } from '../Models/Entities/GroqApiError';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ErrorService implements ErrorHandler {
-    constructor() {}
+    constructor(private toastrService: ToastrService) {}
 
     async handleError(error: any) {
         let message = '';
 
         if (error instanceof HttpErrorResponse) {
-            //erreur http
-        } else {
+
+        } 
+        else if(error instanceof GroqApiError){
+            this.toastrService.error(error.message);
+
+            return;
+        }else {
             // On ne prend une erreur venant de la fermeture de la caméra
             if (error?.message?.includes('cancel') && error?.message?.includes('photos app'))
                 return;
@@ -22,10 +27,6 @@ export class ErrorService implements ErrorHandler {
             message = error.message! ? error.message : error;
         }
 
-        if (Capacitor.isNativePlatform()) {
-            alert(message);
-        } else {
-            console.error(message);
-        }
+        this.toastrService.error(message);
     }
 }

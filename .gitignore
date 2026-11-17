@@ -34,6 +34,10 @@ testem.log
 /typings
 __screenshots__/
 
+# Environnements (contiennent les clés, voir src/environments/environment.example.ts)
+/src/environments/environment.ts
+/src/environments/environment.development.ts
+
 # System files
 .DS_Store
 Thumbs.db

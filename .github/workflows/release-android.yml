@@ -54,11 +54,24 @@ jobs:
       - name: Installation des dépendances
         run: npm install --no-audit --no-fund
 
-      # 6. Build Angular
+      # 6. Création de environment.ts (non commité) depuis les secrets du dépôt
+      #    Settings > Secrets and variables > Actions > New repository secret
+      - name: Création de environment.ts
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+        run: |
+          cat > src/environments/environment.ts <<EOF
+          export const environment = {
+              production: true,
+              groqApiKey: '${GROQ_API_KEY}',
+          };
+          EOF
+
+      # 7. Build Angular
       - name: Build Angular
         run: npm run build
 
-      # 7. Capacitor sync
+      # 8. Capacitor sync
       - name: Capacitor sync
         run: npx cap sync android
 
@@ -67,18 +80,18 @@ jobs:
       # les builds CI et Android Studio partagent le MÊME versionCode
       # (sinon downgrade → mise à jour impossible entre les deux).
 
-      # 8. Génération de l'APK
+      # 9. Génération de l'APK
       - name: Build APK
         working-directory: android
         run: |
           chmod +x ./gradlew
           ./gradlew assembleDebug --no-daemon
 
-      # 9. Renommage de l'APK avec le nom du tag
+      # 10. Renommage de l'APK avec le nom du tag
       - name: Renommage de l'APK
         run: cp android/app/build/outputs/apk/debug/app-debug.apk my-recipes-${{ github.ref_name }}.apk
 
-      # 10. Création de la Release GitHub avec l'APK attaché
+      # 11. Création de la Release GitHub avec l'APK attaché
       - name: Publication de la Release
         uses: softprops/action-gh-release@v2
         with:

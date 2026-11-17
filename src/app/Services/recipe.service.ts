@@ -6,7 +6,7 @@ import { RecipeResult } from '../Models/RecipeResult';
 import { RecipeSearch } from '../Models/RecipeSearch';
 import { Type } from '../Models/Entities/Type';
 import { Capacitor } from '@capacitor/core';
-import { MOCK_TYPES } from '../constants/mock-recipes';
+import { MOCK_RECIPES, MOCK_TYPES } from '../constants/mock-recipes';
 import { FileService } from '@common/capacitor/file.service';
 import { folder } from '../constants/folder';
 
@@ -37,13 +37,13 @@ export class RecipeService {
             await this.storageService.getDb().beginTransaction();
 
             let sql = `
-                INSERT INTO ${tableName.recipe} (title, srcPicture, typeID) 
+                INSERT INT ${tableName.recipe} (title, srcPicture, typeID) 
                 VALUES (?, ?, ?)`;
 
             let result = await this.storageService.getDb().run(sql, [recipe.title, recipe.srcPicture, recipe.typeID], false);
 
             // on créee les ingrédients
-           await this.createIngredients(result.changes?.lastId ?? 0, recipe);
+            await this.createIngredients(result.changes?.lastId ?? 0, recipe);
 
             // on créée les étapes
             await this.createSteps(result.changes?.lastId ?? 0, recipe);
@@ -166,12 +166,39 @@ export class RecipeService {
         await this.storageService.getDb().run(sql, [recipe.id], false);
     }
 
-    async getFirstRecipeID(){
+    async countQueryResult(): Promise<number> {
         let result = await this.storageService.getDb().query(`
-            SELECT MIN(id) as id
-            FROM ${tableName.recipe}`);
+            SELECT COUNT(*) as countTotal
+            FROM ${tableName.recipe}
+            ${this.getQuerySearch()}`);
 
-        return result.values != undefined ? (result.values[0].id as number) : 0;
+        return result.values != undefined ? (result.values[0].countTotal as number) : 0;
+    }
+
+    async getTitles(): Promise<Recipe[]>{
+        let recipesResult = await this.storageService.getDb().query(`
+            SELECT recipe.title
+            FROM ${tableName.recipe} as recipe`);
+
+        return recipesResult.values?.map((item) => Recipe.createRecipe(item)) ?? [];
+    }
+
+    private getQuerySearch() {
+        const searchText = this.recipeSearch().searchText ?? '';
+
+        return `WHERE ${searchText.length > 0 ? 'FALSE' : 'TRUE'} OR lower(recipe.title) LIKE '%${searchText.toLowerCase()}%'`;
+    }
+
+    async getFirstRecipeID(){
+        if (Capacitor.isNativePlatform()) {
+            let result = await this.storageService.getDb().query(`
+                SELECT MIN(id) as id
+                FROM ${tableName.recipe}`);
+
+            return result.values != undefined ? (result.values[0].id as number) : 0;
+        }else{
+            return Promise.resolve(MOCK_RECIPES[0].id);
+        }
     }
 
     async getTypes(): Promise<Type[]> {
@@ -186,6 +213,10 @@ export class RecipeService {
         }else{
             return Promise.resolve(MOCK_TYPES);
         }     
+    }
+
+    getSrcPicture(recipe: Recipe){
+        return this.fileService.getUrlWeb(this.fileService.getPathUri(this._documentURI(), recipe.srcPicture as string));
     }
 
     async fetchPage(take: number | undefined = undefined): Promise<Recipe[]> {
@@ -221,40 +252,21 @@ export class RecipeService {
         
         ///alert(JSON.stringify(recipes, null, 2));
         return recipes ?? [];
-    }
+    } 
 
-    private getQuerySearch() {
-        const searchText = this.recipeSearch().searchText ?? '';
-
-        return `WHERE ${searchText.length > 0 ? 'FALSE' : 'TRUE'} OR lower(recipe.title) LIKE '%${searchText.toLowerCase()}%'`;
-    }
-
-    async countQueryResult(): Promise<number> {
-        let result = await this.storageService.getDb().query(`
-            SELECT COUNT(*) as countTotal
-            FROM ${tableName.recipe}
-            ${this.getQuerySearch()}`);
-
-        return result.values != undefined ? (result.values[0].countTotal as number) : 0;
-    }
-
-    getSrcPicture(recipe: Recipe){
-        return this.fileService.getUrlWeb(this.fileService.getPathUri(this._documentURI(), recipe.srcPicture as string));
-    }
-
-    loadTypes(types: Type[]){
+    setTypes(types: Type[]){
         this._recipeTypes.set(types);
     }
 
-    loadRecipeSearch(recipeSearch: RecipeSearch){
+    setRecipeSearch(recipeSearch: RecipeSearch){
         this._recipeSearch.set({...recipeSearch});
     }
 
-    loadRecipeResult(recipeResult: RecipeResult){
+    setRecipeResult(recipeResult: RecipeResult){
         this._recipeResult.set({...recipeResult});
     }
 
-    loadDocumentURI(uri: string){
+    setDocumentURI(uri: string){
         this._documentURI.set(uri);
     }
 }

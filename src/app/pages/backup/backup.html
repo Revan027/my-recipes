@@ -1,0 +1,42 @@
+<div class="content-padding">
+    <app-page-header title="Backup" subTitle="Sauvegarde des données."></app-page-header>
+
+    <div class="backup-content"> 
+        @if(launchBackup()){
+             <div class="backup-line">
+                <app-progress-bar
+                    [current]="currentStep()?.stepOrder ?? 0"
+                    [max]="countStep()">
+                </app-progress-bar>
+            </div>
+
+            <div class="backup-line meta-text">
+                @if(currentStep()?.stepOrder){
+                    {{currentStep()?.name}} - {{currentStep()?.statusText?.toUpperCase()}}
+                }@else{
+                    {{currentStep()?.name}}
+                }         
+            </div>
+        }    
+        
+        <div>
+            <input multiple accept="text/plain;application/zip" #inputFile type="file" hidden (change)="import($event)" />
+
+            <button matButton="tonal" class="btn-tonal--accent mt-2" (click)="export()" [disabled]="launchBackup()">
+                <mat-icon>download</mat-icon>
+            
+                Exporter les données
+            </button>
+
+            <button matButton="tonal" class="btn-tonal--accent mt-2" (click)="openFileSelector()" [disabled]="launchBackup()">
+                <mat-icon>cloud_upload</mat-icon>
+            
+                Importer des données
+            </button>
+
+            <div class="meta mt-1">
+              Le premier fichier doit être le .txt et le second le .zip     
+            </div>
+        </div>
+    </div>
+</div>

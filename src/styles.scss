@@ -12,7 +12,6 @@
 @import "ngx-toastr/toastr";
 
 html {
-  height: 100%;
   @include mat.theme(
     (
       color: (
@@ -24,6 +23,9 @@ html {
     )
   );
 }
+.app-content{
+  min-height: 100dvh;
+}
 
 body {
   // Default the application to a light color theme. This can be changed to
@@ -33,27 +35,22 @@ body {
   // Set a default background, font and text colors for the application using
   // Angular Material's system-level CSS variables. Learn more about these
   // variables at https://material.angular.dev/guide/system-variables
-  background-color: var(--color-background);
+  background-color: var(--color-f6f0e4);
 
-  color: var(--color-main-text);
+  color: var(--color-2a2521);
   font-family: var(--font-family-karla), system-ui, sans-serif;
   font-size: var(--font-size-base);
   font-weight: 400;
   margin: 0;
-  height: 100%;
-}
-
-.app-version{
-  position: absolute;
-  right: 5px;
-  top: 5px;
-  font-size: var(--font-size-xs); 
-  color: var(--color-accent);
 }
 
 // ESPACEMENTS
 .content-padding{
   padding: 20px 20px;
+}
+
+.m-0{
+  margin: 0px;
 }
 
 .mb-1{
@@ -80,35 +77,10 @@ body {
   margin-top: 30px;
 }
 
-// TEXTES
-.kicker{
-  text-transform: uppercase;
-  color: var(--color-accent);
-  font-size: var(--font-size-md);
-  font-weight: 700;
-  letter-spacing: 0.20em;
-  line-height: 2;
+.pb-1{
+  padding-bottom: 10px;
 }
 
-.kicker--main-text{
-  color: var(--color-main-text);
-}
-
-.meta{
-  font-weight: 400;
-  font-size: var(--font-size-xs);
-  color: var(--color-secondary-text);
-}
-
-.alert-danger{
-  font-size: var(--font-size-sm);
-  color: red;
-  margin: 10px 0;
-}
-
-.text-center{
-  text-align: center;
-}
 
 // SPINNER
 .spinner--app{
@@ -124,14 +96,22 @@ body {
 }
 
 .spinner {
-  --mat-progress-spinner-active-indicator-color: var(--color-accent);
+  --mat-progress-spinner-active-indicator-color: var(--color-bf5333);
+}
+
+.spinner--white {
+  --mat-progress-spinner-active-indicator-color: white;
+}
+
+.spinner--inline {
+  display: inline-block!important;
 }
 
 //CHIPS
 .chips{
   border-radius: 30px;
   padding: 5px 10px;
-  border: 1px solid var(--color-lines);
+  border: 1px solid var(--color-e8dfcd);
   font-size: var(--font-size-lg);
   background-color: white;
   display: flex;
@@ -149,7 +129,7 @@ body {
 hr{
   margin: 20px 0 20px 0;
   width: 40px;
-  border: 1px solid var( --color-accent);
+  border: 1px solid var( --color-bf5333);
 }  
 
 // DISPLAY

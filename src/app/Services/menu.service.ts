@@ -20,6 +20,7 @@ export class MenuService {
             {name: "Home", baseUrl: "home", icon: "home"} as MenuItem,
             {name: "Book", baseUrl: `recipes/${firstID}`, icon: "menu_book"} as MenuItem,
             {name: "Menus", baseUrl: "menus", icon: "restaurant_menu"} as MenuItem,
+            {name: "Backup", baseUrl: "backup", icon: "backup"} as MenuItem,
         ]
     }
 
@@ -31,8 +32,11 @@ export class MenuService {
 
             return this.menus().find(x => x.name == "Home");      
         }
-        else if(url.startsWith("menus")){
+        else if(url.startsWith("/menus")){
             return this.menus().find(x => x.name == "Menus");   
+        }
+        else if(url.startsWith("/backup")){
+            return this.menus().find(x => x.name == "Backup");   
         }
 
         return this.menus().find(x => x.name == "Home")

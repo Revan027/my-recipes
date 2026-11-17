@@ -1,0 +1,44 @@
+<div class="content-padding">
+    <app-page-header title="Mes menus" subTitle="Une idée de recette pour chaque jour."></app-page-header>
+
+    @if(menuWeek() == undefined){
+        <div class="empty-menuWeek current-text">
+            Aucune idée pour l'instant.
+        </div>
+    }
+    @else
+    {
+        <div class="menuWeek mt-3">
+            @for(menuDay of menuWeek().menuDays; track menuDay){
+                <div class="menuWeek-line pb-1 mt-1">
+                    <div class="menuWeek-day kicker">
+                        {{menuDay.day}} 
+                    </div>
+
+                    <div>
+                        @for(menuDayPeriod of menuDay.menuDayPeriods; track menuDayPeriod.recipeName){
+                            <div class="mb-1">
+                                <div  class="kicker--8a8073"> 
+                                    {{(menuDayPeriod.period == 1 ? "MATIN" : "SOIR")}}
+                                </div>
+
+                                <div class="card-title">
+                                    {{menuDayPeriod.recipeName}}
+                                </div>                   
+                            </div>
+                        }
+                    </div>                
+                </div>
+            }    
+        </div>    
+    }
+ 
+    <button matButton="tonal" class="btn-tonal--accent mt-2" (click)="onGenerateIdea()" [disabled]="hasLoading()">
+        <mat-icon>refresh</mat-icon>
+     
+        Générer des idées   
+        @if(hasLoading()){
+            <mat-spinner class="spinner--white spinner--inline" diameter="18"></mat-spinner>
+        }
+    </button>
+</div>

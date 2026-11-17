@@ -2,22 +2,22 @@
     <app-page-header title="Backup" subTitle="Sauvegarde des données."></app-page-header>
 
     <div class="backup-content"> 
-      
-        <div class="backup-line">
-            <app-progress-bar
-                [current]="stepProgression()"
-                [max]="countStep()">
-            </app-progress-bar>
-        </div>
+        @if(launchBackup()){
+             <div class="backup-line">
+                <app-progress-bar
+                    [current]="currentStep()?.stepOrder ?? 0"
+                    [max]="countStep()">
+                </app-progress-bar>
+            </div>
 
-        <div class="backup-line meta-text">
-            @if(currentStep()?.stepOrder){
-                {{currentStep()?.name}} - {{currentStep()?.statusText?.toUpperCase()}} - {{`${currentStep()?.stepOrder}/${countStep()}`}}
-            }@else{
-                {{currentStep()?.name}}
-            }         
-        </div>
-       
+            <div class="backup-line meta-text">
+                @if(currentStep()?.stepOrder){
+                    {{currentStep()?.name}} - {{currentStep()?.statusText?.toUpperCase()}}
+                }@else{
+                    {{currentStep()?.name}}
+                }         
+            </div>
+        }    
         
         <div>
             <input multiple accept="text/plain;application/zip" #inputFile type="file" hidden (change)="import($event)" />

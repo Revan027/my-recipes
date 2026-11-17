@@ -1,13 +1,13 @@
 import { Component, effect, ElementRef, signal, ViewChild } from '@angular/core';
-import { ExportService } from '../../Services/backup.services/export.service';
-import { ImportService } from '../../Services/backup.services/import.service';
-import { FileService } from '@common/capacitor/file.service';
-import { BackupStep } from '../../Services/backup.services/models/backupStep';
+import { BackupStep } from '../../Services/capacitor.services.common/backup/models/backupStep';
 import { PageHeader } from '../../components/page-header/page-header';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ProgressBar } from '../../components/progress-bar/progress-bar';
+import { ExportService } from '@common/capacitor/backup/export.service';
+import { ImportService } from '@common/capacitor/backup/import.service';
+import { folder } from '../../constants/folder';
 
 @Component({
     selector: 'app-backup',
@@ -25,7 +25,7 @@ export class BackupPage {
 
     constructor(
         private exportService: ExportService,
-        private importService: ImportService, private FileService: FileService) 
+        private importService: ImportService) 
     {
         effect( () => {
             const currenStep = this.exportService.currentStep();
@@ -51,7 +51,7 @@ export class BackupPage {
     async export() {  
         this.launchBackup.set(true); 
 
-        await this.exportService.launchExport();
+        await this.exportService.launchExport(folder);
 
         setTimeout(() => {this.launchBackup.set(false);}, 3000)     
     }
@@ -59,7 +59,7 @@ export class BackupPage {
     async import(event: any) {
         this.launchBackup.set(true);
   
-        await this.importService.launchImport(event.target.files[0], event.target.files[1]);
+        await this.importService.launchImport(event.target.files[0], event.target.files[1], folder);
 
         setTimeout(() => {this.launchBackup.set(false);}, 3000)     
     }

@@ -54,18 +54,18 @@ jobs:
       - name: Installation des dépendances
         run: npm install --no-audit --no-fund
 
-      # 6. Création de environment.ts (non commité) depuis les secrets du dépôt
+      # 6. Création de environment.ts (non commité) depuis le secret ENV_FILE
       #    Settings > Secrets and variables > Actions > New repository secret
+      #    ENV_FILE contient le fichier environment.ts complet.
       - name: Création de environment.ts
         env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          ENV_FILE: ${{ secrets.ENV_FILE }}
         run: |
-          cat > src/environments/environment.ts <<EOF
-          export const environment = {
-              production: true,
-              groqApiKey: '${GROQ_API_KEY}',
-          };
-          EOF
+          if [ -z "$ENV_FILE" ]; then
+            echo "::error::Le secret ENV_FILE est vide ou absent"
+            exit 1
+          fi
+          printf '%s\n' "$ENV_FILE" > src/environments/environment.ts
 
       # 7. Build Angular
       - name: Build Angular
